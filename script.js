@@ -3,46 +3,52 @@ document.addEventListener("DOMContentLoaded", () => {
     /* =========================
        🔥 PARTICULAS (OPTIMIZADO)
     ========================= */
-    tsParticles.load("tsparticles", {
-        fullScreen: { enable: true },
-        background: { color: "transparent" },
-        detectRetina: true,
-        fpsLimit: 60,
+if (typeof tsParticles !== "undefined") {
 
-        interactivity: {
-            detectsOn: "window",
-            events: {
-                onHover: { enable: true, mode: "repulse" },
-                onClick: { enable: true, mode: "push" },
-                onTouch: { enable: true, mode: "repulse" },
-                resize: true
-            },
-            modes: {
-                repulse: { distance: 140, duration: 0.4 },
-                push: { quantity: 2 }
-            }
+tsParticles.load("tsparticles", {
+
+    fullScreen: { enable: true },
+    background: { color: "transparent" },
+    detectRetina: true,
+    fpsLimit: 60,
+
+    interactivity: {
+        detectsOn: "window",
+        events: {
+            onHover: { enable: true, mode: "repulse" },
+            onClick: { enable: true, mode: "push" },
+            onTouch: { enable: true, mode: "repulse" },
+            resize: true
         },
-
-        particles: {
-            number: {
-                value: 25,
-                density: { enable: true, area: 1000 }
-            },
-            color: { value: "#8a2be2" },
-            shape: { type: "circle" },
-            opacity: { value: 0.6 },
-            size: {
-                value: 5,
-                random: { enable: true, minimumValue: 2 }
-            },
-            move: {
-                enable: true,
-                speed: 1.2,
-                random: true,
-                outModes: { default: "out" }
-            }
+        modes: {
+            repulse: { distance: 140, duration: 0.4 },
+            push: { quantity: 2 }
         }
-    });
+    },
+
+    particles: {
+        number: {
+            value: 25,
+            density: { enable: true, area: 1000 }
+        },
+        color: { value: "#8a2be2" },
+        shape: { type: "circle" },
+        opacity: { value: 0.6 },
+        size: {
+            value: 5,
+            random: { enable: true, minimumValue: 2 }
+        },
+        move: {
+            enable: true,
+            speed: 1.2,
+            random: true,
+            outModes: { default: "out" }
+        }
+    }
+
+});
+
+}
 
     /* =========================
        🔘 BOTÓN ENTER
