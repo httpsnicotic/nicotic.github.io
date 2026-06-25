@@ -1,177 +1,112 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Histórico NICOTIC</title>
-
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
-
-body{
-
-background:#000;
-color:white;
-font-family:Arial,Helvetica,sans-serif;
-padding:30px;
-
-}
-
-h1{
-
-font-size:3rem;
-margin-bottom:25px;
-
-}
-
-#search{
-
-width:100%;
-max-width:450px;
-padding:12px;
-margin-bottom:35px;
-
-background:#111;
-
-color:white;
-
-border:1px solid #333;
-
-border-radius:8px;
-
-font-size:16px;
-
-}
-
-.year{
-
-margin-bottom:35px;
-
-}
-
-.year h1{
-
-font-size:2rem;
-
-color:#b84dff;
-
-margin-bottom:15px;
-
-}
-
-.folder{
-
-cursor:pointer;
-
-background:#111;
-
-padding:15px;
-
-border-radius:10px;
-
-border:1px solid #2b2b2b;
-
-margin-bottom:10px;
-
-transition:.2s;
-
-user-select:none;
-
-}
-
-.folder:hover{
-
-background:#1a1a1a;
-
-border-color:#7b2cff;
-
-}
-
-.scroll{
-
-display:none;
-
-overflow-x:auto;
-
-gap:15px;
-
-padding:15px 0;
-
-scroll-behavior:smooth;
-
-}
-
-.card{
-
-min-width:220px;
-
-background:#111;
-
-border-radius:10px;
-
-overflow:hidden;
-
-cursor:pointer;
-
-border:1px solid #222;
-
-transition:.2s;
-
-}
-
-.card:hover{
-
-transform:scale(1.05);
-
-border-color:#7b2cff;
-
-}
-
-.card img{
-
-width:100%;
-
-height:130px;
-
-object-fit:cover;
-
-display:block;
-
-}
-
-.card p{
-
-padding:10px;
-
-text-align:center;
-
-}
-
-</style>
-
+  <meta charset="UTF-8" />
+  <title>Histórico NICOTIC</title>
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    body {
+      margin: 0;
+      background: #0a0a0a;
+      color: white;
+      font-family: Arial;
+      overflow: hidden;
+    }
+
+    .center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 40px;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      padding: 12px 25px;
+      background: #7c3aed;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn:hover {
+      background: #5b21b6;
+    }
+
+    /* partículas simples */
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  </style>
 </head>
 
 <body>
 
-<h1>📁 Histórico NICOTIC</h1>
+<canvas id="particles"></canvas>
 
-<input
-id="search"
-type="text"
-placeholder="Buscar episodio..."
->
+<div class="center">
+  <h1>Histórico NICOTIC</h1>
+  <p>Accede a todos los episodios antiguos</p>
 
-<div id="container"></div>
+  <a class="btn" href="https://drive.google.com/" target="_blank">
+    Ver videos antiguos
+  </a>
+</div>
 
-<script src="historico.js"></script>
+<script>
+  // partículas simples (ligeras)
+  const canvas = document.getElementById("particles");
+  const ctx = canvas.getContext("2d");
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  let particles = [];
+
+  for (let i = 0; i < 60; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 2 + 1,
+      dx: (Math.random() - 0.5) * 0.5,
+      dy: (Math.random() - 0.5) * 0.5
+    });
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "white";
+
+    particles.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
+
+      p.x += p.dx;
+      p.y += p.dy;
+
+      if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+    });
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+</script>
 
 </body>
-
 </html>
