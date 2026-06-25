@@ -29,7 +29,6 @@ text-align:center;
 .hero h1{
 font-size:5rem;
 letter-spacing:6px;
-text-shadow:0 0 20px rgba(255,255,255,0.15);
 }
 
 .hero p{
@@ -44,7 +43,6 @@ flex-direction:column;
 justify-content:center;
 align-items:center;
 text-align:center;
-
 border-top:1px solid rgba(255,255,255,0.08);
 padding:60px 20px;
 }
@@ -59,7 +57,7 @@ margin-bottom:20px;
 width:90%;
 max-width:800px;
 background:#0f0f0f;
-padding:20px;
+padding:15px;
 border-radius:15px;
 border:1px solid #222;
 margin-bottom:30px;
@@ -68,7 +66,8 @@ margin-bottom:30px;
 .featured-video video{
 width:100%;
 border-radius:12px;
-background:black;
+max-height:70vh;
+object-fit:contain;
 }
 
 /* GRID VIDEOS */
@@ -77,33 +76,38 @@ display:flex;
 flex-wrap:wrap;
 gap:15px;
 justify-content:center;
+width:100%;
+max-width:1000px;
 }
 
 /* VIDEO CARD */
 .video-card{
 background:#111;
-padding:15px;
+padding:10px;
 border-radius:12px;
-width:260px;
+width:160px;
 border:1px solid #222;
+cursor:pointer;
 transition:0.3s;
 }
 
 .video-card:hover{
 transform:scale(1.05);
 border-color:#555;
-box-shadow:0 0 20px rgba(255,255,255,0.05);
 }
 
 .video-card p{
-margin:10px 0;
+margin:8px 0;
+font-size:14px;
 color:#ddd;
 }
 
-/* VIDEO LOCAL */
-video{
+/* mini preview */
+.video-card video{
 width:100%;
-border-radius:10px;
+height:90px;
+object-fit:cover;
+border-radius:8px;
 }
 
 /* NOTICIAS */
@@ -125,6 +129,17 @@ color:#aaa;
 /* ALTERNAR SECCIONES */
 .section:nth-child(even){
 background:#050505;
+}
+
+/* RESPONSIVE CELULAR */
+@media (max-width:768px){
+.hero h1{
+font-size:3rem;
+}
+
+.video-card{
+width:45%;
+}
 }
 
 </style>
@@ -158,33 +173,26 @@ background:#050505;
 <h2>🎥 Video destacado</h2>
 
 <div class="featured-video">
-<video controls>
+<video id="mainVideo" controls>
 <source src="videos/video1.mp4" type="video/mp4">
-Tu navegador no soporta video.
 </video>
 </div>
 
 <div class="video-grid">
 
-<div class="video-card">
+<div class="video-card" onclick="changeVideo('videos/video1.mp4')">
 <p>📺 Episodio 1</p>
-<video controls>
-<source src="videos/video1.mp4" type="video/mp4">
-</video>
+<video src="videos/video1.mp4"></video>
 </div>
 
-<div class="video-card">
+<div class="video-card" onclick="changeVideo('videos/video2.mp4')">
 <p>📺 Episodio 2</p>
-<video controls>
-<source src="videos/video2.mp4" type="video/mp4">
-</video>
+<video src="videos/video2.mp4"></video>
 </div>
 
-<div class="video-card">
+<div class="video-card" onclick="changeVideo('videos/video3.mp4')">
 <p>📺 Episodio 3</p>
-<video controls>
-<source src="videos/video3.mp4" type="video/mp4">
-</video>
+<video src="videos/video3.mp4"></video>
 </div>
 
 </div>
@@ -213,6 +221,14 @@ Tu navegador no soporta video.
 <h2>⏳ Eventos</h2>
 <p>Cuenta regresiva aquí</p>
 </div>
+
+<script>
+function changeVideo(src){
+    const main = document.getElementById("mainVideo");
+    main.src = src;
+    main.play();
+}
+</script>
 
 </body>
 </html>
