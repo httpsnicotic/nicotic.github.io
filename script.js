@@ -267,3 +267,4 @@ document.querySelectorAll(".thumb-video").forEach(video => {
     });
 
 });
+});
