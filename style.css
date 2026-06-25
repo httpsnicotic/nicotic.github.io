@@ -23,12 +23,18 @@ h1{
 font-size:4rem;
 letter-spacing:8px;
 margin-bottom:10px;
+
+position:relative;
+z-index:5;
 }
 
 p{
 font-size:1.2rem;
 color:#bdbdbd;
 margin-bottom:30px;
+
+position:relative;
+z-index:5;
 }
 
 button{
@@ -44,6 +50,9 @@ border-radius:10px;
 cursor:pointer;
 
 transition:0.3s;
+
+position:relative;
+z-index:5;
 }
 
 button:hover{
