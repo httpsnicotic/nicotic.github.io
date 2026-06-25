@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>NICOTIC Portal</title>
-  
-<style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
+<title>NICOTIC Portal</title>
+
+<style>
 body{
 margin:0;
 font-family:Arial,sans-serif;
@@ -15,9 +16,52 @@ scroll-behavior:smooth;
 }
 
 html, body {
-  margin: 0;
-  touch-action: pan-y;
-  overscroll-behavior: none;
+margin: 0;
+touch-action: pan-y;
+overscroll-behavior: none;
+}
+
+/* TOP BAR */
+.topbar{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:65px;
+background:rgba(0,0,0,0.92);
+backdrop-filter:blur(8px);
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 18px;
+box-sizing:border-box;
+z-index:999;
+border-bottom:1px solid rgba(255,255,255,0.08);
+}
+
+.top-left,
+.top-right{
+display:flex;
+align-items:center;
+gap:18px;
+}
+
+.menu-icon,
+.search-icon,
+.user-icon{
+font-size:28px;
+cursor:pointer;
+color:white;
+}
+
+.logo{
+font-size:24px;
+font-weight:bold;
+letter-spacing:2px;
+}
+
+.logo span{
+color:#a855f7;
 }
 
 /* HERO */
@@ -33,6 +77,7 @@ text-align:center;
 .hero h1{
 font-size:5rem;
 letter-spacing:6px;
+margin:0;
 }
 
 .hero p{
@@ -47,8 +92,9 @@ flex-direction:column;
 justify-content:center;
 align-items:center;
 text-align:center;
-padding:60px 20px;
+padding:80px 20px 60px;
 border-top:1px solid rgba(255,255,255,0.08);
+box-sizing:border-box;
 }
 
 .section:nth-child(even){
@@ -75,6 +121,45 @@ width:100%;
 max-height:75vh;
 border-radius:12px;
 background:black;
+display:block;
+}
+
+/* INFO VIDEO PRINCIPAL */
+.main-video-info{
+width:95%;
+max-width:850px;
+text-align:left;
+margin-top:15px;
+}
+
+.main-video-title{
+font-size:28px;
+font-weight:bold;
+margin:10px 0 5px;
+}
+
+.main-video-meta{
+color:#aaa;
+font-size:15px;
+margin-bottom:12px;
+}
+
+.video-actions{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+}
+
+.action-pill{
+background:#1d1d1d;
+border:1px solid #2a2a2a;
+border-radius:999px;
+padding:9px 14px;
+font-size:15px;
+color:white;
+display:inline-flex;
+align-items:center;
+gap:6px;
 }
 
 /* FEED */
@@ -82,20 +167,16 @@ background:black;
 display:flex;
 flex-wrap:nowrap;
 gap:15px;
-
 width:100%;
 max-width:1000px;
-
-margin-top:20px;
+margin-top:25px;
 padding:10px;
-
 overflow-x:auto;
 overflow-y:hidden;
-
 scroll-behavior:smooth;
-
 justify-content:flex-start;
 cursor:grab;
+box-sizing:border-box;
 }
 
 .video-grid::-webkit-scrollbar{
@@ -115,88 +196,81 @@ border-radius:20px;
 .video-card{
 background:#111;
 padding:10px;
-
-min-width:240px;
+min-width:250px;
+max-width:250px;
 flex-shrink:0;
-
-border-radius:12px;
+border-radius:14px;
 border:1px solid #222;
-
 cursor:pointer;
 transition:0.2s;
+text-align:left;
+box-sizing:border-box;
 }
 
 .video-card:hover{
-transform:scale(1.05);
+transform:scale(1.04);
 border-color:#555;
 }
 
-/* MINIATURA */
-.thumb{
-width:100%;
-height:90px;
-background:#000;
-border-radius:8px;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:12px;
-color:#666;
-border:1px solid #222;
-}
-
 .thumb-video{
 width:100%;
-height:120px;
+height:145px;
 object-fit:cover;
-border-radius:8px;
+border-radius:10px;
 background:black;
 border:1px solid #222;
-}
-
-.thumb-video{
-cursor:pointer;
+display:block;
 transition:0.3s;
 }
 
 .thumb-video:hover{
-transform:scale(1.03);
+transform:scale(1.02);
 }
 
-.video-card p{
-margin:8px 0;
-font-size:14px;
+.card-title{
+font-size:17px;
+font-weight:bold;
+margin:10px 0 4px;
+color:white;
+}
+
+.card-meta{
+font-size:12px;
+color:#888;
+margin-bottom:10px;
+}
+
+.card-actions{
+display:flex;
+gap:7px;
+flex-wrap:wrap;
+}
+
+.card-pill{
+background:#1c1c1c;
+border:1px solid #292929;
+border-radius:999px;
+padding:6px 9px;
+font-size:12px;
 color:#ddd;
 }
 
-/* INTERACCIÓN */
-button{
+/* BOTÓN HISTÓRICO */
+.history-btn{
 background:#222;
 color:white;
 border:1px solid #333;
-padding:5px 8px;
-margin-top:5px;
-border-radius:6px;
+padding:12px 18px;
+margin-top:25px;
+border-radius:999px;
 cursor:pointer;
-font-size:12px;
+font-size:14px;
+transition:0.2s;
 }
 
-input{
-width:90%;
-margin-top:5px;
-padding:5px;
-border-radius:6px;
-border:none;
-background:#111;
-color:white;
-font-size:12px;
-}
-
-span{
-display:block;
-margin-top:5px;
-color:#aaa;
-font-size:12px;
+.history-btn:hover{
+background:#333;
+transform:scale(1.04);
 }
 
 /* NOTICIAS */
@@ -218,20 +292,36 @@ color:#aaa;
 /* RESPONSIVE */
 @media (max-width:768px){
 
+.topbar{
+height:60px;
+padding:0 14px;
+}
+
+.logo{
+font-size:21px;
+}
+
+.menu-icon,
+.search-icon,
+.user-icon{
+font-size:25px;
+}
+
 .hero h1{
 font-size:3rem;
 }
 
+.section h2{
+font-size:2.2rem;
+}
+
 .video-card{
-min-width:220px;
-max-width:220px;
+min-width:230px;
+max-width:230px;
 }
 
 .thumb-video{
-width:100%;
 height:180px;
-display:block;
-object-fit:cover;
 }
 
 .featured-video{
@@ -245,186 +335,218 @@ width:100%;
 height:auto;
 }
 
+.main-video-title{
+font-size:23px;
 }
 
-</style>
+.action-pill{
+font-size:14px;
+padding:8px 12px;
+}
 
+}
+</style>
 </head>
 
 <body>
 
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="top-left">
+    <div class="menu-icon">☰</div>
+    <div class="logo">NICO<span>TIC</span></div>
+  </div>
+
+  <div class="top-right">
+    <div class="search-icon">🔍</div>
+    <div class="user-icon">👤</div>
+  </div>
+</div>
+
 <!-- HERO -->
 <div class="hero">
-<h1>NICOTIC</h1>
-<p>Bienvenidos al sótano de Nico</p>
+  <h1>NICOTIC</h1>
+  <p>Bienvenidos al sótano de Nico</p>
 </div>
 
 <!-- NOTICIAS -->
 <div class="section">
-<h2>📢 Noticias</h2>
+  <h2>📢 Noticias</h2>
 
-<div class="news-card">
-<p>📌 Bienvenido al portal NICOTIC</p>
-</div>
+  <div class="news-card">
+    <p>📌 Bienvenido al portal NICOTIC</p>
+  </div>
 
-<div class="news-card">
-<p>🔥 Próximo evento pronto</p>
-</div>
-
+  <div class="news-card">
+    <p>🔥 Próximo evento pronto</p>
+  </div>
 </div>
 
 <!-- VIDEOS -->
 <div class="section">
-<h2>🎥 Video destacado</h2>
+  <h2>🎥 Video destacado</h2>
 
-<div class="featured-video">
-<video id="mainVideo" controls playsinline src="videos/video1.mp4"></video>
-</div>
+  <div class="featured-video">
+    <video id="mainVideo" controls playsinline src="videos/video1.mp4"></video>
+  </div>
 
-<div class="video-grid">
+  <div class="main-video-info">
+    <div id="mainTitle" class="main-video-title">Episodio 1</div>
+    <div id="mainMeta" class="main-video-meta">Episodio 01 · reciente</div>
 
-<!-- VIDEO 1 -->
-<div class="video-card" onclick="changeVideo('videos/video1.mp4')">
+    <div class="video-actions">
+      <div id="mainSkulls" class="action-pill">☠️ 287</div>
+      <div id="mainComments" class="action-pill">💬 comentarios</div>
+      <div id="mainViews" class="action-pill">👁️ 12334</div>
+    </div>
+  </div>
 
-<img src="thumbs/ep1.jpg" class="thumb-video" alt="Episodio 1">
+  <div class="video-grid">
 
-<p>Episodio 1</p>
+    <!-- VIDEO 1 -->
+    <div class="video-card" onclick="loadVideo('videos/video1.mp4','Episodio 1','Episodio 01 · reciente','287','comentarios','12334')">
+      <img src="thumbs/ep1.jpg" class="thumb-video" alt="Episodio 1">
 
-<button onclick="event.stopPropagation(); likeVideo('video1')">👍 Like</button>
-<span id="likes-video1">0 likes</span>
+      <div class="card-title">Episodio 1</div>
+      <div class="card-meta">Episodio 01 · reciente</div>
 
-<div id="comments-video1"></div>
+      <div class="card-actions">
+        <div class="card-pill">☠️ 287</div>
+        <div class="card-pill">💬 comentarios</div>
+        <div class="card-pill">👁️ 12334</div>
+      </div>
+    </div>
 
-<input id="input-video1" placeholder="Comentario">
-<button onclick="event.stopPropagation(); addComment('video1')">Enviar</button>
+    <!-- VIDEO 2 -->
+    <div class="video-card" onclick="loadVideo('videos/video2.mp4','Episodio 2','Episodio 02 · reciente','194','comentarios','8921')">
+      <img src="thumbs/ep2.jpg" class="thumb-video" alt="Episodio 2">
 
-</div>
+      <div class="card-title">Episodio 2</div>
+      <div class="card-meta">Episodio 02 · reciente</div>
 
-<!-- VIDEO 2 -->
-<div class="video-card" onclick="changeVideo('videos/video2.mp4')">
+      <div class="card-actions">
+        <div class="card-pill">☠️ 194</div>
+        <div class="card-pill">💬 comentarios</div>
+        <div class="card-pill">👁️ 8921</div>
+      </div>
+    </div>
 
-<img src="thumbs/ep2.jpg" class="thumb-video" alt="Episodio 2">
+    <!-- VIDEO 3 -->
+    <div class="video-card" onclick="loadVideo('videos/video3.mp4','Episodio 3','Episodio 03 · reciente','321','comentarios','15400')">
+      <img src="thumbs/ep3.jpg" class="thumb-video" alt="Episodio 3">
 
-<p>Episodio 2</p>
+      <div class="card-title">Episodio 3</div>
+      <div class="card-meta">Episodio 03 · reciente</div>
 
-<button onclick="event.stopPropagation(); likeVideo('video2')">👍 Like</button>
-<span id="likes-video2">0 likes</span>
+      <div class="card-actions">
+        <div class="card-pill">☠️ 321</div>
+        <div class="card-pill">💬 comentarios</div>
+        <div class="card-pill">👁️ 15400</div>
+      </div>
+    </div>
 
-<div id="comments-video2"></div>
+    <!-- VIDEO 4 -->
+    <div class="video-card" onclick="loadVideo('videos/video4.mp4','Episodio 4','Episodio 04 · reciente','156','comentarios','7430')">
+      <img src="thumbs/ep4.jpg" class="thumb-video" alt="Episodio 4">
 
-<input id="input-video2" placeholder="Comentario">
-<button onclick="event.stopPropagation(); addComment('video2')">Enviar</button>
-</div>
+      <div class="card-title">Episodio 4</div>
+      <div class="card-meta">Episodio 04 · reciente</div>
 
-<!-- VIDEO 3 -->
-<div class="video-card" onclick="changeVideo('videos/video3.mp4')">
+      <div class="card-actions">
+        <div class="card-pill">☠️ 156</div>
+        <div class="card-pill">💬 comentarios</div>
+        <div class="card-pill">👁️ 7430</div>
+      </div>
+    </div>
 
-<img src="thumbs/ep3.jpg" class="thumb-video" alt="Episodio 3">
+    <!-- VIDEO 5 -->
+    <div class="video-card" onclick="loadVideo('videos/video5.mp4','Episodio 5','Episodio 05 · reciente','403','comentarios','20102')">
+      <img src="thumbs/ep5.jpg" class="thumb-video" alt="Episodio 5">
 
-<p>Episodio 3</p>
+      <div class="card-title">Episodio 5</div>
+      <div class="card-meta">Episodio 05 · reciente</div>
 
-<button onclick="event.stopPropagation(); likeVideo('video3')">👍 Like</button>
-<span id="likes-video3">0 likes</span>
+      <div class="card-actions">
+        <div class="card-pill">☠️ 403</div>
+        <div class="card-pill">💬 comentarios</div>
+        <div class="card-pill">👁️ 20102</div>
+      </div>
+    </div>
 
-<div id="comments-video3"></div>
+  </div>
 
-<input id="input-video3" placeholder="Comentario">
-<button onclick="event.stopPropagation(); addComment('video3')">Enviar</button>
-</div>
-
-<!-- VIDEO 4 -->
-<div class="video-card" onclick="changeVideo('videos/video4.mp4')">
-
-<img src="thumbs/ep4.jpg" class="thumb-video" alt="Episodio 4">
-
-<p>Episodio 4</p>
-
-<button onclick="event.stopPropagation(); likeVideo('video4')">👍 Like</button>
-<span id="likes-video4">0 likes</span>
-
-<div id="comments-video4"></div>
-
-<input id="input-video4" placeholder="Comentario">
-<button onclick="event.stopPropagation(); addComment('video4')">Enviar</button>
-</div>
-
-<!-- VIDEO 5 -->
-<div class="video-card" onclick="changeVideo('videos/video5.mp4')">
-
-<img src="thumbs/ep5.jpg" class="thumb-video" alt="Episodio 5">
-
-<p>Episodio 5</p>
-
-<button onclick="event.stopPropagation(); likeVideo('video5')">👍 Like</button>
-<span id="likes-video5">0 likes</span>
-
-<div id="comments-video5"></div>
-
-<input id="input-video5" placeholder="Comentario">
-<button onclick="event.stopPropagation(); addComment('video5')">Enviar</button>
-</div>
-
-</div>
-
-<button onclick="location.href='historico.html'">
-📁 Histórico / Episodios anteriores
-</button>
-
+  <button class="history-btn" onclick="location.href='historico.html'">
+    📁 Histórico / Episodios anteriores
+  </button>
 </div>
 
 <!-- HORARIOS -->
 <div class="section">
-<h2>🌎 Horarios</h2>
-<p class="time">7:30 PM Perú</p>
+  <h2>🌎 Horarios</h2>
+  <p class="time">7:30 PM Perú</p>
 </div>
 
 <!-- COMUNIDAD -->
 <div class="section">
-<h2>👥 Comunidad</h2>
-<p>Seguidores y usuarios (próximamente real)</p>
+  <h2>👥 Comunidad</h2>
+  <p>Seguidores y usuarios próximamente</p>
 </div>
 
 <!-- COMANDOS -->
 <div class="section">
-<h2>⌨️ Comandos</h2>
-<p>ayuda / social / stream / noticias</p>
+  <h2>⌨️ Comandos</h2>
+  <p>ayuda / social / stream / noticias</p>
 </div>
 
 <!-- EVENTOS -->
 <div class="section">
-<h2>⏳ Eventos</h2>
-<p>Cuenta regresiva aquí</p>
+  <h2>⏳ Eventos</h2>
+  <p>Cuenta regresiva aquí</p>
 </div>
 
 <script>
+function loadVideo(src, title, meta, skulls, comments, views) {
+  const video = document.getElementById("mainVideo");
+
+  video.src = src;
+  video.load();
+  video.play().catch(() => {});
+
+  document.getElementById("mainTitle").textContent = title;
+  document.getElementById("mainMeta").textContent = meta;
+  document.getElementById("mainSkulls").textContent = "☠️ " + skulls;
+  document.getElementById("mainComments").textContent = "💬 " + comments;
+  document.getElementById("mainViews").textContent = "👁️ " + views;
+}
+
+/* BLOQUEO DE ZOOM EN MÓVIL */
 document.addEventListener('gesturestart', function (e) {
-    e.preventDefault();
+  e.preventDefault();
 });
 
 document.addEventListener('gesturechange', function (e) {
-    e.preventDefault();
+  e.preventDefault();
 });
 
 document.addEventListener('gestureend', function (e) {
-    e.preventDefault();
+  e.preventDefault();
 });
 
 document.addEventListener('dblclick', function (e) {
-    e.preventDefault();
+  e.preventDefault();
 }, { passive: false });
 
 document.addEventListener('touchmove', function (e) {
-    if (e.scale && e.scale !== 1) {
-        e.preventDefault();
-    }
+  if (e.scale && e.scale !== 1) {
+    e.preventDefault();
+  }
 }, { passive: false });
 
 document.addEventListener('touchstart', function (e) {
-    if (e.touches.length > 1) {
-        e.preventDefault();
-    }
+  if (e.touches.length > 1) {
+    e.preventDefault();
+  }
 }, { passive: false });
-
 </script>
 
 <script src="script.js"></script>
