@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     /* =========================
-       🔥 PARTICULAS (IGUAL, OPTIMIZADO)
+       🔥 PARTICULAS (OPTIMIZADO)
     ========================= */
     tsParticles.load("tsparticles", {
         fullScreen: { enable: true },
@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* =========================
-       🔥 V4.1 PRO – SWIPE REAL (TIKTOK BASE)
+       🔥 V4.2 PRO – SWIPE TIKTOK
     ========================= */
 
     let startY = 0;
@@ -139,15 +139,8 @@ document.addEventListener("DOMContentLoaded", () => {
             let endY = e.changedTouches[0].clientY;
             let diff = startY - endY;
 
-            // 🔼 swipe arriba = siguiente video
-            if (diff > 60) {
-                nextVideo();
-            }
-
-            // 🔽 swipe abajo = anterior video
-            if (diff < -60) {
-                prevVideo();
-            }
+            if (diff > 60) nextVideo();
+            if (diff < -60) prevVideo();
         });
 
     }
@@ -182,10 +175,58 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* =========================
-       🎬 AUTOPLAY NETFLIX STYLE
+       🎬 AUTOPLAY NETFLIX
     ========================= */
     video?.addEventListener("ended", () => {
         nextVideo();
     });
+
+    /* =========================
+       🎬 NETFLIX SCROLL (HORIZONTAL)
+    ========================= */
+
+    const grid = document.querySelector(".video-grid");
+
+    if (grid) {
+
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        grid.addEventListener("mousedown", (e) => {
+            isDown = true;
+            startX = e.pageX - grid.offsetLeft;
+            scrollLeft = grid.scrollLeft;
+        });
+
+        grid.addEventListener("mouseup", () => isDown = false);
+        grid.addEventListener("mouseleave", () => isDown = false);
+
+        grid.addEventListener("mousemove", (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+
+            const x = e.pageX - grid.offsetLeft;
+            const walk = (x - startX) * 2;
+
+            grid.scrollLeft = scrollLeft - walk;
+        });
+
+        /* 📱 TOUCH */
+        let touchStartX = 0;
+        let touchScrollLeft = 0;
+
+        grid.addEventListener("touchstart", (e) => {
+            touchStartX = e.touches[0].clientX;
+            touchScrollLeft = grid.scrollLeft;
+        });
+
+        grid.addEventListener("touchmove", (e) => {
+            const x = e.touches[0].clientX;
+            const walk = (touchStartX - x) * 1.5;
+
+            grid.scrollLeft = touchScrollLeft + walk;
+        });
+    }
 
 });
