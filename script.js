@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
             },
 
             size: {
-                value: { min: 1, max: 3 }
+                value: { min: 2, max: 6 }
             },
 
             move: {
