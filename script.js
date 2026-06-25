@@ -7,36 +7,50 @@ document.addEventListener("DOMContentLoaded", () => {
             color: "transparent"
         },
 
+        // 🔥 LIMITE DE SEGURIDAD (evita saturación)
+        detectRetina: true,
+        fpsLimit: 60,
+
         interactivity: {
+            detectsOn: "window",
+
             events: {
                 onHover: {
                     enable: true,
                     mode: "repulse"
                 },
+
                 onClick: {
                     enable: true,
                     mode: "push"
                 },
+
+                onTouch: {
+                    enable: true,
+                    mode: "repulse"
+                },
+
                 resize: true
             },
 
             modes: {
                 repulse: {
-                    distance: 120,
+                    distance: 140,
                     duration: 0.4
                 },
+
                 push: {
-                    quantity: 4
+                    quantity: 2 // 🔥 LIMITA CREACIÓN DE PARTICULAS
                 }
             }
         },
 
         particles: {
             number: {
-                value: 60,
+                value: 45, // 🔥 BAJADO PARA EVITAR LAG
                 density: {
                     enable: true,
-                    area: 800
+                    area: 900
                 }
             },
 
@@ -49,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
             },
 
             opacity: {
-                value: 0.7
+                value: 0.65
             },
 
             size: {
@@ -62,9 +76,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             move: {
                 enable: true,
-                speed: 1.5,
-                direction: "none",
+                speed: 1.3,
                 random: true,
+                direction: "none",
                 straight: false,
                 outModes: {
                     default: "out"
@@ -74,13 +88,14 @@ document.addEventListener("DOMContentLoaded", () => {
             links: {
                 enable: true,
                 color: "#8a2be2",
-                distance: 140,
-                opacity: 0.35,
+                distance: 130,
+                opacity: 0.3,
                 width: 1
             }
         }
     });
 
+    // 🔘 BOTÓN SEGURO
     const boton = document.getElementById("enterBtn");
 
     if (boton) {
