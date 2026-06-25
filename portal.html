@@ -84,7 +84,7 @@ max-width:1000px;
 margin-top:20px;
 }
 
-/* MINI CARDS LIGERAS */
+/* VIDEO CARD */
 .video-card{
 background:#111;
 padding:10px;
@@ -100,13 +100,7 @@ transform:scale(1.05);
 border-color:#555;
 }
 
-.video-card p{
-margin:8px 0;
-font-size:14px;
-color:#ddd;
-}
-
-/* MINIATURA (IMPORTANTE: NO CARGA VIDEO) */
+/* MINIATURA LIGERA (SIN VIDEO = SIN LAG) */
 .thumb{
 width:100%;
 height:90px;
@@ -118,6 +112,42 @@ justify-content:center;
 font-size:12px;
 color:#666;
 border:1px solid #222;
+}
+
+.video-card p{
+margin:8px 0;
+font-size:14px;
+color:#ddd;
+}
+
+/* INTERACCIÓN */
+button{
+background:#222;
+color:white;
+border:1px solid #333;
+padding:5px 8px;
+margin-top:5px;
+border-radius:6px;
+cursor:pointer;
+font-size:12px;
+}
+
+input{
+width:90%;
+margin-top:5px;
+padding:5px;
+border-radius:6px;
+border:none;
+background:#111;
+color:white;
+font-size:12px;
+}
+
+span{
+display:block;
+margin-top:5px;
+color:#aaa;
+font-size:12px;
 }
 
 /* NOTICIAS */
@@ -185,19 +215,46 @@ width:45%;
 
 <div class="video-grid">
 
+<!-- VIDEO 1 -->
 <div class="video-card" onclick="changeVideo('videos/video1.mp4')">
 <div class="thumb">VIDEO 1</div>
 <p>Episodio 1</p>
+
+<button onclick="event.stopPropagation(); likeVideo('video1')">👍 Like</button>
+<span id="likes-video1">0 likes</span>
+
+<div id="comments-video1"></div>
+
+<input id="input-video1" placeholder="Comentario">
+<button onclick="event.stopPropagation(); addComment('video1')">Enviar</button>
 </div>
 
+<!-- VIDEO 2 -->
 <div class="video-card" onclick="changeVideo('videos/video2.mp4')">
 <div class="thumb">VIDEO 2</div>
 <p>Episodio 2</p>
+
+<button onclick="event.stopPropagation(); likeVideo('video2')">👍 Like</button>
+<span id="likes-video2">0 likes</span>
+
+<div id="comments-video2"></div>
+
+<input id="input-video2" placeholder="Comentario">
+<button onclick="event.stopPropagation(); addComment('video2')">Enviar</button>
 </div>
 
+<!-- VIDEO 3 -->
 <div class="video-card" onclick="changeVideo('videos/video3.mp4')">
 <div class="thumb">VIDEO 3</div>
 <p>Episodio 3</p>
+
+<button onclick="event.stopPropagation(); likeVideo('video3')">👍 Like</button>
+<span id="likes-video3">0 likes</span>
+
+<div id="comments-video3"></div>
+
+<input id="input-video3" placeholder="Comentario">
+<button onclick="event.stopPropagation(); addComment('video3')">Enviar</button>
 </div>
 
 </div>
@@ -237,6 +294,8 @@ function changeVideo(src){
     main.play();
 }
 </script>
+
+<script src="script.js"></script>
 
 </body>
 </html>
