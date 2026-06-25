@@ -76,21 +76,48 @@ background:black;
 /* FEED */
 .video-grid{
 display:flex;
-flex-wrap:wrap;
+flex-wrap:nowrap;
 gap:15px;
-justify-content:center;
+
 width:100%;
 max-width:1000px;
+
 margin-top:20px;
+padding:10px;
+
+overflow-x:auto;
+overflow-y:hidden;
+
+scroll-behavior:smooth;
+
+justify-content:flex-start;
+cursor:grab;
+}
+
+.video-grid::-webkit-scrollbar{
+height:8px;
+}
+
+.video-grid::-webkit-scrollbar-track{
+background:#111;
+}
+
+.video-grid::-webkit-scrollbar-thumb{
+background:#333;
+border-radius:20px;
 }
 
 /* VIDEO CARD */
 .video-card{
 background:#111;
 padding:10px;
+
+min-width:240px;
+flex-shrink:0;
+
 border-radius:12px;
-width:160px;
 border:1px solid #222;
+
 cursor:pointer;
 transition:0.2s;
 }
@@ -168,13 +195,15 @@ color:#aaa;
 
 /* RESPONSIVE */
 @media (max-width:768px){
+
 .hero h1{
 font-size:3rem;
 }
 
 .video-card{
-width:45%;
+min-width:85%;
 }
+
 }
 
 </style>
