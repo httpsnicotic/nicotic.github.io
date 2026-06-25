@@ -7,9 +7,33 @@ document.addEventListener("DOMContentLoaded", () => {
             color: "transparent"
         },
 
+        interactivity: {
+            events: {
+                onHover: {
+                    enable: true,
+                    mode: "repulse"
+                },
+                onClick: {
+                    enable: true,
+                    mode: "push"
+                },
+                resize: true
+            },
+
+            modes: {
+                repulse: {
+                    distance: 120,
+                    duration: 0.4
+                },
+                push: {
+                    quantity: 4
+                }
+            }
+        },
+
         particles: {
             number: {
-                value: 55,
+                value: 60,
                 density: {
                     enable: true,
                     area: 800
@@ -38,7 +62,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
             move: {
                 enable: true,
-                speed: 1.2,
+                speed: 1.5,
+                direction: "none",
+                random: true,
+                straight: false,
                 outModes: {
                     default: "out"
                 }
@@ -47,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
             links: {
                 enable: true,
                 color: "#8a2be2",
-                distance: 150,
+                distance: 140,
                 opacity: 0.35,
                 width: 1
             }
