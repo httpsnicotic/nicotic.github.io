@@ -1,28 +1,53 @@
-document.addEventListener("DOMContentLoaded", async () => {
-    await tsParticles.load("tsparticles", {
+document.addEventListener("DOMContentLoaded", () => {
+    tsParticles.load("tsparticles", {
         fullScreen: { enable: true },
+
         background: {
-            color: "#000"
+            color: "#000000"
         },
+
         particles: {
             number: {
-                value: 60
+                value: 90,
+                density: {
+                    enable: true,
+                    area: 800
+                }
             },
+
             color: {
-                value: "#ffffff"
+                value: "#8a2be2"
             },
+
             shape: {
                 type: "circle"
             },
+
             opacity: {
-                value: 0.5
+                value: 0.4
             },
+
             size: {
-                value: 3
+                value: { min: 1, max: 3 }
             },
+
             move: {
                 enable: true,
-                speed: 2
+                speed: 1.2,
+                direction: "none",
+                random: true,
+                straight: false,
+                outModes: {
+                    default: "out"
+                }
+            },
+
+            links: {
+                enable: true,
+                color: "#8a2be2",
+                distance: 150,
+                opacity: 0.25,
+                width: 1
             }
         }
     });
