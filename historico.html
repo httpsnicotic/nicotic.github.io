@@ -19,6 +19,7 @@ font-size:3rem;
 margin-bottom:20px;
 }
 
+/* 🔍 SEARCH */
 #search{
 width:100%;
 max-width:400px;
@@ -30,6 +31,34 @@ border:1px solid #333;
 border-radius:6px;
 }
 
+/* 🎛️ FILTROS */
+.filtros{
+display:flex;
+gap:10px;
+margin-bottom:20px;
+flex-wrap:wrap;
+}
+
+.filtros button{
+background:#111;
+color:white;
+border:1px solid #333;
+padding:8px 12px;
+border-radius:6px;
+cursor:pointer;
+transition:0.2s;
+}
+
+.filtros button:hover{
+background:#222;
+transform:scale(1.05);
+}
+
+.filtros button:active{
+transform:scale(0.95);
+}
+
+/* 📦 CONTENIDO */
 .row{
 margin-bottom:30px;
 }
@@ -38,13 +67,16 @@ margin-bottom:30px;
 margin-bottom:10px;
 }
 
+/* 🎬 SCROLL STYLE NETFLIX */
 .scroll{
 display:flex;
 overflow-x:auto;
 gap:10px;
 padding-bottom:10px;
+scroll-behavior:smooth;
 }
 
+/* 🎥 CARD */
 .card{
 min-width:200px;
 background:#111;
@@ -52,6 +84,12 @@ border:1px solid #222;
 border-radius:10px;
 cursor:pointer;
 flex-shrink:0;
+transition:0.2s;
+}
+
+.card:hover{
+transform:scale(1.05);
+border-color:#444;
 }
 
 .card img{
@@ -73,11 +111,21 @@ font-size:14px;
 
 <h1>📁 Histórico NICOTIC</h1>
 
+<!-- 🔍 BUSCADOR -->
 <input id="search" placeholder="Buscar episodio...">
 
+<!-- 🎛️ FILTROS -->
+<div class="filtros">
+  <button onclick="cambiarFiltro('todos')">Todos</button>
+  <button onclick="cambiarFiltro('local')">Recientes</button>
+  <button onclick="cambiarFiltro('drive')">Archivo</button>
+</div>
+
+<!-- 📦 CONTENEDOR -->
 <div id="container"></div>
 
-<script src="historico.js"></script>
+<!-- ⚙️ LÓGICA -->
+<script src="script.js"></script>
 
 </body>
 </html>
