@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
         fullScreen: { enable: true },
 
         background: {
-            color: "#000000"
+            color: "transparent"
         },
 
         particles: {
@@ -34,9 +34,6 @@ document.addEventListener("DOMContentLoaded", () => {
             move: {
                 enable: true,
                 speed: 1.2,
-                direction: "none",
-                random: true,
-                straight: false,
                 outModes: {
                     default: "out"
                 }
