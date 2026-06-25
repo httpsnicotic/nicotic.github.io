@@ -1,1 +1,52 @@
-/* NICOTIC CSS */
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+background:black;
+color:white;
+font-family:Arial, sans-serif;
+
+height:100vh;
+
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+
+overflow:hidden;
+}
+
+h1{
+font-size:4rem;
+letter-spacing:8px;
+margin-bottom:10px;
+}
+
+p{
+font-size:1.2rem;
+color:#bdbdbd;
+margin-bottom:30px;
+}
+
+button{
+padding:15px 40px;
+font-size:1.2rem;
+
+background:#7a2cff;
+color:white;
+
+border:none;
+border-radius:10px;
+
+cursor:pointer;
+
+transition:0.3s;
+}
+
+button:hover{
+transform:scale(1.08);
+box-shadow:0 0 20px #7a2cff;
+}
