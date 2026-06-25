@@ -100,7 +100,7 @@ transform:scale(1.05);
 border-color:#555;
 }
 
-/* MINIATURA LIGERA (SIN VIDEO = SIN LAG) */
+/* MINIATURA */
 .thumb{
 width:100%;
 height:90px;
@@ -284,16 +284,6 @@ width:45%;
 <h2>⏳ Eventos</h2>
 <p>Cuenta regresiva aquí</p>
 </div>
-
-<script>
-function changeVideo(src){
-    const main = document.getElementById("mainVideo");
-    main.pause();
-    main.src = src;
-    main.load();
-    main.play();
-}
-</script>
 
 <script src="script.js"></script>
 
