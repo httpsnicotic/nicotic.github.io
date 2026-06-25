@@ -36,22 +36,22 @@ container.innerHTML = "";
 
 const grupos = {};
 
-list.forEach(v => {
+list.forEach(v=>{
 
 const fecha = new Date(v.fecha);
 
 const anio = fecha.getFullYear();
 
-const mes = fecha.toLocaleString("es-ES", {
-month: "long"
+const mes = fecha.toLocaleString("es-ES",{
+month:"long"
 });
 
 if(!grupos[anio]){
-grupos[anio] = {};
+grupos[anio]={};
 }
 
 if(!grupos[anio][mes]){
-grupos[anio][mes] = [];
+grupos[anio][mes]=[];
 }
 
 grupos[anio][mes].push(v);
@@ -62,34 +62,38 @@ Object.keys(grupos)
 .sort((a,b)=>b-a)
 .forEach(anio=>{
 
-const yearBlock = document.createElement("div");
-yearBlock.className = "year";
-
-yearBlock.innerHTML = `<h1>📁 ${anio}</h1>`;
+const yearBlock=document.createElement("div");
+yearBlock.className="year";
+yearBlock.innerHTML=`<h1>📁 ${anio}</h1>`;
 
 container.appendChild(yearBlock);
 
 Object.keys(grupos[anio]).forEach(mes=>{
 
-const row = document.createElement("div");
-row.className = "row";
+const row=document.createElement("div");
+row.className="row";
 
-row.innerHTML = `<h2>📂 ${mes}</h2>`;
+const titulo=document.createElement("h2");
+titulo.className="folder";
+titulo.innerHTML=`▶ ${mes.charAt(0).toUpperCase()+mes.slice(1)} (${grupos[anio][mes].length})`;
 
-const scroll = document.createElement("div");
-scroll.className = "scroll";
+row.appendChild(titulo);
+
+const scroll=document.createElement("div");
+scroll.className="scroll";
+scroll.style.display="none";
 
 grupos[anio][mes].forEach(v=>{
 
-const card = document.createElement("div");
-card.className = "card";
+const card=document.createElement("div");
+card.className="card";
 
-card.innerHTML = `
+card.innerHTML=`
 <img src="${v.thumb}">
 <p>${v.title}</p>
 `;
 
-card.onclick = ()=>{
+card.onclick=()=>{
 
 window.open(v.video,"_blank");
 
@@ -99,7 +103,26 @@ scroll.appendChild(card);
 
 });
 
+titulo.onclick=()=>{
+
+if(scroll.style.display==="none"){
+
+scroll.style.display="flex";
+
+titulo.innerHTML=`▼ ${mes.charAt(0).toUpperCase()+mes.slice(1)} (${grupos[anio][mes].length})`;
+
+}else{
+
+scroll.style.display="none";
+
+titulo.innerHTML=`▶ ${mes.charAt(0).toUpperCase()+mes.slice(1)} (${grupos[anio][mes].length})`;
+
+}
+
+};
+
 row.appendChild(scroll);
+
 container.appendChild(row);
 
 });
@@ -110,9 +133,9 @@ container.appendChild(row);
 
 document.getElementById("search").addEventListener("input",(e)=>{
 
-const value = e.target.value.toLowerCase();
+const value=e.target.value.toLowerCase();
 
-const filtered = videos.filter(v=>
+const filtered=videos.filter(v=>
 v.title.toLowerCase().includes(value)
 );
 
