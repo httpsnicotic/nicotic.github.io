@@ -1,5 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+    /* =========================
+       🔥 PARTICULAS (TU CÓDIGO ORIGINAL)
+    ========================= */
     tsParticles.load("tsparticles", {
         fullScreen: { enable: true },
 
@@ -7,7 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
             color: "transparent"
         },
 
-        // 🔥 LIMITE DE SEGURIDAD (evita saturación)
         detectRetina: true,
         fpsLimit: 60,
 
@@ -40,14 +42,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 },
 
                 push: {
-                    quantity: 2 // 🔥 LIMITA CREACIÓN DE PARTICULAS
+                    quantity: 2
                 }
             }
         },
 
         particles: {
             number: {
-                value: 45, // 🔥 BAJADO PARA EVITAR LAG
+                value: 45,
                 density: {
                     enable: true,
                     area: 900
@@ -95,7 +97,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // 🔘 BOTÓN SEGURO
+    /* =========================
+       🔘 BOTÓN ENTER (TU CÓDIGO)
+    ========================= */
     const boton = document.getElementById("enterBtn");
 
     if (boton) {
@@ -103,4 +107,44 @@ document.addEventListener("DOMContentLoaded", () => {
             window.location.href = "portal.html";
         });
     }
+
+    /* =========================
+       🎬 SISTEMA VIDEO PRO
+    ========================= */
+    window.changeVideo = function(src){
+        const main = document.getElementById("mainVideo");
+        main.pause();
+        main.src = src;
+        main.load();
+        main.play();
+    };
+
+    /* =========================
+       👍 LIKES (LOCAL STORAGE)
+    ========================= */
+    window.likeVideo = function(id){
+        let likes = localStorage.getItem("like_" + id) || 0;
+        likes++;
+        localStorage.setItem("like_" + id, likes);
+
+        const el = document.getElementById("likes-" + id);
+        if(el) el.innerText = likes + " likes";
+    };
+
+    /* =========================
+       💬 COMENTARIOS (LOCAL)
+    ========================= */
+    window.addComment = function(id){
+        const input = document.getElementById("input-" + id);
+        const list = document.getElementById("comments-" + id);
+
+        if(!input || input.value.trim() === "") return;
+
+        const p = document.createElement("p");
+        p.innerText = "💬 " + input.value;
+
+        list.appendChild(p);
+        input.value = "";
+    };
+
 });
