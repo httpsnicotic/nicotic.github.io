@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>NICOTIC Portal</title>
   
 <style>
@@ -13,7 +12,12 @@ font-family:Arial,sans-serif;
 background:black;
 color:white;
 scroll-behavior:smooth;
-touch-action: manipulation;
+}
+
+html, body {
+  margin: 0;
+  touch-action: pan-y;
+  overscroll-behavior: none;
 }
 
 /* HERO */
@@ -295,7 +299,7 @@ height:auto;
 <button onclick="event.stopPropagation(); addComment('video1')">Enviar</button>
 
 </div>
-  
+
 <!-- VIDEO 2 -->
 <div class="video-card" onclick="changeVideo('videos/video2.mp4')">
 
@@ -360,7 +364,6 @@ height:auto;
 <button onclick="event.stopPropagation(); addComment('video5')">Enviar</button>
 </div>
 
-
 </div>
 
 </div>
@@ -388,6 +391,37 @@ height:auto;
 <h2>⏳ Eventos</h2>
 <p>Cuenta regresiva aquí</p>
 </div>
+
+<script>
+document.addEventListener('gesturestart', function (e) {
+    e.preventDefault();
+});
+
+document.addEventListener('gesturechange', function (e) {
+    e.preventDefault();
+});
+
+document.addEventListener('gestureend', function (e) {
+    e.preventDefault();
+});
+
+document.addEventListener('dblclick', function (e) {
+    e.preventDefault();
+}, { passive: false });
+
+document.addEventListener('touchmove', function (e) {
+    if (e.scale && e.scale !== 1) {
+        e.preventDefault();
+    }
+}, { passive: false });
+
+document.addEventListener('touchstart', function (e) {
+    if (e.touches.length > 1) {
+        e.preventDefault();
+    }
+}, { passive: false });
+
+</script>
 
 <script src="script.js"></script>
 
