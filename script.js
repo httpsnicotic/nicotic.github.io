@@ -1,5 +1,9 @@
-const boton = document.getElementById("enterBtn");
+document.addEventListener("DOMContentLoaded", () => {
+    const boton = document.getElementById("enterBtn");
 
-boton.addEventListener("click", function() {
-    window.location.href = "portal.html";
+    if (boton) {
+        boton.addEventListener("click", () => {
+            window.location.href = "portal.html";
+        });
+    }
 });
