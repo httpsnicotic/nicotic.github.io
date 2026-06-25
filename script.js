@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     /* =========================
-       🔘 BOTÓN ENTER (TU CÓDIGO)
+       🔘 BOTÓN ENTER
     ========================= */
     const boton = document.getElementById("enterBtn");
 
@@ -113,6 +113,8 @@ document.addEventListener("DOMContentLoaded", () => {
     ========================= */
     window.changeVideo = function(src){
         const main = document.getElementById("mainVideo");
+        if (!main) return;
+
         main.pause();
         main.src = src;
         main.load();
@@ -128,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("like_" + id, likes);
 
         const el = document.getElementById("likes-" + id);
-        if(el) el.innerText = likes + " likes";
+        if (el) el.innerText = likes + " likes";
     };
 
     /* =========================
@@ -138,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const input = document.getElementById("input-" + id);
         const list = document.getElementById("comments-" + id);
 
-        if(!input || input.value.trim() === "") return;
+        if (!input || input.value.trim() === "") return;
 
         const p = document.createElement("p");
         p.innerText = "💬 " + input.value;
@@ -146,5 +148,20 @@ document.addEventListener("DOMContentLoaded", () => {
         list.appendChild(p);
         input.value = "";
     };
+
+    /* =========================
+       📱 FULLSCREEN TIKTOK STYLE
+    ========================= */
+    const video = document.getElementById("mainVideo");
+
+    if (video) {
+        video.addEventListener("dblclick", () => {
+            if (!document.fullscreenElement) {
+                video.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        });
+    }
 
 });
