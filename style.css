@@ -70,13 +70,11 @@ z-index:-1;
 }
 
 body{
-
-background:
-linear-gradient(
-rgba(0,0,0,0.85),
-rgba(0,0,0,0.85)
-),
-url("ojo.jpg");
+background-image:url("ojo.jpg");
+background-size:cover;
+background-position:center;
+background-repeat:no-repeat;
+}
 
 background-size:cover;
 background-position:center;
