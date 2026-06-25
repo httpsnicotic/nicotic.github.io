@@ -1,11 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     /* =========================
-       🔥 PARTICULAS (TU CÓDIGO ORIGINAL)
+       🔥 PARTICULAS (IGUAL, OPTIMIZADO)
     ========================= */
     tsParticles.load("tsparticles", {
         fullScreen: { enable: true },
-
         background: { color: "transparent" },
         detectRetina: true,
         fpsLimit: 60,
@@ -26,30 +25,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
         particles: {
             number: {
-                value: 45,
-                density: { enable: true, area: 900 }
+                value: 25,
+                density: { enable: true, area: 1000 }
             },
             color: { value: "#8a2be2" },
             shape: { type: "circle" },
-            opacity: { value: 0.65 },
+            opacity: { value: 0.6 },
             size: {
-                value: 6,
-                random: { enable: true, minimumValue: 3 }
+                value: 5,
+                random: { enable: true, minimumValue: 2 }
             },
             move: {
                 enable: true,
-                speed: 1.3,
+                speed: 1.2,
                 random: true,
-                direction: "none",
-                straight: false,
                 outModes: { default: "out" }
-            },
-            links: {
-                enable: true,
-                color: "#8a2be2",
-                distance: 130,
-                opacity: 0.3,
-                width: 1
             }
         }
     });
@@ -66,20 +56,25 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* =========================
-       🎬 SISTEMA VIDEO PRO
+       🎬 VIDEO SYSTEM BASE
     ========================= */
     window.changeVideo = function(src){
         const main = document.getElementById("mainVideo");
         if (!main) return;
 
-        main.pause();
-        main.src = src;
-        main.load();
-        main.play();
+        main.style.opacity = "0.2";
+
+        setTimeout(() => {
+            main.pause();
+            main.src = src;
+            main.load();
+            main.play();
+            main.style.opacity = "1";
+        }, 150);
     };
 
     /* =========================
-       👍 LIKES (LOCAL STORAGE)
+       👍 LIKES
     ========================= */
     window.likeVideo = function(id){
         let likes = localStorage.getItem("like_" + id) || 0;
@@ -107,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     /* =========================
-       📱 FULLSCREEN TIKTOK STYLE
+       📱 FULLSCREEN (TIKTOK STYLE)
     ========================= */
     const video = document.getElementById("mainVideo");
 
@@ -122,44 +117,75 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* =========================
-       🚀 V4 PRO UPGRADE (NUEVO)
+       🔥 V4.1 PRO – SWIPE REAL (TIKTOK BASE)
     ========================= */
 
-    // 🔥 SWIPE NATURAL (MÓVIL)
     let startY = 0;
-    let endY = 0;
+    let currentIndex = 0;
+
+    const videos = [
+        "videos/video1.mp4",
+        "videos/video2.mp4",
+        "videos/video3.mp4"
+    ];
 
     if (video) {
+
         video.addEventListener("touchstart", (e) => {
             startY = e.touches[0].clientY;
         });
 
         video.addEventListener("touchend", (e) => {
-            endY = e.changedTouches[0].clientY;
-
+            let endY = e.changedTouches[0].clientY;
             let diff = startY - endY;
 
-            // swipe hacia arriba = siguiente video (FUTURO LISTO)
-            if (diff > 50) {
-                console.log("👉 swipe up detectado (listo para autoplay next)");
+            // 🔼 swipe arriba = siguiente video
+            if (diff > 60) {
+                nextVideo();
             }
 
-            // swipe hacia abajo = pausa
-            if (diff < -50) {
-                video.pause();
+            // 🔽 swipe abajo = anterior video
+            if (diff < -60) {
+                prevVideo();
             }
         });
+
     }
 
-    // ⚡ AUTOPLAY NEXT (BASE LISTA)
-    const videos = ["videos/video1.mp4", "videos/video2.mp4", "videos/video3.mp4"];
+    function nextVideo(){
+        currentIndex++;
+        if (currentIndex >= videos.length) currentIndex = 0;
+        playVideo(currentIndex);
+    }
 
+    function prevVideo(){
+        currentIndex--;
+        if (currentIndex < 0) currentIndex = videos.length - 1;
+        playVideo(currentIndex);
+    }
+
+    function playVideo(index){
+        const main = document.getElementById("mainVideo");
+        if (!main) return;
+
+        main.style.transform = "scale(0.98)";
+        main.style.opacity = "0.3";
+
+        setTimeout(() => {
+            main.src = videos[index];
+            main.load();
+            main.play();
+
+            main.style.transform = "scale(1)";
+            main.style.opacity = "1";
+        }, 150);
+    }
+
+    /* =========================
+       🎬 AUTOPLAY NETFLIX STYLE
+    ========================= */
     video?.addEventListener("ended", () => {
-        let current = videos.indexOf(video.getAttribute("src"));
-        let next = videos[(current + 1) % videos.length];
-
-        video.src = next;
-        video.play();
+        nextVideo();
     });
 
 });
