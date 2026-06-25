@@ -62,12 +62,18 @@ z-index:-1;
 
 ojo{
 position:fixed;
-width:500px;
-max-width:80vw;
 
-opacity:0.18;
+width:350px;
+max-width:65vw;
+
+opacity:0.12;
 
 filter:grayscale(100%);
 
 z-index:-1;
+
+top:50%;
+left:50%;
+
+transform:translate(-50%,-50%);
 }
