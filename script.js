@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+
     tsParticles.load("tsparticles", {
         fullScreen: { enable: true },
 
@@ -8,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         particles: {
             number: {
-                value: 90,
+                value: 55,
                 density: {
                     enable: true,
                     area: 800
@@ -24,11 +25,15 @@ document.addEventListener("DOMContentLoaded", () => {
             },
 
             opacity: {
-                value: 0.4
+                value: 0.7
             },
 
             size: {
-                value: { min: 2, max: 6 }
+                value: 6,
+                random: {
+                    enable: true,
+                    minimumValue: 3
+                }
             },
 
             move: {
@@ -43,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 enable: true,
                 color: "#8a2be2",
                 distance: 150,
-                opacity: 0.25,
+                opacity: 0.35,
                 width: 1
             }
         }
