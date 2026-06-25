@@ -64,20 +64,34 @@ tsParticles.load("tsparticles", {
     /* =========================
        🎬 VIDEO SYSTEM BASE
     ========================= */
-    window.changeVideo = function(src){
-        const main = document.getElementById("mainVideo");
-        if (!main) return;
+window.changeVideo = function(src){
 
-        main.style.opacity = "0.2";
+    console.log("Intentando cargar:", src);
 
-        setTimeout(() => {
-            main.pause();
-            main.src = src;
-            main.load();
-            main.play();
-            main.style.opacity = "1";
-        }, 150);
-    };
+    const main = document.getElementById("mainVideo");
+
+    if (!main){
+        console.log("NO EXISTE mainVideo");
+        return;
+    }
+
+    main.pause();
+
+    main.src = src;
+
+    console.log("SRC ACTUAL:", main.src);
+
+    main.load();
+
+    main.play()
+        .then(() => {
+            console.log("VIDEO CARGADO");
+        })
+        .catch(err => {
+            console.error("ERROR VIDEO:", err);
+        });
+
+};
 
     /* =========================
        👍 LIKES
@@ -132,7 +146,9 @@ tsParticles.load("tsparticles", {
     const videos = [
         "videos/video1.mp4",
         "videos/video2.mp4",
-        "videos/video3.mp4"
+        "videos/video3.mp4",
+        "videos/video4.mp4",
+        "videos/video5.mp4"
     ];
 
     if (video) {
