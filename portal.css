@@ -141,6 +141,7 @@ gap:10px;
 flex-wrap:wrap;
 }
 
+/* BOTONES / PASTILLAS DEL VIDEO PRINCIPAL */
 .action-pill{
 background:#1d1d1d;
 border:1px solid #2a2a2a;
@@ -151,6 +152,109 @@ color:white;
 display:inline-flex;
 align-items:center;
 gap:6px;
+font-family:Arial,sans-serif;
+}
+
+button.action-pill{
+cursor:pointer;
+}
+
+button.action-pill:hover{
+background:#2a2a2a;
+transform:scale(1.04);
+}
+
+/* CAJA DE COMENTARIOS */
+.comments-box{
+width:100%;
+margin-top:20px;
+background:#0f0f0f;
+border:1px solid #242424;
+border-radius:16px;
+padding:16px;
+box-sizing:border-box;
+}
+
+.comments-box h3{
+margin:0 0 12px;
+font-size:20px;
+}
+
+.comment-form{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-bottom:15px;
+}
+
+.comment-form input{
+background:#111;
+color:white;
+border:1px solid #333;
+border-radius:10px;
+padding:11px 12px;
+font-size:14px;
+outline:none;
+box-sizing:border-box;
+}
+
+.comment-form input:focus{
+border-color:#a855f7;
+box-shadow:0 0 0 2px rgba(168,85,247,0.2);
+}
+
+#commentName{
+width:180px;
+}
+
+#commentText{
+flex:1;
+min-width:220px;
+}
+
+#sendCommentBtn{
+background:#7c3aed;
+color:white;
+border:none;
+border-radius:10px;
+padding:11px 16px;
+font-size:14px;
+cursor:pointer;
+transition:0.2s;
+}
+
+#sendCommentBtn:hover{
+background:#6d28d9;
+transform:scale(1.04);
+}
+
+.comment-list{
+display:flex;
+flex-direction:column;
+gap:8px;
+max-height:220px;
+overflow-y:auto;
+padding-right:5px;
+}
+
+.comment-item{
+background:#171717;
+border:1px solid #292929;
+border-radius:10px;
+padding:10px;
+font-size:14px;
+color:#ddd;
+}
+
+.comment-item strong{
+color:white;
+}
+
+.comment-item span{
+display:block;
+color:#777;
+font-size:11px;
+margin-top:4px;
 }
 
 /* CARRETE */
@@ -203,6 +307,11 @@ transform:scale(1.04);
 border-color:#555;
 }
 
+.video-card.active-card{
+border-color:#a855f7;
+box-shadow:0 0 18px rgba(168,85,247,0.35);
+}
+
 .thumb-video{
 width:100%;
 height:145px;
@@ -245,6 +354,26 @@ border-radius:999px;
 padding:6px 9px;
 font-size:12px;
 color:#ddd;
+font-family:Arial,sans-serif;
+display:inline-flex;
+align-items:center;
+gap:4px;
+}
+
+button.card-pill{
+cursor:pointer;
+}
+
+button.card-pill:hover{
+background:#2a2a2a;
+transform:scale(1.04);
+}
+
+.skull-card-btn.liked,
+.skull-btn.liked{
+background:#3b0764;
+border-color:#a855f7;
+box-shadow:0 0 12px rgba(168,85,247,0.45);
 }
 
 /* BOTÓN HISTÓRICO */
@@ -275,6 +404,103 @@ width:300px;
 border:1px solid #222;
 }
 
+/* TOTALES */
+.totals-section{
+background:radial-gradient(circle at center, #13051f 0%, #050505 55%, #000 100%);
+}
+
+.big-counter{
+background:#0f0f0f;
+border:1px solid #282828;
+border-radius:24px;
+padding:35px 25px;
+width:95%;
+max-width:720px;
+box-sizing:border-box;
+box-shadow:0 0 30px rgba(168,85,247,0.18);
+}
+
+.big-number{
+font-size:5rem;
+font-weight:900;
+letter-spacing:3px;
+color:white;
+text-shadow:0 0 25px rgba(168,85,247,0.65);
+}
+
+.big-counter p{
+color:#aaa;
+font-size:18px;
+margin-top:8px;
+}
+
+.totals-grid{
+display:flex;
+gap:18px;
+flex-wrap:wrap;
+justify-content:center;
+margin-top:25px;
+width:95%;
+max-width:720px;
+}
+
+.total-card{
+background:#111;
+border:1px solid #292929;
+border-radius:18px;
+padding:22px;
+min-width:220px;
+box-sizing:border-box;
+}
+
+.total-card span{
+font-size:2rem;
+display:block;
+margin-bottom:8px;
+}
+
+.total-card strong{
+display:block;
+font-size:2.4rem;
+}
+
+.total-card p{
+color:#999;
+font-size:14px;
+margin-top:6px;
+}
+
+/* VISITANTES DEL PORTAL */
+.visitors-section{
+background:#030303;
+}
+
+.visitor-counter{
+background:linear-gradient(180deg,#151515,#080808);
+border:1px solid #2a2a2a;
+border-radius:28px;
+padding:40px 25px;
+width:95%;
+max-width:780px;
+box-sizing:border-box;
+box-shadow:0 0 35px rgba(255,255,255,0.08);
+}
+
+.visitor-number{
+font-size:6rem;
+font-weight:900;
+letter-spacing:3px;
+line-height:1;
+color:white;
+text-shadow:0 0 25px rgba(255,255,255,0.22);
+}
+
+.visitor-counter p{
+font-size:18px;
+color:#aaa;
+margin-top:15px;
+}
+
 /* HORARIO */
 .time{
 font-size:2rem;
@@ -301,6 +527,10 @@ font-size:25px;
 
 .hero h1{
 font-size:3rem;
+}
+
+.section{
+padding:80px 15px 55px;
 }
 
 .section h2{
@@ -334,6 +564,28 @@ font-size:23px;
 .action-pill{
 font-size:14px;
 padding:8px 12px;
+}
+
+.comment-form{
+flex-direction:column;
+}
+
+#commentName,
+#commentText,
+#sendCommentBtn{
+width:100%;
+}
+
+.big-number{
+font-size:3.5rem;
+}
+
+.visitor-number{
+font-size:4rem;
+}
+
+.total-card{
+width:100%;
 }
 
 }
