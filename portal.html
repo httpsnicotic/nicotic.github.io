@@ -48,7 +48,13 @@
   <h2>🎥 Video destacado</h2>
 
   <div class="featured-video">
-    <video id="mainVideo" controls playsinline src="videos/video1.mp4"></video>
+    <video 
+      id="mainVideo" 
+      controls 
+      playsinline 
+      src="videos/video1.mp4" 
+      data-current-video="video1">
+    </video>
   </div>
 
   <div class="main-video-info">
@@ -56,81 +62,172 @@
     <div id="mainMeta" class="main-video-meta">Episodio 01 · reciente</div>
 
     <div class="video-actions">
-      <div id="mainSkulls" class="action-pill">☠️ 287</div>
-      <div id="mainComments" class="action-pill">💬 comentarios</div>
-      <div id="mainViews" class="action-pill">👁️ 12334</div>
+      <button id="mainSkulls" class="action-pill skull-btn" data-video-id="video1" type="button">
+        ☠️ <span id="mainSkullCount">287</span>
+      </button>
+
+      <button id="mainComments" class="action-pill comments-btn" type="button">
+        💬 comentarios
+      </button>
+
+      <div id="mainViews" class="action-pill">
+        👁️ <span id="mainViewCount">12334</span>
+      </div>
+    </div>
+
+    <!-- COMENTARIOS ANÓNIMOS -->
+    <div class="comments-box">
+      <h3>💬 Comentarios</h3>
+
+      <div class="comment-form">
+        <input id="commentName" type="text" placeholder="Nombre o Anónimo">
+        <input id="commentText" type="text" placeholder="Escribe un comentario">
+        <button id="sendCommentBtn" type="button">Enviar</button>
+      </div>
+
+      <div id="commentList" class="comment-list"></div>
     </div>
   </div>
 
   <div class="video-grid">
 
     <!-- VIDEO 1 -->
-    <div class="video-card" onclick="loadVideo('videos/video1.mp4','Episodio 1','Episodio 01 · reciente','287','comentarios','12334')">
+    <div class="video-card active-card"
+      onclick="selectVideo(this)"
+      data-video-id="video1"
+      data-src="videos/video1.mp4"
+      data-title="Episodio 1"
+      data-meta="Episodio 01 · reciente"
+      data-skulls="287"
+      data-views="12334">
+
       <img src="thumbs/ep1.jpg" class="thumb-video" alt="Episodio 1">
 
       <div class="card-title">Episodio 1</div>
       <div class="card-meta">Episodio 01 · reciente</div>
 
       <div class="card-actions">
-        <div class="card-pill">☠️ 287</div>
+        <button class="card-pill skull-card-btn" type="button" onclick="event.stopPropagation();">
+          ☠️ <span id="skulls-video1">287</span>
+        </button>
+
         <div class="card-pill">💬 comentarios</div>
-        <div class="card-pill">👁️ 12334</div>
+
+        <div class="card-pill">
+          👁️ <span id="views-video1">12334</span>
+        </div>
       </div>
     </div>
 
     <!-- VIDEO 2 -->
-    <div class="video-card" onclick="loadVideo('videos/video2.mp4','Episodio 2','Episodio 02 · reciente','194','comentarios','8921')">
+    <div class="video-card"
+      onclick="selectVideo(this)"
+      data-video-id="video2"
+      data-src="videos/video2.mp4"
+      data-title="Episodio 2"
+      data-meta="Episodio 02 · reciente"
+      data-skulls="194"
+      data-views="8921">
+
       <img src="thumbs/ep2.jpg" class="thumb-video" alt="Episodio 2">
 
       <div class="card-title">Episodio 2</div>
       <div class="card-meta">Episodio 02 · reciente</div>
 
       <div class="card-actions">
-        <div class="card-pill">☠️ 194</div>
+        <button class="card-pill skull-card-btn" type="button" onclick="event.stopPropagation();">
+          ☠️ <span id="skulls-video2">194</span>
+        </button>
+
         <div class="card-pill">💬 comentarios</div>
-        <div class="card-pill">👁️ 8921</div>
+
+        <div class="card-pill">
+          👁️ <span id="views-video2">8921</span>
+        </div>
       </div>
     </div>
 
     <!-- VIDEO 3 -->
-    <div class="video-card" onclick="loadVideo('videos/video3.mp4','Episodio 3','Episodio 03 · reciente','321','comentarios','15400')">
+    <div class="video-card"
+      onclick="selectVideo(this)"
+      data-video-id="video3"
+      data-src="videos/video3.mp4"
+      data-title="Episodio 3"
+      data-meta="Episodio 03 · reciente"
+      data-skulls="321"
+      data-views="15400">
+
       <img src="thumbs/ep3.jpg" class="thumb-video" alt="Episodio 3">
 
       <div class="card-title">Episodio 3</div>
       <div class="card-meta">Episodio 03 · reciente</div>
 
       <div class="card-actions">
-        <div class="card-pill">☠️ 321</div>
+        <button class="card-pill skull-card-btn" type="button" onclick="event.stopPropagation();">
+          ☠️ <span id="skulls-video3">321</span>
+        </button>
+
         <div class="card-pill">💬 comentarios</div>
-        <div class="card-pill">👁️ 15400</div>
+
+        <div class="card-pill">
+          👁️ <span id="views-video3">15400</span>
+        </div>
       </div>
     </div>
 
     <!-- VIDEO 4 -->
-    <div class="video-card" onclick="loadVideo('videos/video4.mp4','Episodio 4','Episodio 04 · reciente','156','comentarios','7430')">
+    <div class="video-card"
+      onclick="selectVideo(this)"
+      data-video-id="video4"
+      data-src="videos/video4.mp4"
+      data-title="Episodio 4"
+      data-meta="Episodio 04 · reciente"
+      data-skulls="156"
+      data-views="7430">
+
       <img src="thumbs/ep4.jpg" class="thumb-video" alt="Episodio 4">
 
       <div class="card-title">Episodio 4</div>
       <div class="card-meta">Episodio 04 · reciente</div>
 
       <div class="card-actions">
-        <div class="card-pill">☠️ 156</div>
+        <button class="card-pill skull-card-btn" type="button" onclick="event.stopPropagation();">
+          ☠️ <span id="skulls-video4">156</span>
+        </button>
+
         <div class="card-pill">💬 comentarios</div>
-        <div class="card-pill">👁️ 7430</div>
+
+        <div class="card-pill">
+          👁️ <span id="views-video4">7430</span>
+        </div>
       </div>
     </div>
 
     <!-- VIDEO 5 -->
-    <div class="video-card" onclick="loadVideo('videos/video5.mp4','Episodio 5','Episodio 05 · reciente','403','comentarios','20102')">
+    <div class="video-card"
+      onclick="selectVideo(this)"
+      data-video-id="video5"
+      data-src="videos/video5.mp4"
+      data-title="Episodio 5"
+      data-meta="Episodio 05 · reciente"
+      data-skulls="403"
+      data-views="20102">
+
       <img src="thumbs/ep5.jpg" class="thumb-video" alt="Episodio 5">
 
       <div class="card-title">Episodio 5</div>
       <div class="card-meta">Episodio 05 · reciente</div>
 
       <div class="card-actions">
-        <div class="card-pill">☠️ 403</div>
+        <button class="card-pill skull-card-btn" type="button" onclick="event.stopPropagation();">
+          ☠️ <span id="skulls-video5">403</span>
+        </button>
+
         <div class="card-pill">💬 comentarios</div>
-        <div class="card-pill">👁️ 20102</div>
+
+        <div class="card-pill">
+          👁️ <span id="views-video5">20102</span>
+        </div>
       </div>
     </div>
 
@@ -139,6 +236,40 @@
   <button class="history-btn" onclick="location.href='historico.html'">
     📁 Histórico / Episodios anteriores
   </button>
+</div>
+
+<!-- TOTALES -->
+<div class="section totals-section">
+  <h2>👁️ Totales</h2>
+
+  <div class="big-counter">
+    <div id="totalVideoViews" class="big-number">0</div>
+    <p>vistas acumuladas en los videos del sótano</p>
+  </div>
+
+  <div class="totals-grid">
+    <div class="total-card">
+      <span>☠️</span>
+      <strong id="totalSkulls">0</strong>
+      <p>calaveras acumuladas</p>
+    </div>
+
+    <div class="total-card">
+      <span>💬</span>
+      <strong id="totalComments">0</strong>
+      <p>comentarios acumulados</p>
+    </div>
+  </div>
+</div>
+
+<!-- VISITANTES DEL PORTAL -->
+<div class="section visitors-section">
+  <h2>👁️ Visitantes del sótano</h2>
+
+  <div class="visitor-counter">
+    <div id="portalVisits" class="visitor-number">0</div>
+    <p>personas han entrado al portal NICOTIC</p>
+  </div>
 </div>
 
 <!-- HORARIOS -->
@@ -166,18 +297,33 @@
 </div>
 
 <script>
-function loadVideo(src, title, meta, skulls, comments, views) {
+function selectVideo(card) {
+  const videoId = card.dataset.videoId;
+  const src = card.dataset.src;
+  const title = card.dataset.title;
+  const meta = card.dataset.meta;
+  const skulls = card.dataset.skulls;
+  const views = card.dataset.views;
+
   const video = document.getElementById("mainVideo");
 
   video.src = src;
+  video.dataset.currentVideo = videoId;
   video.load();
   video.play().catch(() => {});
 
   document.getElementById("mainTitle").textContent = title;
   document.getElementById("mainMeta").textContent = meta;
-  document.getElementById("mainSkulls").textContent = "☠️ " + skulls;
-  document.getElementById("mainComments").textContent = "💬 " + comments;
-  document.getElementById("mainViews").textContent = "👁️ " + views;
+  document.getElementById("mainSkullCount").textContent = skulls;
+  document.getElementById("mainViewCount").textContent = views;
+
+  document.getElementById("mainSkulls").dataset.videoId = videoId;
+
+  document.querySelectorAll(".video-card").forEach(item => {
+    item.classList.remove("active-card");
+  });
+
+  card.classList.add("active-card");
 }
 
 /* BLOQUEO DE ZOOM EN MÓVIL */
