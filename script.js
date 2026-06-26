@@ -3,52 +3,52 @@ document.addEventListener("DOMContentLoaded", () => {
     /* =========================
        🔥 PARTICULAS (OPTIMIZADO)
     ========================= */
-if (typeof tsParticles !== "undefined") {
+    if (typeof tsParticles !== "undefined") {
 
-tsParticles.load("tsparticles", {
+        tsParticles.load("tsparticles", {
 
-    fullScreen: { enable: true },
-    background: { color: "transparent" },
-    detectRetina: true,
-    fpsLimit: 60,
+            fullScreen: { enable: true },
+            background: { color: "transparent" },
+            detectRetina: true,
+            fpsLimit: 60,
 
-    interactivity: {
-        detectsOn: "window",
-        events: {
-            onHover: { enable: true, mode: "repulse" },
-            onClick: { enable: true, mode: "push" },
-            onTouch: { enable: true, mode: "repulse" },
-            resize: true
-        },
-        modes: {
-            repulse: { distance: 140, duration: 0.4 },
-            push: { quantity: 2 }
-        }
-    },
+            interactivity: {
+                detectsOn: "window",
+                events: {
+                    onHover: { enable: true, mode: "repulse" },
+                    onClick: { enable: true, mode: "push" },
+                    onTouch: { enable: true, mode: "repulse" },
+                    resize: true
+                },
+                modes: {
+                    repulse: { distance: 140, duration: 0.4 },
+                    push: { quantity: 2 }
+                }
+            },
 
-    particles: {
-        number: {
-            value: 25,
-            density: { enable: true, area: 1000 }
-        },
-        color: { value: "#8a2be2" },
-        shape: { type: "circle" },
-        opacity: { value: 0.6 },
-        size: {
-            value: 5,
-            random: { enable: true, minimumValue: 2 }
-        },
-        move: {
-            enable: true,
-            speed: 1.2,
-            random: true,
-            outModes: { default: "out" }
-        }
+            particles: {
+                number: {
+                    value: 25,
+                    density: { enable: true, area: 1000 }
+                },
+                color: { value: "#8a2be2" },
+                shape: { type: "circle" },
+                opacity: { value: 0.6 },
+                size: {
+                    value: 5,
+                    random: { enable: true, minimumValue: 2 }
+                },
+                move: {
+                    enable: true,
+                    speed: 1.2,
+                    random: true,
+                    outModes: { default: "out" }
+                }
+            }
+
+        });
+
     }
-
-});
-
-}
 
     /* =========================
        🔘 BOTÓN ENTER
@@ -62,41 +62,60 @@ tsParticles.load("tsparticles", {
     }
 
     /* =========================
-       🎬 VIDEO SYSTEM BASE
+       🎬 CAMBIAR VIDEO BASE
     ========================= */
-window.changeVideo = function(src){
+    window.changeVideo = function(src) {
 
-    console.log("Intentando cargar:", src);
+        console.log("Intentando cargar:", src);
 
-    const main = document.getElementById("mainVideo");
+        const main = document.getElementById("mainVideo");
 
-    if (!main){
-        console.log("NO EXISTE mainVideo");
-        return;
-    }
+        if (!main) {
+            console.log("NO EXISTE mainVideo");
+            return;
+        }
 
-    main.pause();
+        main.pause();
+        main.src = src;
 
-    main.src = src;
+        console.log("SRC ACTUAL:", main.src);
 
-    console.log("SRC ACTUAL:", main.src);
+        main.load();
 
-    main.load();
+        main.play()
+            .then(() => {
+                console.log("VIDEO CARGADO");
+            })
+            .catch(err => {
+                console.error("ERROR VIDEO:", err);
+            });
 
-    main.play()
-        .then(() => {
-            console.log("VIDEO CARGADO");
-        })
-        .catch(err => {
-            console.error("ERROR VIDEO:", err);
-        });
+    };
 
-};
+    /* =========================
+       🎬 CAMBIAR VIDEO + DATOS
+    ========================= */
+    window.loadVideo = function(src, title, meta, skulls, comments, views) {
+
+        window.changeVideo(src);
+
+        const mainTitle = document.getElementById("mainTitle");
+        const mainMeta = document.getElementById("mainMeta");
+        const mainSkulls = document.getElementById("mainSkulls");
+        const mainComments = document.getElementById("mainComments");
+        const mainViews = document.getElementById("mainViews");
+
+        if (mainTitle) mainTitle.textContent = title;
+        if (mainMeta) mainMeta.textContent = meta;
+        if (mainSkulls) mainSkulls.textContent = "☠️ " + skulls;
+        if (mainComments) mainComments.textContent = "💬 " + comments;
+        if (mainViews) mainViews.textContent = "👁️ " + views;
+    };
 
     /* =========================
        👍 LIKES
     ========================= */
-    window.likeVideo = function(id){
+    window.likeVideo = function(id) {
         let likes = localStorage.getItem("like_" + id) || 0;
         likes++;
         localStorage.setItem("like_" + id, likes);
@@ -108,11 +127,12 @@ window.changeVideo = function(src){
     /* =========================
        💬 COMENTARIOS
     ========================= */
-    window.addComment = function(id){
+    window.addComment = function(id) {
         const input = document.getElementById("input-" + id);
         const list = document.getElementById("comments-" + id);
 
         if (!input || input.value.trim() === "") return;
+        if (!list) return;
 
         const p = document.createElement("p");
         p.innerText = "💬 " + input.value;
@@ -137,9 +157,8 @@ window.changeVideo = function(src){
     }
 
     /* =========================
-       🎬 NETFLIX SCROLL (HORIZONTAL)
+       🎬 NETFLIX SCROLL HORIZONTAL
     ========================= */
-
     const grid = document.querySelector(".video-grid");
 
     if (grid) {
@@ -183,21 +202,26 @@ window.changeVideo = function(src){
             grid.scrollLeft = touchScrollLeft + walk;
         });
     }
-/* =========================
-   🎥 PREVIEW AL PASAR CURSOR
-========================= */
 
-document.querySelectorAll(".thumb-video").forEach(video => {
+    /* =========================
+       🎥 PREVIEW AL PASAR CURSOR
+       Solo funciona si la miniatura es VIDEO.
+       Si es imagen, no hace nada.
+    ========================= */
+    document.querySelectorAll(".thumb-video").forEach(thumb => {
 
-    video.addEventListener("mouseenter", () => {
-        video.currentTime = 0;
-        video.play();
+        if (thumb.tagName !== "VIDEO") return;
+
+        thumb.addEventListener("mouseenter", () => {
+            thumb.currentTime = 0;
+            thumb.play();
+        });
+
+        thumb.addEventListener("mouseleave", () => {
+            thumb.pause();
+            thumb.currentTime = 0;
+        });
+
     });
 
-    video.addEventListener("mouseleave", () => {
-        video.pause();
-        video.currentTime = 0;
-    });
-
-});
 });
