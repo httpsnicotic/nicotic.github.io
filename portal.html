@@ -7,74 +7,6 @@
 <title>NICOTIC Portal</title>
 <link rel="stylesheet" href="portal.css">
 
-<style>
-/* CONTADOR REAL EN HERO */
-.hero-live-counter{
-margin-top:16px;
-display:inline-flex;
-align-items:center;
-justify-content:center;
-gap:10px;
-padding:10px 17px;
-border-radius:999px;
-background:rgba(10,10,14,0.72);
-border:1px solid rgba(168,85,247,0.22);
-box-shadow:
-0 0 22px rgba(168,85,247,0.14),
-0 12px 35px rgba(0,0,0,0.45);
-position:relative;
-z-index:2;
-}
-
-.hero-live-dot{
-width:8px;
-height:8px;
-border-radius:50%;
-background:#a855f7;
-box-shadow:0 0 12px rgba(168,85,247,0.9);
-flex-shrink:0;
-}
-
-.hero-live-copy{
-display:flex;
-flex-direction:column;
-align-items:flex-start;
-line-height:1.1;
-}
-
-.hero-live-label{
-font-size:9px;
-text-transform:uppercase;
-letter-spacing:1.5px;
-color:#aaa;
-}
-
-.hero-live-counter strong{
-font-size:20px;
-line-height:1;
-color:white;
-font-weight:900;
-margin-top:3px;
-text-shadow:0 0 14px rgba(168,85,247,0.45);
-}
-
-@media (max-width:768px){
-.hero-live-counter{
-margin-top:14px;
-padding:9px 15px;
-}
-
-.hero-live-label{
-font-size:8.5px;
-letter-spacing:1.2px;
-}
-
-.hero-live-counter strong{
-font-size:19px;
-}
-}
-</style>
-
 </head>
 
 <body>
@@ -97,26 +29,15 @@ font-size:19px;
   <h1>NICOTIC</h1>
   <p>Bienvenidos al sótano de Nico</p>
 
-  <div class="channel-card">
-    <img src="ojo.jpg" alt="Foto NICOTIC" class="channel-avatar">
+  <div class="hero-visitor-box">
+    <div class="hero-visitor-label">Visitantes del sótano</div>
 
-    <div class="channel-info">
-      <div class="channel-name">
-        NICOTIC <span class="verified">✓</span>
-      </div>
-
-      <div class="channel-stats">
-        5 videos | 130 seguidores
-      </div>
+    <div class="hero-visitor-number">
+      <span class="hero-plus">+</span><span id="portalVisitsHero">0</span>
     </div>
-  </div>
 
-  <div class="hero-live-counter">
-    <span class="hero-live-dot"></span>
-
-    <div class="hero-live-copy">
-      <span class="hero-live-label">Visitantes del sótano</span>
-      <strong id="portalVisitsHero">0</strong>
+    <div class="hero-visitor-sub">
+      personas han entrado al portal
     </div>
   </div>
 </div>
@@ -466,52 +387,6 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 window.nicoticDb = firebase.database();
-
-/* CONTADOR REAL DE VISITANTES */
-(function(){
-  const db = window.nicoticDb;
-  const totalRef = db.ref("stats/portalVisitsTotal");
-  const registeredKey = "nicotic_firebase_visitor_registered_v1";
-
-  function formatNumber(num){
-    return Number(num || 0).toLocaleString("es-PE");
-  }
-
-  function updateVisitorDisplays(value){
-    const formatted = formatNumber(value);
-
-    const heroCounter = document.getElementById("portalVisitsHero");
-    const bottomCounter = document.getElementById("portalVisits");
-
-    if (heroCounter) heroCounter.textContent = formatted;
-    if (bottomCounter) bottomCounter.textContent = formatted;
-  }
-
-  function startVisitorCounter(){
-    totalRef.on("value", snapshot => {
-      const total = Number(snapshot.val() || 0);
-      updateVisitorDisplays(total);
-    });
-
-    const alreadyRegistered = localStorage.getItem(registeredKey);
-
-    if (alreadyRegistered) return;
-
-    totalRef.transaction(current => {
-      return Number(current || 0) + 1;
-    }, (error, committed) => {
-      if (!error && committed) {
-        localStorage.setItem(registeredKey, "true");
-      }
-    });
-  }
-
-  if (document.readyState === "complete") {
-    startVisitorCounter();
-  } else {
-    window.addEventListener("load", startVisitorCounter, { once:true });
-  }
-})();
 </script>
 
 <script src="script.js"></script>
