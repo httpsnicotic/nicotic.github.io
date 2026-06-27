@@ -939,6 +939,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const description = document.getElementById("locationAlertDescription");
         const media = document.getElementById("locationAlertMedia");
         const button = document.getElementById("locationAlertButton");
+        const toggle = document.getElementById("locationAlertToggle");
 
         if (!section) return;
 
@@ -952,10 +953,26 @@ document.addEventListener("DOMContentLoaded", () => {
         if (description) description.textContent = data.description || "Pronto habrá un aviso especial.";
 
         renderLocationAlertMedia(media, data);
+        setupLocationAlertToggle(section, toggle);
         renderLocationAlertButton(button, data);
 
         section.classList.remove("nicotic-alert-hidden");
         startLocationAlertCountdown(data);
+    }
+
+
+    function setupLocationAlertToggle(section, toggle) {
+        if (!section || !toggle) return;
+
+        section.classList.remove("location-alert-expanded");
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.innerHTML = 'Ver foto completa <span>⌄</span>';
+
+        toggle.onclick = () => {
+            const expanded = section.classList.toggle("location-alert-expanded");
+            toggle.setAttribute("aria-expanded", expanded ? "true" : "false");
+            toggle.innerHTML = expanded ? 'Ocultar foto <span>⌃</span>' : 'Ver foto completa <span>⌄</span>';
+        };
     }
 
     function renderLocationAlertMedia(media, data) {
@@ -1375,14 +1392,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (status) status.textContent = data.live === false ? "PRÓXIMO STREAM" : "EN VIVO";
         if (title) title.textContent = data.title || "Estoy en vivo";
-        if (platform) platform.textContent = data.platform || "Kick";
+        if (platform) platform.textContent = data.platform || "KICK";
         if (description) description.textContent = data.description || "Estoy en directo ahora mismo desde el sótano.";
 
         renderGeneralAlertMedia(media, data);
 
         if (button) {
-            const url = String(data.url || "").trim();
-            button.textContent = data.buttonText || "Ir al stream";
+            const url = String(data.url || "https://kick.com/niicotic").trim();
+            button.textContent = data.buttonText || "Ir";
 
             if (url) {
                 button.href = url;
