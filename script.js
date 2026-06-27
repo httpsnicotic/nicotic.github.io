@@ -1262,12 +1262,177 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
+
+
+    /* =========================
+       NUEVO EPISODIO DISPONIBLE
+       Firebase: portal/alerts/newEpisode
+    ========================= */
+    function initNewEpisodeAlert() {
+        const section = document.getElementById("newEpisodeSection");
+        if (!section) return;
+
+        hideNewEpisodeAlert();
+
+        if (window.nicoticDb) {
+            window.nicoticDb.ref("portal/alerts/newEpisode").on("value", snapshot => {
+                const data = snapshot.val();
+
+                if (!data || data.active !== true) {
+                    hideNewEpisodeAlert();
+                    return;
+                }
+
+                renderNewEpisodeAlert(data);
+            }, error => {
+                console.warn("NICOTIC: no se pudo leer newEpisode.", error);
+                hideNewEpisodeAlert();
+            });
+        }
+    }
+
+    function renderNewEpisodeAlert(data) {
+        const section = document.getElementById("newEpisodeSection");
+        const title = document.getElementById("newEpisodeTitle");
+        const description = document.getElementById("newEpisodeDescription");
+        const media = document.getElementById("newEpisodeMedia");
+        const button = document.getElementById("newEpisodeButton");
+
+        if (!section) return;
+
+        if (title) title.textContent = data.title || "Nuevo episodio disponible";
+        if (description) description.textContent = data.description || "Ya está arriba el nuevo episodio del sótano.";
+
+        renderGeneralAlertMedia(media, data);
+
+        if (button) {
+            button.textContent = data.buttonText || "Ver episodio";
+            button.onclick = () => {
+                const videoSection = document.getElementById("videoSection") || document.querySelector(".video-highlight-section");
+                if (videoSection) videoSection.scrollIntoView({ behavior: "smooth", block: "start" });
+            };
+        }
+
+        section.classList.remove("nicotic-alert-hidden");
+    }
+
+    function hideNewEpisodeAlert() {
+        const section = document.getElementById("newEpisodeSection");
+        if (section) section.classList.add("nicotic-alert-hidden");
+    }
+
+    /* =========================
+       STREAM / EN VIVO
+       Firebase: portal/alerts/streamAlert
+    ========================= */
+    function initStreamAlert() {
+        const section = document.getElementById("streamAlertSection");
+        if (!section) return;
+
+        hideStreamAlert();
+
+        if (window.nicoticDb) {
+            window.nicoticDb.ref("portal/alerts/streamAlert").on("value", snapshot => {
+                const data = snapshot.val();
+
+                if (!data || data.active !== true) {
+                    hideStreamAlert();
+                    return;
+                }
+
+                renderStreamAlert(data);
+            }, error => {
+                console.warn("NICOTIC: no se pudo leer streamAlert.", error);
+                hideStreamAlert();
+            });
+        }
+    }
+
+    function renderStreamAlert(data) {
+        const section = document.getElementById("streamAlertSection");
+        const status = document.getElementById("streamAlertStatus");
+        const title = document.getElementById("streamAlertTitle");
+        const platform = document.getElementById("streamAlertPlatform");
+        const description = document.getElementById("streamAlertDescription");
+        const media = document.getElementById("streamAlertMedia");
+        const button = document.getElementById("streamAlertButton");
+
+        if (!section) return;
+
+        if (status) status.textContent = data.live === false ? "PRÓXIMO STREAM" : "EN VIVO";
+        if (title) title.textContent = data.title || "Estoy en vivo";
+        if (platform) platform.textContent = data.platform || "Kick";
+        if (description) description.textContent = data.description || "Estoy en directo ahora mismo desde el sótano.";
+
+        renderGeneralAlertMedia(media, data);
+
+        if (button) {
+            const url = String(data.url || "").trim();
+            button.textContent = data.buttonText || "Ir al stream";
+
+            if (url) {
+                button.href = url;
+                button.classList.remove("nicotic-alert-hidden");
+            } else {
+                button.href = "#";
+                button.classList.add("nicotic-alert-hidden");
+            }
+        }
+
+        section.classList.remove("nicotic-alert-hidden");
+    }
+
+    function hideStreamAlert() {
+        const section = document.getElementById("streamAlertSection");
+        if (section) section.classList.add("nicotic-alert-hidden");
+    }
+
+    /* =========================
+       MEDIA GENERAL PARA AVISOS
+    ========================= */
+    function renderGeneralAlertMedia(media, data) {
+        if (!media) return;
+
+        const imageUrl = String(data.imageUrl || "").trim();
+        const videoUrl = String(data.videoUrl || "").trim();
+
+        media.innerHTML = "";
+
+        if (videoUrl) {
+            const video = document.createElement("video");
+            video.src = videoUrl;
+            video.autoplay = true;
+            video.loop = true;
+            video.muted = true;
+            video.playsInline = true;
+            video.setAttribute("playsinline", "");
+            video.setAttribute("muted", "");
+            media.appendChild(video);
+            media.style.display = "";
+            return;
+        }
+
+        if (imageUrl) {
+            const img = document.createElement("img");
+            img.src = imageUrl;
+            img.alt = "Aviso NICOTIC";
+            media.appendChild(img);
+            media.style.display = "";
+            return;
+        }
+
+        media.style.display = "none";
+    }
+
+
     /* =========================
        INICIAR TODO
     ========================= */
     initializeVideos();
     initLocationAlert();
     initFeaturedEvent();
+    initNewEpisodeAlert();
+    initStreamAlert();
     countPortalVisit();
     initVisualEffects();
 
