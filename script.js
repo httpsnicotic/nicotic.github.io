@@ -75,7 +75,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (saved) {
             try {
-                return JSON.parse(saved);
+                const parsed = JSON.parse(saved);
+
+                if (!parsed.videos) parsed.videos = {};
+                if (!parsed.likedSkulls) parsed.likedSkulls = {};
+                if (!parsed.totals) {
+                    parsed.totals = {
+                        videoViews: 0,
+                        skulls: 0,
+                        comments: 0
+                    };
+                }
+
+                return parsed;
+
             } catch (e) {
                 console.warn("Error leyendo datos locales. Reiniciando.");
             }
@@ -129,6 +142,10 @@ document.addEventListener("DOMContentLoaded", () => {
     function initializeVideos() {
         const cards = document.querySelectorAll(".video-card");
 
+        let recalculatedViews = 0;
+        let recalculatedSkulls = 0;
+        let recalculatedComments = 0;
+
         cards.forEach(card => {
             const videoId = card.dataset.videoId;
             const baseViews = Number(card.dataset.views || 0);
@@ -142,11 +159,20 @@ document.addEventListener("DOMContentLoaded", () => {
                     skulls: baseSkulls,
                     comments: []
                 };
-
-                state.totals.videoViews += baseViews;
-                state.totals.skulls += baseSkulls;
             }
+
+            if (!Array.isArray(state.videos[videoId].comments)) {
+                state.videos[videoId].comments = [];
+            }
+
+            recalculatedViews += Number(state.videos[videoId].views || 0);
+            recalculatedSkulls += Number(state.videos[videoId].skulls || 0);
+            recalculatedComments += state.videos[videoId].comments.length || 0;
         });
+
+        state.totals.videoViews = recalculatedViews;
+        state.totals.skulls = recalculatedSkulls;
+        state.totals.comments = recalculatedComments;
 
         saveState();
         refreshAllUI();
@@ -192,8 +218,11 @@ document.addEventListener("DOMContentLoaded", () => {
         video.dataset.currentVideo = videoId;
         video.load();
 
-        document.getElementById("mainTitle").textContent = title || "Episodio";
-        document.getElementById("mainMeta").textContent = meta || "reciente";
+        const titleEl = document.getElementById("mainTitle");
+        const metaEl = document.getElementById("mainMeta");
+
+        if (titleEl) titleEl.textContent = title || "Episodio";
+        if (metaEl) metaEl.textContent = meta || "reciente";
 
         const mainSkulls = document.getElementById("mainSkulls");
         if (mainSkulls) mainSkulls.dataset.videoId = videoId;
@@ -206,6 +235,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         refreshVideoUI(videoId);
         renderComments(videoId);
+        refreshLikedButtons();
 
         video.play().catch(() => {});
     };
@@ -346,7 +376,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* =========================
-       💬 COMENTARIOS COMPACTOS
+       💬 COMENTARIOS PREMIUM
     ========================= */
     const sendCommentBtn = document.getElementById("sendCommentBtn");
 
@@ -378,14 +408,14 @@ document.addEventListener("DOMContentLoaded", () => {
             ? aliasInput.value
             : "👁️ | Habitante del Sótano";
 
-        const text = textInput ? textInput.value.trim() : "";
+        const text = textInput ? cleanCommentText(textInput.value) : "";
 
         if (!text) return;
 
         const comment = {
             name: name,
             text: text.slice(0, 180),
-            date: new Date().toLocaleString("es-PE")
+            date: formatCommentDate()
         };
 
         state.videos[videoId].comments.push(comment);
@@ -397,6 +427,23 @@ document.addEventListener("DOMContentLoaded", () => {
         renderComments(videoId);
         refreshCommentCounts(videoId);
         refreshTotals();
+    }
+
+    function cleanCommentText(value) {
+        return String(value || "")
+            .trim()
+            .replace(/\s+/g, " ")
+            .slice(0, 180);
+    }
+
+    function formatCommentDate() {
+        return new Date().toLocaleString("es-PE", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+        });
     }
 
     function renderComments(videoId) {
@@ -416,13 +463,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const item = document.createElement("div");
             item.className = "comment-item";
 
-            let commentName = comment.name;
-
-            if (!commentName || commentName === "Anónimo") {
-                commentName = "👁️ | Habitante del Sótano";
-            }
-
-            const alias = getAliasData(commentName);
+            const alias = getAliasData(comment.name);
 
             item.innerHTML = `
                 <div class="comment-line">
@@ -432,10 +473,10 @@ document.addEventListener("DOMContentLoaded", () => {
                         <span class="alias-name ${alias.className}">${escapeHTML(alias.label)}</span>
                     </span>
 
-                    <p class="comment-text">${escapeHTML(comment.text)}</p>
+                    <span class="comment-text">${escapeHTML(comment.text)}</span>
                 </div>
 
-                <span class="comment-date">${escapeHTML(comment.date)}</span>
+                <span class="comment-date">${escapeHTML(comment.date || "")}</span>
             `;
 
             list.appendChild(item);
