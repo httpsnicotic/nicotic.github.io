@@ -666,3 +666,37 @@ width:100%;
 }
 
 }
+
+/* FOTO AL LADO DEL VIDEO ACTUAL */
+.main-title-row{
+display:flex;
+align-items:center;
+gap:13px;
+margin-top:15px;
+margin-bottom:10px;
+}
+
+.playing-avatar{
+width:52px;
+height:52px;
+border-radius:50%;
+object-fit:cover;
+border:2px solid rgba(255,255,255,0.22);
+box-shadow:0 0 16px rgba(168,85,247,0.4);
+flex-shrink:0;
+}
+
+@media (max-width:768px){
+.main-title-row{
+gap:10px;
+}
+
+.playing-avatar{
+width:45px;
+height:45px;
+}
+
+.main-title-row .main-video-title{
+font-size:21px;
+}
+}
