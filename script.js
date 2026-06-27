@@ -1325,8 +1325,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!section) return;
 
-        if (title) title.textContent = data.title || "Nuevo episodio disponible";
-        if (description) description.textContent = data.description || "Nuevo video listo en el sótano.";
+        if (title) title.textContent = data.title || "NEW EPISODIO";
+        if (description) description.textContent = data.description || "Disponible";
 
         renderGeneralAlertMedia(media, data);
 
@@ -1460,31 +1460,60 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* =========================
        MÚSICA FLOTANTE
-       Carga YouTube solo cuando el usuario toca el botón.
+       Usa archivo MP3 local para evitar problemas con YouTube y reducir lag.
     ========================= */
     function initFloatingMusic() {
         const button = document.getElementById("musicFloatButton");
-        const player = document.getElementById("musicFloatPlayer");
+        const icon = button ? button.querySelector(".music-float-icon") : null;
+        const text = button ? button.querySelector(".music-float-text") : null;
 
-        if (!button || !player) return;
+        if (!button) return;
+
+        const audioFile = "Provoker - Dark Angel (Official Video) HD.mp3";
+        const audio = new Audio(audioFile);
+
+        audio.loop = true;
+        audio.preload = "metadata";
+        audio.volume = 0.45;
 
         let playing = false;
-        const musicUrl = "https://www.youtube.com/embed/4kFLPrDBzf4?autoplay=1&start=40&loop=1&playlist=4kFLPrDBzf4&controls=0&modestbranding=1";
 
-        button.addEventListener("click", () => {
-            playing = !playing;
+        function setPausedState() {
+            playing = false;
+            button.classList.remove("is-playing");
+            button.setAttribute("aria-pressed", "false");
+            if (icon) icon.textContent = "🎧";
+            if (text) text.textContent = "Música";
+        }
 
-            if (playing) {
-                player.innerHTML = `<iframe title="Música NICOTIC" width="1" height="1" src="${musicUrl}" allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
-                button.classList.add("is-playing");
-                button.setAttribute("aria-pressed", "true");
-                button.querySelector(".music-float-text").textContent = "Sonando";
-            } else {
-                player.innerHTML = "";
-                button.classList.remove("is-playing");
-                button.setAttribute("aria-pressed", "false");
-                button.querySelector(".music-float-text").textContent = "Música";
+        function setPlayingState() {
+            playing = true;
+            button.classList.add("is-playing");
+            button.setAttribute("aria-pressed", "true");
+            if (icon) icon.textContent = "❚❚";
+            if (text) text.textContent = "Sonando";
+        }
+
+        setPausedState();
+
+        button.addEventListener("click", async () => {
+            try {
+                if (!playing) {
+                    await audio.play();
+                    setPlayingState();
+                } else {
+                    audio.pause();
+                    setPausedState();
+                }
+            } catch (error) {
+                console.warn("NICOTIC: el navegador bloqueó la música o no encontró el MP3.", error);
+                setPausedState();
             }
+        });
+
+        audio.addEventListener("ended", setPausedState);
+        audio.addEventListener("pause", () => {
+            if (!audio.ended) setPausedState();
         });
     }
 
