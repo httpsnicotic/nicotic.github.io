@@ -6,7 +6,7 @@ color:white;
 scroll-behavior:smooth;
 }
 
-html, body {
+html, body{
 margin:0;
 touch-action:pan-y;
 overscroll-behavior:none;
@@ -178,10 +178,28 @@ text-align:left;
 margin-top:15px;
 }
 
+.main-title-row{
+display:flex;
+align-items:center;
+gap:13px;
+margin-top:15px;
+margin-bottom:10px;
+}
+
+.playing-avatar{
+width:52px;
+height:52px;
+border-radius:50%;
+object-fit:cover;
+border:2px solid rgba(255,255,255,0.22);
+box-shadow:0 0 16px rgba(168,85,247,0.4);
+flex-shrink:0;
+}
+
 .main-video-title{
 font-size:28px;
 font-weight:bold;
-margin:10px 0 5px;
+margin:0 0 5px;
 }
 
 .main-video-meta{
@@ -196,7 +214,7 @@ gap:10px;
 flex-wrap:wrap;
 }
 
-/* BOTONES / PASTILLAS DEL VIDEO PRINCIPAL */
+/* BOTONES / PASTILLAS */
 .action-pill{
 background:#1d1d1d;
 border:1px solid #2a2a2a;
@@ -219,6 +237,13 @@ background:#2a2a2a;
 transform:scale(1.04);
 }
 
+.skull-card-btn.liked,
+.skull-btn.liked{
+background:#3b0764;
+border-color:#a855f7;
+box-shadow:0 0 12px rgba(168,85,247,0.45);
+}
+
 /* CAJA DE COMENTARIOS */
 .comments-box{
 width:100%;
@@ -235,6 +260,7 @@ margin:0 0 12px;
 font-size:20px;
 }
 
+/* FORMULARIO COMENTARIOS */
 .comment-form{
 display:flex;
 gap:10px;
@@ -242,7 +268,8 @@ flex-wrap:wrap;
 margin-bottom:15px;
 }
 
-.comment-form input{
+.comment-form input,
+.comment-form select{
 background:#111;
 color:white;
 border:1px solid #333;
@@ -253,13 +280,18 @@ outline:none;
 box-sizing:border-box;
 }
 
-.comment-form input:focus{
+.comment-form input:focus,
+.comment-form select:focus{
 border-color:#a855f7;
 box-shadow:0 0 0 2px rgba(168,85,247,0.2);
 }
 
-#commentName{
-width:180px;
+.comment-form select{
+cursor:pointer;
+}
+
+#commentAlias{
+width:240px;
 }
 
 #commentText{
@@ -283,33 +315,121 @@ background:#6d28d9;
 transform:scale(1.04);
 }
 
+/* LISTA DE COMENTARIOS COMPACTA */
 .comment-list{
 display:flex;
 flex-direction:column;
 gap:8px;
-max-height:220px;
+max-height:260px;
 overflow-y:auto;
-padding-right:5px;
+padding-right:6px;
+}
+
+.comment-list::-webkit-scrollbar{
+width:7px;
+}
+
+.comment-list::-webkit-scrollbar-track{
+background:#111;
+border-radius:20px;
+}
+
+.comment-list::-webkit-scrollbar-thumb{
+background:#444;
+border-radius:20px;
 }
 
 .comment-item{
 background:#171717;
 border:1px solid #292929;
-border-radius:10px;
-padding:10px;
-font-size:14px;
+border-radius:12px;
+padding:9px 11px;
 color:#ddd;
+display:flex;
+flex-direction:column;
+gap:4px;
+font-size:14px;
 }
 
-.comment-item strong{
-color:white;
+.empty-comment{
+color:#999;
 }
 
-.comment-item span{
+.comment-line{
+display:flex;
+align-items:center;
+gap:9px;
+flex-wrap:wrap;
+}
+
+.comment-alias{
+display:inline-flex;
+align-items:center;
+gap:4px;
+font-weight:900;
+font-size:14px;
+line-height:1.2;
+letter-spacing:0.3px;
+white-space:nowrap;
+}
+
+.alias-icon{
+font-size:14px;
+line-height:1;
+}
+
+.alias-divider{
+color:rgba(255,255,255,0.55);
+font-weight:800;
+}
+
+.alias-name{
+font-weight:900;
+}
+
+/* 🍞 MIGAJERO - SOLO LETRAS */
+.alias-migajero-text{
+background:linear-gradient(90deg,#f59e0b 0%,#facc15 45%,#fff1b8 100%);
+-webkit-background-clip:text;
+background-clip:text;
+-webkit-text-fill-color:transparent;
+color:transparent;
+}
+
+/* 👻 FANTASMA - SOLO LETRAS */
+.alias-fantasma-text{
+background:linear-gradient(90deg,#a855f7 0%,#d8b4fe 50%,#ffffff 100%);
+-webkit-background-clip:text;
+background-clip:text;
+-webkit-text-fill-color:transparent;
+color:transparent;
+}
+
+/* 👁️ HABITANTE - ROJO/BLANCO */
+.alias-habitante-text{
+background:linear-gradient(90deg,#ef4444 0%,#ff8a8a 48%,#ffffff 100%);
+-webkit-background-clip:text;
+background-clip:text;
+-webkit-text-fill-color:transparent;
+color:transparent;
+}
+
+.comment-text{
+margin:0;
+color:#eeeeee;
+font-size:14px;
+line-height:1.35;
+word-break:break-word;
+flex:1;
+min-width:160px;
+}
+
+.comment-date{
 display:block;
 color:#777;
-font-size:11px;
-margin-top:4px;
+font-size:10.5px;
+line-height:1.2;
+margin-left:1px;
 }
 
 /* CARRETE */
@@ -382,7 +502,6 @@ transition:0.3s;
 transform:scale(1.02);
 }
 
-/* TEXTO DE LAS TARJETAS */
 .card-title{
 font-size:17px;
 font-weight:bold;
@@ -424,13 +543,6 @@ background:#2a2a2a;
 transform:scale(1.04);
 }
 
-.skull-card-btn.liked,
-.skull-btn.liked{
-background:#3b0764;
-border-color:#a855f7;
-box-shadow:0 0 12px rgba(168,85,247,0.45);
-}
-
 /* BOTÓN HISTÓRICO */
 .history-btn{
 background:#222;
@@ -461,7 +573,7 @@ border:1px solid #222;
 
 /* TOTALES */
 .totals-section{
-background:radial-gradient(circle at center, #13051f 0%, #050505 55%, #000 100%);
+background:radial-gradient(circle at center,#13051f 0%,#050505 55%,#000 100%);
 }
 
 .big-counter{
@@ -525,7 +637,7 @@ font-size:14px;
 margin-top:6px;
 }
 
-/* VISITANTES DEL PORTAL */
+/* VISITANTES */
 .visitors-section{
 background:#030303;
 }
@@ -634,8 +746,17 @@ width:100%;
 height:auto;
 }
 
-.main-video-title{
-font-size:23px;
+.main-title-row{
+gap:10px;
+}
+
+.playing-avatar{
+width:45px;
+height:45px;
+}
+
+.main-title-row .main-video-title{
+font-size:21px;
 }
 
 .action-pill{
@@ -647,10 +768,20 @@ padding:8px 12px;
 flex-direction:column;
 }
 
-#commentName,
+#commentAlias,
 #commentText,
 #sendCommentBtn{
 width:100%;
+}
+
+.comment-line{
+align-items:flex-start;
+gap:6px;
+}
+
+.comment-text{
+min-width:100%;
+font-size:14px;
 }
 
 .big-number{
@@ -665,103 +796,4 @@ font-size:4rem;
 width:100%;
 }
 
-}
-
-/* FOTO AL LADO DEL VIDEO ACTUAL */
-.main-title-row{
-display:flex;
-align-items:center;
-gap:13px;
-margin-top:15px;
-margin-bottom:10px;
-}
-
-.playing-avatar{
-width:52px;
-height:52px;
-border-radius:50%;
-object-fit:cover;
-border:2px solid rgba(255,255,255,0.22);
-box-shadow:0 0 16px rgba(168,85,247,0.4);
-flex-shrink:0;
-}
-
-@media (max-width:768px){
-.main-title-row{
-gap:10px;
-}
-
-.playing-avatar{
-width:45px;
-height:45px;
-}
-
-.main-title-row .main-video-title{
-font-size:21px;
-}
-}
-
-/* SELECTOR DE IDENTIDAD */
-.comment-form select{
-background:#111;
-color:white;
-border:1px solid #333;
-border-radius:10px;
-padding:11px 12px;
-font-size:14px;
-outline:none;
-box-sizing:border-box;
-cursor:pointer;
-}
-
-#commentAlias{
-width:240px;
-}
-
-/* ALIAS DE COMENTARIOS */
-.comment-alias{
-display:inline-block;
-font-weight:900;
-font-size:15px;
-margin-bottom:6px;
-padding:5px 10px;
-border-radius:999px;
-letter-spacing:0.2px;
-}
-
-/* 🍞 Migajero */
-.alias-migajero{
-color:#fde68a;
-background:rgba(146,64,14,0.22);
-border:1px solid rgba(251,191,36,0.35);
-text-shadow:0 0 10px rgba(251,191,36,0.45);
-box-shadow:0 0 14px rgba(251,191,36,0.12);
-}
-
-/* 👻 Fantasma */
-.alias-fantasma{
-color:#f5f3ff;
-background:rgba(88,28,135,0.28);
-border:1px solid rgba(192,132,252,0.38);
-text-shadow:0 0 10px rgba(192,132,252,0.55);
-box-shadow:0 0 14px rgba(168,85,247,0.15);
-}
-
-/* 👁️ Habitante rojo/blanco */
-.alias-habitante{
-color:#fff;
-background:linear-gradient(135deg, rgba(127,29,29,0.75), rgba(20,20,20,0.92));
-border:1px solid rgba(248,113,113,0.55);
-text-shadow:
-0 0 8px rgba(255,255,255,0.35),
-0 0 12px rgba(239,68,68,0.65);
-box-shadow:
-0 0 16px rgba(239,68,68,0.22),
-inset 0 0 10px rgba(255,255,255,0.04);
-}
-
-@media (max-width:768px){
-#commentAlias{
-width:100%;
-}
 }
