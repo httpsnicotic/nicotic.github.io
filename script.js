@@ -740,10 +740,17 @@ document.addEventListener("DOMContentLoaded", () => {
         const totalViews = document.getElementById("totalVideoViews");
         const totalSkulls = document.getElementById("totalSkulls");
         const totalComments = document.getElementById("totalComments");
+        const heroVideosTotal = document.getElementById("heroVideosTotal");
+        const heroSkullsTotal = document.getElementById("heroSkullsTotal");
+
+        const videosCount = document.querySelectorAll(".video-card").length;
 
         if (totalViews) totalViews.textContent = formatNumber(state.totals.videoViews);
         if (totalSkulls) totalSkulls.textContent = formatNumber(state.totals.skulls);
         if (totalComments) totalComments.textContent = formatNumber(state.totals.comments);
+
+        if (heroVideosTotal) heroVideosTotal.textContent = formatNumber(videosCount);
+        if (heroSkullsTotal) heroSkullsTotal.textContent = formatNumber(state.totals.skulls);
     }
 
     /* =========================
@@ -1297,20 +1304,27 @@ document.addEventListener("DOMContentLoaded", () => {
         const description = document.getElementById("newEpisodeDescription");
         const media = document.getElementById("newEpisodeMedia");
         const button = document.getElementById("newEpisodeButton");
+        const cardButton = document.getElementById("newEpisodeCardButton");
 
         if (!section) return;
 
         if (title) title.textContent = data.title || "Nuevo episodio disponible";
-        if (description) description.textContent = data.description || "Ya está arriba el nuevo episodio del sótano.";
+        if (description) description.textContent = data.description || "Nuevo video listo en el sótano.";
 
         renderGeneralAlertMedia(media, data);
 
+        const goToEpisode = () => {
+            const videoSection = document.getElementById("videoSection") || document.querySelector(".video-highlight-section");
+            if (videoSection) videoSection.scrollIntoView({ behavior: "smooth", block: "start" });
+        };
+
         if (button) {
-            button.textContent = data.buttonText || "Ver episodio";
-            button.onclick = () => {
-                const videoSection = document.getElementById("videoSection") || document.querySelector(".video-highlight-section");
-                if (videoSection) videoSection.scrollIntoView({ behavior: "smooth", block: "start" });
-            };
+            button.textContent = data.buttonText || "Ver ahora";
+            button.onclick = goToEpisode;
+        }
+
+        if (cardButton) {
+            cardButton.onclick = goToEpisode;
         }
 
         section.classList.remove("nicotic-alert-hidden");
