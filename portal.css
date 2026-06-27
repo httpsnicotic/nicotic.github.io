@@ -700,3 +700,68 @@ height:45px;
 font-size:21px;
 }
 }
+
+/* SELECTOR DE IDENTIDAD */
+.comment-form select{
+background:#111;
+color:white;
+border:1px solid #333;
+border-radius:10px;
+padding:11px 12px;
+font-size:14px;
+outline:none;
+box-sizing:border-box;
+cursor:pointer;
+}
+
+#commentAlias{
+width:240px;
+}
+
+/* ALIAS DE COMENTARIOS */
+.comment-alias{
+display:inline-block;
+font-weight:900;
+font-size:15px;
+margin-bottom:6px;
+padding:5px 10px;
+border-radius:999px;
+letter-spacing:0.2px;
+}
+
+/* 🍞 Migajero */
+.alias-migajero{
+color:#fde68a;
+background:rgba(146,64,14,0.22);
+border:1px solid rgba(251,191,36,0.35);
+text-shadow:0 0 10px rgba(251,191,36,0.45);
+box-shadow:0 0 14px rgba(251,191,36,0.12);
+}
+
+/* 👻 Fantasma */
+.alias-fantasma{
+color:#f5f3ff;
+background:rgba(88,28,135,0.28);
+border:1px solid rgba(192,132,252,0.38);
+text-shadow:0 0 10px rgba(192,132,252,0.55);
+box-shadow:0 0 14px rgba(168,85,247,0.15);
+}
+
+/* 👁️ Habitante rojo/blanco */
+.alias-habitante{
+color:#fff;
+background:linear-gradient(135deg, rgba(127,29,29,0.75), rgba(20,20,20,0.92));
+border:1px solid rgba(248,113,113,0.55);
+text-shadow:
+0 0 8px rgba(255,255,255,0.35),
+0 0 12px rgba(239,68,68,0.65);
+box-shadow:
+0 0 16px rgba(239,68,68,0.22),
+inset 0 0 10px rgba(255,255,255,0.04);
+}
+
+@media (max-width:768px){
+#commentAlias{
+width:100%;
+}
+}
