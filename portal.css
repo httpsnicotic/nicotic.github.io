@@ -1855,3 +1855,260 @@ width:100%;
 }
 
 }
+
+
+/* =========================
+   NUEVO EPISODIO DISPONIBLE
+========================= */
+.new-episode-section{
+min-height:auto;
+padding:30px 20px;
+background:
+radial-gradient(circle at 82% 0%, rgba(168,85,247,0.12), transparent 34%),
+linear-gradient(180deg,#050505 0%,#080808 100%);
+border-top:1px solid rgba(255,255,255,0.08);
+border-bottom:1px solid rgba(255,255,255,0.08);
+position:relative;
+z-index:3;
+}
+
+.new-episode-card{
+width:100%;
+max-width:1050px;
+margin:0 auto;
+display:grid;
+grid-template-columns:220px 1fr;
+gap:18px;
+align-items:center;
+background:rgba(14,14,18,0.82);
+border:1px solid rgba(255,255,255,0.08);
+border-radius:24px;
+padding:14px;
+box-shadow:0 22px 55px rgba(0,0,0,0.45);
+}
+
+.new-episode-media{
+width:100%;
+height:140px;
+border-radius:18px;
+overflow:hidden;
+background:#090909;
+border:1px solid rgba(255,255,255,0.08);
+}
+
+.new-episode-media img,
+.new-episode-media video{
+width:100%;
+height:100%;
+object-fit:cover;
+display:block;
+}
+
+.new-episode-content{
+text-align:left;
+display:flex;
+flex-direction:column;
+align-items:flex-start;
+gap:8px;
+}
+
+.new-episode-kicker{
+font-size:11px;
+letter-spacing:2.5px;
+text-transform:uppercase;
+color:#c084fc;
+font-weight:900;
+}
+
+.new-episode-content h2{
+font-size:clamp(1.75rem, 4vw, 3rem);
+line-height:1;
+margin:0;
+}
+
+.new-episode-content p{
+margin:0;
+color:#bdbdbd;
+font-size:15px;
+line-height:1.45;
+}
+
+.new-episode-button{
+margin-top:6px;
+background:#ffffff;
+color:#050505;
+border:none;
+border-radius:999px;
+padding:11px 17px;
+font-size:14px;
+font-weight:900;
+cursor:pointer;
+transition:0.2s ease;
+}
+
+.new-episode-button:hover{
+transform:scale(1.04);
+background:#d8b4fe;
+}
+
+/* =========================
+   STREAM / EN VIVO
+========================= */
+.stream-alert-section{
+min-height:auto;
+padding:30px 20px;
+background:
+radial-gradient(circle at 18% 0%, rgba(239,68,68,0.10), transparent 34%),
+linear-gradient(180deg,#050505 0%,#090506 100%);
+border-top:1px solid rgba(255,255,255,0.08);
+border-bottom:1px solid rgba(255,255,255,0.08);
+position:relative;
+z-index:3;
+}
+
+.stream-alert-card{
+width:100%;
+max-width:1050px;
+margin:0 auto;
+display:grid;
+grid-template-columns:minmax(240px, 0.9fr) minmax(280px, 1.1fr);
+gap:18px;
+align-items:center;
+background:rgba(14,10,12,0.84);
+border:1px solid rgba(255,255,255,0.08);
+border-radius:26px;
+padding:14px;
+box-shadow:0 24px 65px rgba(0,0,0,0.48);
+}
+
+.stream-alert-media{
+width:100%;
+height:230px;
+border-radius:20px;
+overflow:hidden;
+background:#080808;
+border:1px solid rgba(255,255,255,0.08);
+}
+
+.stream-alert-media img,
+.stream-alert-media video{
+width:100%;
+height:100%;
+object-fit:cover;
+display:block;
+}
+
+.stream-alert-content{
+text-align:left;
+display:flex;
+flex-direction:column;
+align-items:flex-start;
+gap:10px;
+}
+
+.stream-alert-status{
+display:inline-flex;
+align-items:center;
+gap:7px;
+font-size:12px;
+letter-spacing:2px;
+text-transform:uppercase;
+color:white;
+font-weight:900;
+background:rgba(239,68,68,0.18);
+border:1px solid rgba(239,68,68,0.45);
+border-radius:999px;
+padding:8px 12px;
+}
+
+.stream-alert-status::before{
+content:"";
+width:8px;
+height:8px;
+border-radius:50%;
+background:#ef4444;
+box-shadow:0 0 12px rgba(239,68,68,0.9);
+}
+
+.stream-alert-content h2{
+font-size:clamp(2rem, 5vw, 4rem);
+line-height:0.95;
+margin:0;
+}
+
+.stream-alert-platform{
+color:#fca5a5;
+font-size:14px;
+font-weight:900;
+text-transform:uppercase;
+letter-spacing:2px;
+}
+
+.stream-alert-content p{
+margin:0;
+color:#d0d0d0;
+font-size:16px;
+line-height:1.45;
+}
+
+.stream-alert-button{
+margin-top:6px;
+display:inline-flex;
+align-items:center;
+justify-content:center;
+background:#ef4444;
+color:white;
+border:none;
+border-radius:999px;
+padding:12px 18px;
+font-size:14px;
+font-weight:900;
+text-decoration:none;
+cursor:pointer;
+transition:0.2s ease;
+}
+
+.stream-alert-button:hover{
+background:#dc2626;
+transform:scale(1.04);
+}
+
+@media (max-width:768px){
+
+.new-episode-section,
+.stream-alert-section{
+padding:22px 15px;
+}
+
+.new-episode-card,
+.stream-alert-card{
+grid-template-columns:1fr;
+border-radius:20px;
+padding:12px;
+gap:14px;
+}
+
+.new-episode-media{
+height:190px;
+border-radius:16px;
+}
+
+.stream-alert-media{
+height:220px;
+border-radius:16px;
+}
+
+.new-episode-content h2{
+font-size:2rem;
+}
+
+.stream-alert-content h2{
+font-size:2.35rem;
+}
+
+.new-episode-button,
+.stream-alert-button{
+width:100%;
+}
+
+}
