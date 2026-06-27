@@ -154,7 +154,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* =========================
        👁️ VISITAS AL PORTAL
-       Cuenta 1 vez por día por dispositivo
     ========================= */
     function countPortalVisit() {
         const today = new Date().toISOString().slice(0, 10);
@@ -211,7 +210,6 @@ document.addEventListener("DOMContentLoaded", () => {
         video.play().catch(() => {});
     };
 
-    /* Compatibilidad con funciones antiguas */
     window.changeVideo = function(src) {
         const main = document.getElementById("mainVideo");
 
@@ -239,7 +237,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* =========================
        👁️ VISTAS POR VIDEO
-       Suma cuando reproduce 3 segundos
     ========================= */
     const mainVideo = document.getElementById("mainVideo");
 
@@ -283,7 +280,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* =========================
        ☠️ CALAVERAS
-       1 vez por dispositivo
     ========================= */
     function addSkull(videoId) {
         if (!videoId) return;
@@ -350,7 +346,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* =========================
-       💬 COMENTARIOS CON IDENTIDAD
+       💬 COMENTARIOS COMPACTOS
     ========================= */
     const sendCommentBtn = document.getElementById("sendCommentBtn");
 
@@ -412,7 +408,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const comments = state.videos[videoId]?.comments || [];
 
         if (comments.length === 0) {
-            list.innerHTML = `<div class="comment-item">Sé el primero en comentar 👀</div>`;
+            list.innerHTML = `<div class="comment-item empty-comment">Sé el primero en comentar 👀</div>`;
             return;
         }
 
@@ -426,23 +422,58 @@ document.addEventListener("DOMContentLoaded", () => {
                 commentName = "👁️ | Habitante del Sótano";
             }
 
-            const aliasClass = getAliasClass(commentName);
+            const alias = getAliasData(commentName);
 
             item.innerHTML = `
-                <strong class="comment-alias ${aliasClass}">${escapeHTML(commentName)}</strong>
-                <p>${escapeHTML(comment.text)}</p>
-                <span>${escapeHTML(comment.date)}</span>
+                <div class="comment-line">
+                    <span class="comment-alias">
+                        <span class="alias-icon">${alias.icon}</span>
+                        <span class="alias-divider">|</span>
+                        <span class="alias-name ${alias.className}">${escapeHTML(alias.label)}</span>
+                    </span>
+
+                    <p class="comment-text">${escapeHTML(comment.text)}</p>
+                </div>
+
+                <span class="comment-date">${escapeHTML(comment.date)}</span>
             `;
 
             list.appendChild(item);
         });
     }
 
-    function getAliasClass(name) {
-        if (name.includes("Migajero")) return "alias-migajero";
-        if (name.includes("Fantasma")) return "alias-fantasma";
-        if (name.includes("Habitante")) return "alias-habitante";
-        return "alias-habitante";
+    function getAliasData(name) {
+        const value = String(name || "");
+
+        if (value.includes("Migajero")) {
+            return {
+                icon: "🍞",
+                label: "Migajero del Sótano",
+                className: "alias-migajero-text"
+            };
+        }
+
+        if (value.includes("Fantasma")) {
+            return {
+                icon: "👻",
+                label: "Fantasma del Sótano",
+                className: "alias-fantasma-text"
+            };
+        }
+
+        if (value.includes("Habitante")) {
+            return {
+                icon: "👁️",
+                label: "Habitante del Sótano",
+                className: "alias-habitante-text"
+            };
+        }
+
+        return {
+            icon: "👁️",
+            label: "Habitante del Sótano",
+            className: "alias-habitante-text"
+        };
     }
 
     function refreshCommentCounts(videoId) {
@@ -475,12 +506,10 @@ document.addEventListener("DOMContentLoaded", () => {
             .replaceAll("'", "&#039;");
     }
 
-    /* Compatibilidad con comentarios antiguos */
     window.addComment = function(id) {
         sendComment();
     };
 
-    /* Compatibilidad con likes antiguos */
     window.likeVideo = function(id) {
         addSkull(id);
     };
@@ -603,7 +632,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* =========================
        🎥 PREVIEW MINIATURA
-       Solo si la miniatura es video
     ========================= */
     document.querySelectorAll(".thumb-video").forEach(thumb => {
 
