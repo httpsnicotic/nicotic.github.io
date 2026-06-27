@@ -29,16 +29,38 @@
   <h1>NICOTIC</h1>
   <p>Bienvenidos al sótano de Nico</p>
 
-  <div class="hero-visitor-box">
-    <div class="hero-visitor-label">Visitantes del sótano</div>
+  <div class="hero-stats-row">
 
-    <div class="hero-visitor-number">
-      <span class="hero-plus">+</span><span id="portalVisitsHero">0</span>
+    <div class="hero-visitor-box">
+      <div class="hero-visitor-label">Visitantes del sótano</div>
+
+      <div class="hero-visitor-number">
+        <span class="hero-plus">+</span><span id="portalVisitsHero">0</span>
+      </div>
+
+      <div class="hero-visitor-sub">
+        personas han entrado al portal
+      </div>
     </div>
 
-    <div class="hero-visitor-sub">
-      personas han entrado al portal
+    <div class="hero-profile-mini" aria-label="Resumen NICOTIC">
+      <div class="hero-profile-avatar-wrap">
+        <img class="hero-profile-avatar" src="ojo.jpg" alt="NICOTIC">
+        <span class="hero-verified-check" aria-label="Verificado">✓</span>
+      </div>
+
+      <div class="hero-profile-info">
+        <div class="hero-profile-name">
+          NICOTIC <span class="hero-profile-tag">portal</span>
+        </div>
+
+        <div class="hero-profile-mini-stats">
+          <span><strong id="heroVideosTotal">0</strong> videos</span>
+          <span><strong id="heroSkullsTotal">0</strong> calaveras</span>
+        </div>
+      </div>
     </div>
+
   </div>
 </div>
 
@@ -121,28 +143,33 @@
 </section>
 
 
-<!-- NUEVO EPISODIO DISPONIBLE -->
-<section id="newEpisodeSection" class="new-episode-section nicotic-alert-hidden">
-  <div class="new-episode-card">
+<!-- AVISOS PEQUEÑOS / BARRA RÁPIDA -->
+<div class="quick-alerts-section">
+  <div class="quick-alerts-row">
 
-    <div id="newEpisodeMedia" class="new-episode-media" aria-hidden="true"></div>
+    <!-- NUEVO EPISODIO DISPONIBLE -->
+    <section id="newEpisodeSection" class="new-episode-section nicotic-alert-hidden">
+      <button id="newEpisodeCardButton" class="new-episode-card" type="button" aria-label="Ver episodio nuevo">
+        <div id="newEpisodeMedia" class="new-episode-media" aria-hidden="true"></div>
 
-    <div class="new-episode-content">
-      <div class="new-episode-kicker">Nuevo contenido</div>
+        <div class="new-episode-content">
+          <div class="new-episode-kicker">Nuevo episodio</div>
 
-      <h2 id="newEpisodeTitle">Nuevo episodio disponible</h2>
+          <h2 id="newEpisodeTitle">Nuevo episodio disponible</h2>
 
-      <p id="newEpisodeDescription">
-        Ya está arriba el nuevo episodio del sótano.
-      </p>
+          <p id="newEpisodeDescription">
+            Ya está arriba el nuevo episodio del sótano.
+          </p>
+        </div>
 
-      <button id="newEpisodeButton" class="new-episode-button" type="button">
-        Ver episodio
+        <span id="newEpisodeButton" class="new-episode-button">
+          Ver ahora
+        </span>
       </button>
-    </div>
+    </section>
 
   </div>
-</section>
+</div>
 
 <!-- STREAM / EN VIVO -->
 <section id="streamAlertSection" class="stream-alert-section nicotic-alert-hidden">
