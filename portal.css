@@ -1170,4 +1170,70 @@ font-size:4rem;
 width:100%;
 }
 
+/* CONTADOR REAL EN HERO */
+.hero-live-counter{
+margin-top:16px;
+display:inline-flex;
+align-items:center;
+justify-content:center;
+gap:10px;
+padding:10px 17px;
+border-radius:999px;
+background:rgba(10,10,14,0.72);
+border:1px solid rgba(168,85,247,0.22);
+box-shadow:
+0 0 22px rgba(168,85,247,0.14),
+0 12px 35px rgba(0,0,0,0.45);
+position:relative;
+z-index:2;
+}
+
+.hero-live-dot{
+width:8px;
+height:8px;
+border-radius:50%;
+background:#a855f7;
+box-shadow:0 0 12px rgba(168,85,247,0.9);
+flex-shrink:0;
+}
+
+.hero-live-copy{
+display:flex;
+flex-direction:column;
+align-items:flex-start;
+line-height:1.1;
+}
+
+.hero-live-label{
+font-size:9px;
+text-transform:uppercase;
+letter-spacing:1.5px;
+color:#aaa;
+}
+
+.hero-live-counter strong{
+font-size:20px;
+line-height:1;
+color:white;
+font-weight:900;
+margin-top:3px;
+text-shadow:0 0 14px rgba(168,85,247,0.45);
+}
+
+@media (max-width:768px){
+
+.hero-live-counter{
+margin-top:14px;
+padding:9px 15px;
+}
+
+.hero-live-label{
+font-size:8.5px;
+letter-spacing:1.2px;
+}
+
+.hero-live-counter strong{
+font-size:19px;
+}
+
 }
