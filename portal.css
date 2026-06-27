@@ -2112,3 +2112,380 @@ width:100%;
 }
 
 }
+
+
+/* =========================================================
+   AJUSTE NICOTIC: HERO PERFIL + EPISODIO PEQUEÑO
+   Este bloque pisa el diseño anterior sin romper lo demás.
+========================================================= */
+
+/* HERO: contador + tarjeta pequeña al costado */
+.hero-stats-row{
+position:relative;
+z-index:2;
+display:flex;
+align-items:center;
+justify-content:center;
+gap:16px;
+width:100%;
+padding:0 18px;
+flex-wrap:wrap;
+}
+
+.hero-profile-mini{
+display:flex;
+align-items:center;
+gap:12px;
+min-width:230px;
+max-width:300px;
+padding:13px 15px;
+border-radius:22px;
+background:rgba(8,8,12,0.62);
+border:1px solid rgba(255,255,255,0.08);
+box-shadow:0 18px 46px rgba(0,0,0,0.38);
+backdrop-filter:blur(10px);
+-webkit-backdrop-filter:blur(10px);
+}
+
+.hero-profile-avatar-wrap{
+position:relative;
+width:58px;
+height:58px;
+flex:0 0 auto;
+}
+
+.hero-profile-avatar{
+width:58px;
+height:58px;
+border-radius:50%;
+object-fit:cover;
+display:block;
+border:2px solid rgba(255,255,255,0.86);
+box-shadow:0 0 0 4px rgba(168,85,247,0.16), 0 12px 28px rgba(0,0,0,0.42);
+background:#070707;
+}
+
+.hero-verified-check{
+position:absolute;
+right:-2px;
+bottom:1px;
+width:21px;
+height:21px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:14px;
+font-weight:900;
+color:#fff;
+background:#1d9bf0;
+border:2px solid #050505;
+box-shadow:0 0 12px rgba(29,155,240,0.55);
+line-height:1;
+}
+
+.hero-profile-info{
+display:flex;
+flex-direction:column;
+align-items:flex-start;
+gap:7px;
+min-width:0;
+}
+
+.hero-profile-name{
+display:flex;
+align-items:center;
+gap:7px;
+font-size:15px;
+font-weight:900;
+letter-spacing:1.2px;
+white-space:nowrap;
+}
+
+.hero-profile-tag{
+font-size:9px;
+letter-spacing:1.8px;
+text-transform:uppercase;
+font-weight:900;
+color:#c084fc;
+padding:4px 7px;
+border-radius:999px;
+background:rgba(168,85,247,0.12);
+border:1px solid rgba(168,85,247,0.22);
+}
+
+.hero-profile-mini-stats{
+display:flex;
+flex-direction:column;
+gap:3px;
+font-size:12px;
+color:#bdbdbd;
+line-height:1.2;
+}
+
+.hero-profile-mini-stats strong{
+color:white;
+font-size:13px;
+font-weight:900;
+}
+
+/* BARRA PEQUEÑA PARA AVISOS; luego se pueden poner más cosas al costado */
+.quick-alerts-section{
+position:relative;
+z-index:3;
+padding:18px 18px 6px;
+background:linear-gradient(180deg,#050505 0%,#050505 100%);
+}
+
+.quick-alerts-row{
+width:100%;
+max-width:1050px;
+margin:0 auto;
+display:flex;
+align-items:stretch;
+justify-content:flex-start;
+gap:14px;
+flex-wrap:wrap;
+}
+
+/* Nuevo episodio: letrero compacto */
+.new-episode-section{
+min-height:0 !important;
+padding:0 !important;
+background:transparent !important;
+border:0 !important;
+position:relative;
+z-index:3;
+flex:1 1 430px;
+max-width:640px;
+}
+
+.new-episode-card{
+width:100%;
+min-height:76px;
+margin:0 !important;
+display:grid !important;
+grid-template-columns:58px minmax(0,1fr) auto !important;
+gap:12px !important;
+align-items:center !important;
+padding:10px 12px !important;
+border-radius:22px !important;
+border:1px solid rgba(255,255,255,0.12) !important;
+background:
+linear-gradient(90deg, rgba(168,85,247,0.22), rgba(59,130,246,0.10), rgba(244,114,182,0.15)),
+rgba(10,10,14,0.86) !important;
+box-shadow:0 16px 46px rgba(0,0,0,0.38) !important;
+cursor:pointer;
+text-align:left;
+animation:nicoticEpisodeBanner 7s ease-in-out infinite;
+overflow:hidden;
+position:relative;
+}
+
+.new-episode-card::before{
+content:"";
+position:absolute;
+inset:-2px;
+background:linear-gradient(90deg, transparent, rgba(255,255,255,0.10), transparent);
+transform:translateX(-100%);
+animation:nicoticEpisodeShine 4.5s ease-in-out infinite;
+pointer-events:none;
+}
+
+.new-episode-card:hover{
+transform:translateY(-2px);
+border-color:rgba(216,180,254,0.45) !important;
+}
+
+.new-episode-media{
+width:54px !important;
+height:54px !important;
+border-radius:50% !important;
+overflow:hidden;
+background:#090909;
+border:2px solid rgba(255,255,255,0.80) !important;
+box-shadow:0 0 0 4px rgba(168,85,247,0.14);
+flex:0 0 auto;
+}
+
+.new-episode-media img,
+.new-episode-media video{
+width:100% !important;
+height:100% !important;
+object-fit:cover !important;
+display:block;
+}
+
+.new-episode-content{
+min-width:0;
+gap:3px !important;
+}
+
+.new-episode-kicker{
+font-size:10px !important;
+letter-spacing:2px !important;
+text-transform:uppercase;
+color:#d8b4fe !important;
+font-weight:900;
+line-height:1;
+}
+
+.new-episode-content h2{
+font-size:15px !important;
+line-height:1.05 !important;
+margin:0 !important;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+letter-spacing:0.2px;
+}
+
+.new-episode-content p{
+margin:0 !important;
+color:#bdbdbd !important;
+font-size:11px !important;
+line-height:1.2 !important;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+max-width:100%;
+}
+
+.new-episode-button{
+display:inline-flex !important;
+align-items:center;
+justify-content:center;
+width:auto !important;
+margin:0 !important;
+background:#ffffff !important;
+color:#050505 !important;
+border:none !important;
+border-radius:999px !important;
+padding:10px 13px !important;
+font-size:12px !important;
+font-weight:900 !important;
+text-decoration:none;
+white-space:nowrap;
+position:relative;
+z-index:2;
+}
+
+.new-episode-button::after{
+content:"";
+margin-left:6px;
+width:6px;
+height:6px;
+border-top:2px solid currentColor;
+border-right:2px solid currentColor;
+transform:rotate(45deg);
+}
+
+@keyframes nicoticEpisodeBanner{
+0%{
+background:
+linear-gradient(90deg, rgba(168,85,247,0.23), rgba(59,130,246,0.10), rgba(244,114,182,0.13)),
+rgba(10,10,14,0.86);
+}
+50%{
+background:
+linear-gradient(90deg, rgba(244,114,182,0.18), rgba(168,85,247,0.20), rgba(59,130,246,0.14)),
+rgba(10,10,14,0.86);
+}
+100%{
+background:
+linear-gradient(90deg, rgba(168,85,247,0.23), rgba(59,130,246,0.10), rgba(244,114,182,0.13)),
+rgba(10,10,14,0.86);
+}
+}
+
+@keyframes nicoticEpisodeShine{
+0%,55%{
+transform:translateX(-110%);
+}
+75%{
+transform:translateX(110%);
+}
+100%{
+transform:translateX(110%);
+}
+}
+
+@media (max-width:768px){
+
+.hero-stats-row{
+gap:12px;
+padding:0;
+}
+
+.hero-profile-mini{
+width:100%;
+max-width:360px;
+justify-content:flex-start;
+padding:12px 14px;
+border-radius:20px;
+}
+
+.hero-profile-avatar-wrap,
+.hero-profile-avatar{
+width:50px;
+height:50px;
+}
+
+.hero-verified-check{
+width:19px;
+height:19px;
+font-size:12px;
+}
+
+.hero-profile-mini-stats{
+flex-direction:row;
+flex-wrap:wrap;
+gap:8px;
+font-size:11px;
+}
+
+.quick-alerts-section{
+padding:14px 14px 4px;
+}
+
+.quick-alerts-row{
+gap:10px;
+}
+
+.new-episode-section{
+flex-basis:100%;
+max-width:none;
+}
+
+.new-episode-card{
+grid-template-columns:48px minmax(0,1fr) auto !important;
+min-height:68px;
+border-radius:19px !important;
+padding:9px 10px !important;
+gap:10px !important;
+}
+
+.new-episode-media{
+width:46px !important;
+height:46px !important;
+}
+
+.new-episode-kicker{
+font-size:9px !important;
+letter-spacing:1.6px !important;
+}
+
+.new-episode-content h2{
+font-size:13px !important;
+}
+
+.new-episode-content p{
+font-size:10px !important;
+}
+
+.new-episode-button{
+font-size:11px !important;
+padding:9px 10px !important;
+}
+
+}
