@@ -350,7 +350,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* =========================
-       💬 COMENTARIOS ANÓNIMOS
+       💬 COMENTARIOS CON IDENTIDAD
     ========================= */
     const sendCommentBtn = document.getElementById("sendCommentBtn");
 
@@ -375,19 +375,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!videoId || !state.videos[videoId]) return;
 
-        const nameInput = document.getElementById("commentName");
+        const aliasInput = document.getElementById("commentAlias");
         const textInput = document.getElementById("commentText");
 
-        const name = nameInput && nameInput.value.trim()
-            ? nameInput.value.trim()
-            : "Anónimo";
+        const name = aliasInput
+            ? aliasInput.value
+            : "👁️ | Habitante del Sótano";
 
         const text = textInput ? textInput.value.trim() : "";
 
         if (!text) return;
 
         const comment = {
-            name: name.slice(0, 30),
+            name: name,
             text: text.slice(0, 180),
             date: new Date().toLocaleString("es-PE")
         };
@@ -420,14 +420,29 @@ document.addEventListener("DOMContentLoaded", () => {
             const item = document.createElement("div");
             item.className = "comment-item";
 
+            let commentName = comment.name;
+
+            if (!commentName || commentName === "Anónimo") {
+                commentName = "👁️ | Habitante del Sótano";
+            }
+
+            const aliasClass = getAliasClass(commentName);
+
             item.innerHTML = `
-                <strong>${escapeHTML(comment.name)}</strong>
+                <strong class="comment-alias ${aliasClass}">${escapeHTML(commentName)}</strong>
                 <p>${escapeHTML(comment.text)}</p>
                 <span>${escapeHTML(comment.date)}</span>
             `;
 
             list.appendChild(item);
         });
+    }
+
+    function getAliasClass(name) {
+        if (name.includes("Migajero")) return "alias-migajero";
+        if (name.includes("Fantasma")) return "alias-fantasma";
+        if (name.includes("Habitante")) return "alias-habitante";
+        return "alias-habitante";
     }
 
     function refreshCommentCounts(videoId) {
