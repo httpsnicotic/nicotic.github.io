@@ -876,10 +876,204 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }, { passive: false });
 
+
+
+    /* =========================
+       AVISO RÁPIDO: HOY ESTARÉ EN...
+       Firebase: portal/alerts/locationAlert
+    ========================= */
+    let locationAlertTimer = null;
+
+    const locationAlertDemo = {
+        active: false,
+        title: "Hoy estaré en Trujillo",
+        place: "Centro de Trujillo",
+        description: "Estaré grabando algo especial para el sótano.",
+        dateTime: "2026-07-10T17:00:00-05:00",
+        imageUrl: "ojo.jpg",
+        videoUrl: "",
+        buttonText: "Más info",
+        buttonUrl: "",
+        expireAfterHours: 6
+    };
+
+    function initLocationAlert() {
+        const section = document.getElementById("locationAlertSection");
+
+        if (!section) return;
+
+        hideLocationAlert();
+
+        if (window.nicoticDb) {
+            window.nicoticDb.ref("portal/alerts/locationAlert").on("value", snapshot => {
+                const data = snapshot.val();
+
+                if (!data || data.active !== true) {
+                    hideLocationAlert();
+                    return;
+                }
+
+                renderLocationAlert(data);
+            }, error => {
+                console.warn("NICOTIC: no se pudo leer locationAlert.", error);
+                renderLocationAlert(locationAlertDemo);
+            });
+
+            return;
+        }
+
+        renderLocationAlert(locationAlertDemo);
+    }
+
+    function renderLocationAlert(data) {
+        const section = document.getElementById("locationAlertSection");
+        const title = document.getElementById("locationAlertTitle");
+        const place = document.getElementById("locationAlertPlace");
+        const description = document.getElementById("locationAlertDescription");
+        const media = document.getElementById("locationAlertMedia");
+        const button = document.getElementById("locationAlertButton");
+
+        if (!section) return;
+
+        if (!data || data.active !== true) {
+            hideLocationAlert();
+            return;
+        }
+
+        if (title) title.textContent = data.title || "Hoy estaré en...";
+        if (place) place.textContent = data.place || "Lugar por confirmar";
+        if (description) description.textContent = data.description || "Pronto habrá un aviso especial.";
+
+        renderLocationAlertMedia(media, data);
+        renderLocationAlertButton(button, data);
+
+        section.classList.remove("nicotic-alert-hidden");
+        startLocationAlertCountdown(data);
+    }
+
+    function renderLocationAlertMedia(media, data) {
+        if (!media) return;
+
+        const imageUrl = String(data.imageUrl || "").trim();
+        const videoUrl = String(data.videoUrl || "").trim();
+
+        media.innerHTML = "";
+
+        if (videoUrl) {
+            const video = document.createElement("video");
+            video.src = videoUrl;
+            video.autoplay = true;
+            video.muted = true;
+            video.loop = true;
+            video.playsInline = true;
+            video.preload = "metadata";
+            media.appendChild(video);
+            return;
+        }
+
+        if (imageUrl) {
+            const img = document.createElement("img");
+            img.src = imageUrl;
+            img.alt = data.title || "Aviso NICOTIC";
+            img.loading = "lazy";
+            media.appendChild(img);
+        }
+    }
+
+    function renderLocationAlertButton(button, data) {
+        if (!button) return;
+
+        const buttonText = String(data.buttonText || "").trim();
+        const buttonUrl = String(data.buttonUrl || "").trim();
+
+        if (!buttonText || !buttonUrl) {
+            button.classList.add("nicotic-alert-hidden");
+            button.removeAttribute("href");
+            return;
+        }
+
+        button.textContent = buttonText;
+        button.href = buttonUrl;
+        button.classList.remove("nicotic-alert-hidden");
+    }
+
+    function startLocationAlertCountdown(data) {
+        clearInterval(locationAlertTimer);
+
+        updateLocationAlertCountdown(data);
+
+        locationAlertTimer = setInterval(() => {
+            updateLocationAlertCountdown(data);
+        }, 1000);
+    }
+
+    function updateLocationAlertCountdown(data) {
+        const section = document.getElementById("locationAlertSection");
+        const countdown = document.getElementById("locationAlertCountdown");
+
+        if (!section || !countdown) return;
+
+        const target = new Date(data.dateTime || "").getTime();
+
+        if (!target || Number.isNaN(target)) {
+            countdown.textContent = "Fecha por confirmar";
+            section.classList.remove("location-alert-ended");
+            return;
+        }
+
+        const now = Date.now();
+        const diff = target - now;
+        const expireAfterHours = Number(data.expireAfterHours || 6);
+        const hideAfterMs = expireAfterHours * 60 * 60 * 1000;
+
+        if (diff <= 0) {
+            const passed = Math.abs(diff);
+
+            if (passed >= hideAfterMs) {
+                hideLocationAlert();
+                return;
+            }
+
+            countdown.textContent = data.startedText || "Ya comenzó";
+            section.classList.add("location-alert-ended");
+            return;
+        }
+
+        section.classList.remove("location-alert-ended");
+
+        const totalSeconds = Math.floor(diff / 1000);
+        const days = Math.floor(totalSeconds / 86400);
+        const hours = Math.floor((totalSeconds % 86400) / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+
+        if (days > 0) {
+            countdown.textContent = `${days}d ${padTime(hours)}h ${padTime(minutes)}m`;
+        } else {
+            countdown.textContent = `${padTime(hours)}h ${padTime(minutes)}m ${padTime(seconds)}s`;
+        }
+    }
+
+    function hideLocationAlert() {
+        const section = document.getElementById("locationAlertSection");
+
+        if (section) {
+            section.classList.add("nicotic-alert-hidden");
+            section.classList.remove("location-alert-ended");
+        }
+
+        clearInterval(locationAlertTimer);
+    }
+
+    function padTime(value) {
+        return String(value).padStart(2, "0");
+    }
+
     /* =========================
        INICIAR TODO
     ========================= */
     initializeVideos();
+    initLocationAlert();
     countPortalVisit();
     initVisualEffects();
 
