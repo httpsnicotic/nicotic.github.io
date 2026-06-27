@@ -58,17 +58,35 @@
 </div>
 
 <!-- VIDEOS -->
-<div class="section">
-  <h2>🎥 Video destacado</h2>
+<div class="section video-highlight-section">
 
-  <div class="featured-video">
-    <video 
-      id="mainVideo" 
-      controls 
-      playsinline 
-      src="videos/video1.mp4" 
-      data-current-video="video1">
-    </video>
+  <div class="featured-section-header">
+    <div class="featured-kicker">NICOTIC</div>
+
+    <h2 class="featured-title">Video destacado</h2>
+
+    <div class="featured-divider" aria-hidden="true">
+      <span></span>
+    </div>
+  </div>
+
+  <div class="featured-video-shell">
+    <div class="featured-glow featured-glow-left" aria-hidden="true"></div>
+    <div class="featured-glow featured-glow-right" aria-hidden="true"></div>
+
+    <div class="featured-video-frame">
+      <div class="featured-video">
+        <video 
+          id="mainVideo" 
+          controls 
+          playsinline 
+          preload="metadata"
+          poster="thumbs/ep1.jpg"
+          src="videos/video1.mp4" 
+          data-current-video="video1">
+        </video>
+      </div>
+    </div>
   </div>
 
   <div class="main-video-info">
@@ -323,35 +341,6 @@
 </div>
 
 <script>
-function selectVideo(card) {
-  const videoId = card.dataset.videoId;
-  const src = card.dataset.src;
-  const title = card.dataset.title;
-  const meta = card.dataset.meta;
-  const skulls = card.dataset.skulls;
-  const views = card.dataset.views;
-
-  const video = document.getElementById("mainVideo");
-
-  video.src = src;
-  video.dataset.currentVideo = videoId;
-  video.load();
-  video.play().catch(() => {});
-
-  document.getElementById("mainTitle").textContent = title;
-  document.getElementById("mainMeta").textContent = meta;
-  document.getElementById("mainSkullCount").textContent = skulls;
-  document.getElementById("mainViewCount").textContent = views;
-
-  document.getElementById("mainSkulls").dataset.videoId = videoId;
-
-  document.querySelectorAll(".video-card").forEach(item => {
-    item.classList.remove("active-card");
-  });
-
-  card.classList.add("active-card");
-}
-
 /* BLOQUEO DE ZOOM EN MÓVIL */
 document.addEventListener('gesturestart', function (e) {
   e.preventDefault();
