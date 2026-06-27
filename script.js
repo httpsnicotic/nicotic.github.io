@@ -1069,11 +1069,205 @@ document.addEventListener("DOMContentLoaded", () => {
         return String(value).padStart(2, "0");
     }
 
+
+    /* =========================
+       EVENTO GRANDE / VIAJE / MISIÓN ESPECIAL
+       Firebase: portal/alerts/featuredEvent
+    ========================= */
+    let featuredEventTimer = null;
+
+    const featuredEventDemo = {
+        active: false,
+        title: "Viaje a Japón",
+        subtitle: "Misión especial",
+        description: "Se viene contenido fuera del sótano. Esto será parte de una etapa especial de NICOTIC.",
+        dateTime: "2026-12-20T08:00:00-05:00",
+        imageUrl: "ojo.jpg",
+        videoUrl: "",
+        buttonText: "Ver más",
+        buttonUrl: "",
+        startedText: "LA MISIÓN COMENZÓ"
+    };
+
+    function initFeaturedEvent() {
+        const section = document.getElementById("featuredEventSection");
+
+        if (!section) return;
+
+        hideFeaturedEvent();
+
+        if (window.nicoticDb) {
+            window.nicoticDb.ref("portal/alerts/featuredEvent").on("value", snapshot => {
+                const data = snapshot.val();
+
+                if (!data || data.active !== true) {
+                    hideFeaturedEvent();
+                    return;
+                }
+
+                renderFeaturedEvent(data);
+            }, error => {
+                console.warn("NICOTIC: no se pudo leer featuredEvent.", error);
+                renderFeaturedEvent(featuredEventDemo);
+            });
+
+            return;
+        }
+
+        renderFeaturedEvent(featuredEventDemo);
+    }
+
+    function renderFeaturedEvent(data) {
+        const section = document.getElementById("featuredEventSection");
+        const title = document.getElementById("featuredEventTitle");
+        const subtitle = document.getElementById("featuredEventSubtitle");
+        const description = document.getElementById("featuredEventDescription");
+        const media = document.getElementById("featuredEventMedia");
+        const button = document.getElementById("featuredEventButton");
+
+        if (!section) return;
+
+        if (!data || data.active !== true) {
+            hideFeaturedEvent();
+            return;
+        }
+
+        if (title) title.textContent = data.title || "Evento especial";
+        if (subtitle) subtitle.textContent = data.subtitle || "Misión especial";
+        if (description) description.textContent = data.description || "Se viene algo especial para el sótano.";
+
+        renderFeaturedEventMedia(media, data);
+        renderFeaturedEventButton(button, data);
+
+        section.classList.remove("nicotic-alert-hidden");
+        startFeaturedEventCountdown(data);
+    }
+
+    function renderFeaturedEventMedia(media, data) {
+        if (!media) return;
+
+        const imageUrl = String(data.imageUrl || "").trim();
+        const videoUrl = String(data.videoUrl || "").trim();
+
+        media.innerHTML = "";
+
+        if (videoUrl) {
+            const video = document.createElement("video");
+            video.src = videoUrl;
+            video.autoplay = true;
+            video.muted = true;
+            video.loop = true;
+            video.playsInline = true;
+            video.preload = "metadata";
+            media.appendChild(video);
+            return;
+        }
+
+        if (imageUrl) {
+            const img = document.createElement("img");
+            img.src = imageUrl;
+            img.alt = data.title || "Evento NICOTIC";
+            img.loading = "lazy";
+            media.appendChild(img);
+        }
+    }
+
+    function renderFeaturedEventButton(button, data) {
+        if (!button) return;
+
+        const buttonText = String(data.buttonText || "").trim();
+        const buttonUrl = String(data.buttonUrl || "").trim();
+
+        if (!buttonText || !buttonUrl) {
+            button.classList.add("nicotic-alert-hidden");
+            button.removeAttribute("href");
+            return;
+        }
+
+        button.textContent = buttonText;
+        button.href = buttonUrl;
+        button.classList.remove("nicotic-alert-hidden");
+    }
+
+    function startFeaturedEventCountdown(data) {
+        clearInterval(featuredEventTimer);
+
+        updateFeaturedEventCountdown(data);
+
+        featuredEventTimer = setInterval(() => {
+            updateFeaturedEventCountdown(data);
+        }, 1000);
+    }
+
+    function updateFeaturedEventCountdown(data) {
+        const section = document.getElementById("featuredEventSection");
+        const countdown = document.getElementById("featuredEventCountdown");
+        const started = document.getElementById("featuredEventStarted");
+
+        const daysEl = document.getElementById("featuredEventDays");
+        const hoursEl = document.getElementById("featuredEventHours");
+        const minutesEl = document.getElementById("featuredEventMinutes");
+        const secondsEl = document.getElementById("featuredEventSeconds");
+
+        if (!section || !countdown || !started) return;
+
+        const target = new Date(data.dateTime || "").getTime();
+
+        if (!target || Number.isNaN(target)) {
+            if (daysEl) daysEl.textContent = "--";
+            if (hoursEl) hoursEl.textContent = "--";
+            if (minutesEl) minutesEl.textContent = "--";
+            if (secondsEl) secondsEl.textContent = "--";
+            countdown.classList.remove("nicotic-alert-hidden");
+            started.classList.add("nicotic-alert-hidden");
+            section.classList.remove("featured-event-ended");
+            return;
+        }
+
+        const diff = target - Date.now();
+
+        if (diff <= 0) {
+            countdown.classList.add("nicotic-alert-hidden");
+            started.textContent = data.startedText || "LA MISIÓN COMENZÓ";
+            started.classList.remove("nicotic-alert-hidden");
+            section.classList.add("featured-event-ended");
+            return;
+        }
+
+        section.classList.remove("featured-event-ended");
+        countdown.classList.remove("nicotic-alert-hidden");
+        started.classList.add("nicotic-alert-hidden");
+
+        const totalSeconds = Math.floor(diff / 1000);
+        const days = Math.floor(totalSeconds / 86400);
+        const hours = Math.floor((totalSeconds % 86400) / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+
+        if (daysEl) daysEl.textContent = padTime(days);
+        if (hoursEl) hoursEl.textContent = padTime(hours);
+        if (minutesEl) minutesEl.textContent = padTime(minutes);
+        if (secondsEl) secondsEl.textContent = padTime(seconds);
+    }
+
+    function hideFeaturedEvent() {
+        const section = document.getElementById("featuredEventSection");
+
+        if (section) {
+            section.classList.add("nicotic-alert-hidden");
+            section.classList.remove("featured-event-ended");
+        }
+
+        clearInterval(featuredEventTimer);
+    }
+
+
     /* =========================
        INICIAR TODO
     ========================= */
     initializeVideos();
     initLocationAlert();
+    initFeaturedEvent();
     countPortalVisit();
     initVisualEffects();
 
