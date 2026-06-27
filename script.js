@@ -1456,6 +1456,39 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
+
+
+    /* =========================
+       MÚSICA FLOTANTE
+       Carga YouTube solo cuando el usuario toca el botón.
+    ========================= */
+    function initFloatingMusic() {
+        const button = document.getElementById("musicFloatButton");
+        const player = document.getElementById("musicFloatPlayer");
+
+        if (!button || !player) return;
+
+        let playing = false;
+        const musicUrl = "https://www.youtube.com/embed/4kFLPrDBzf4?autoplay=1&start=40&loop=1&playlist=4kFLPrDBzf4&controls=0&modestbranding=1";
+
+        button.addEventListener("click", () => {
+            playing = !playing;
+
+            if (playing) {
+                player.innerHTML = `<iframe title="Música NICOTIC" width="1" height="1" src="${musicUrl}" allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+                button.classList.add("is-playing");
+                button.setAttribute("aria-pressed", "true");
+                button.querySelector(".music-float-text").textContent = "Sonando";
+            } else {
+                player.innerHTML = "";
+                button.classList.remove("is-playing");
+                button.setAttribute("aria-pressed", "false");
+                button.querySelector(".music-float-text").textContent = "Música";
+            }
+        });
+    }
+
+
     /* =========================
        INICIAR TODO
     ========================= */
@@ -1464,6 +1497,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initFeaturedEvent();
     initNewEpisodeAlert();
     initStreamAlert();
+    initFloatingMusic();
     countPortalVisit();
     initVisualEffects();
 
