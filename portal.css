@@ -2939,3 +2939,466 @@ padding:8px 13px !important;
 animation:none !important;
 }
 }
+
+
+/* =========================================================
+   AJUSTE FINAL NICOTIC V8
+   - bienvenida con GIF
+   - episodio morado
+   - aviso con media foto desplegable
+   - stream oscuro con KICK verde solamente
+   - música flotante
+========================================================= */
+
+/* HERO sin NICOTIC repetido */
+.hero{
+min-height:100vh !important;
+height:auto !important;
+padding:92px 18px 72px !important;
+justify-content:center !important;
+gap:24px !important;
+}
+
+.hero-welcome-wrap{
+position:relative;
+z-index:2;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+gap:14px;
+width:100%;
+}
+
+.hero-welcome-gif{
+width:min(230px, 50vw);
+height:auto;
+display:block;
+object-fit:contain;
+filter:drop-shadow(0 0 22px rgba(168,85,247,0.24));
+opacity:0.95;
+}
+
+.hero h1,
+.hero-welcome-title{
+font-size:clamp(2.9rem, 8vw, 6.2rem) !important;
+letter-spacing:2px !important;
+line-height:0.95 !important;
+margin:0 !important;
+max-width:920px;
+text-align:center;
+text-shadow:
+0 0 16px rgba(255,255,255,0.16),
+0 0 28px rgba(168,85,247,0.26) !important;
+}
+
+.hero > p{
+display:none !important;
+}
+
+.hero-stats-row{
+margin-top:8px !important;
+}
+
+.hero-visitor-box{
+padding:24px 28px !important;
+}
+
+.hero-plus{
+color:#22c55e !important;
+text-shadow:0 0 16px rgba(34,197,94,0.45) !important;
+}
+
+.hero-visitor-sub{
+display:none !important;
+}
+
+.hero-profile-tag{
+color:#d8b4fe !important;
+background:linear-gradient(90deg, rgba(168,85,247,0.18), rgba(255,255,255,0.06)) !important;
+border:1px solid rgba(216,180,254,0.38) !important;
+box-shadow:0 0 18px rgba(168,85,247,0.14);
+}
+
+/* Nuevo episodio morado, compacto */
+.new-episode-card{
+background:
+linear-gradient(90deg, rgba(126,34,206,0.34), rgba(88,28,135,0.22), rgba(20,20,24,0.92)),
+rgba(10,10,14,0.92) !important;
+border-color:rgba(216,180,254,0.28) !important;
+box-shadow:0 16px 44px rgba(0,0,0,0.42), 0 0 24px rgba(126,34,206,0.12) !important;
+animation:nicoticEpisodeBannerPurple 7s ease-in-out infinite !important;
+}
+
+.new-episode-kicker{
+color:#e9d5ff !important;
+}
+
+.new-episode-button{
+background:#d8b4fe !important;
+color:#15051f !important;
+box-shadow:0 0 18px rgba(216,180,254,0.18);
+}
+
+.new-episode-button:hover{
+background:#f3e8ff !important;
+}
+
+@keyframes nicoticEpisodeBannerPurple{
+0%,100%{filter:brightness(1);}
+50%{filter:brightness(1.14);}
+}
+
+/* Viaje / comunicado importante rojo con contador más chico */
+.featured-event-section{
+padding:28px 20px !important;
+background:
+radial-gradient(circle at 85% 0%, rgba(239,68,68,0.16), transparent 32%),
+linear-gradient(180deg,#070303 0%,#120505 52%,#030303 100%) !important;
+}
+
+.featured-event-card{
+max-width:1050px !important;
+border-color:rgba(239,68,68,0.20) !important;
+background:rgba(18,6,7,0.82) !important;
+box-shadow:0 24px 68px rgba(0,0,0,0.48), 0 0 28px rgba(239,68,68,0.10) !important;
+}
+
+.featured-event-subtitle{
+color:#fecaca !important;
+background:rgba(239,68,68,0.13) !important;
+border-color:rgba(239,68,68,0.32) !important;
+}
+
+.featured-event-media::after{
+content:"COMUNICADO IMPORTANTE" !important;
+}
+
+.featured-event-countdown{
+gap:7px !important;
+margin:5px 0 12px !important;
+max-width:440px;
+}
+
+.featured-event-time{
+padding:8px 5px !important;
+border-radius:12px !important;
+background:rgba(255,255,255,0.05) !important;
+border-color:rgba(239,68,68,0.18) !important;
+}
+
+.featured-event-time strong{
+font-size:clamp(1.35rem, 2.8vw, 2.1rem) !important;
+text-shadow:0 0 14px rgba(239,68,68,0.26) !important;
+}
+
+.featured-event-time span{
+font-size:8px !important;
+letter-spacing:1.1px !important;
+margin-top:5px !important;
+}
+
+/* Aviso del sótano: foto media y desplegable bien */
+.location-alert-section{
+padding:18px 20px !important;
+background:linear-gradient(180deg,#050505 0%,#08060a 100%) !important;
+}
+
+.location-alert-card{
+grid-template-columns:minmax(260px, 0.58fr) minmax(300px, 1fr) !important;
+grid-template-areas:
+"media content"
+"toggle content" !important;
+align-items:center !important;
+gap:12px 16px !important;
+max-width:1050px !important;
+padding:12px !important;
+border-radius:22px !important;
+background:rgba(10,10,14,0.84) !important;
+}
+
+.location-alert-media{
+grid-area:media;
+height:150px !important;
+min-height:150px !important;
+width:100% !important;
+border-radius:17px !important;
+}
+
+.location-alert-media img,
+.location-alert-media video{
+height:100% !important;
+min-height:150px !important;
+object-fit:cover !important;
+object-position:center top !important;
+}
+
+.location-alert-toggle{
+grid-area:toggle;
+width:100% !important;
+padding:9px 12px !important;
+font-size:12px !important;
+}
+
+.location-alert-content{
+grid-area:content;
+display:grid;
+grid-template-columns:1fr auto;
+grid-template-areas:
+"kicker countdown"
+"title countdown"
+"place countdown"
+"description countdown"
+"button countdown";
+column-gap:16px;
+align-items:center;
+padding:4px 4px !important;
+}
+
+.location-alert-kicker{grid-area:kicker;}
+.location-alert-content h2{grid-area:title;}
+.location-alert-place{grid-area:place;}
+.location-alert-content p{grid-area:description;}
+.location-alert-button{grid-area:button;}
+.location-alert-countdown-box{grid-area:countdown;}
+
+.location-alert-expanded .location-alert-card{
+grid-template-areas:
+"media content"
+"toggle content" !important;
+}
+
+.location-alert-expanded .location-alert-media{
+height:330px !important;
+min-height:330px !important;
+}
+
+.location-alert-expanded .location-alert-media img,
+.location-alert-expanded .location-alert-media video{
+min-height:330px !important;
+}
+
+/* Stream: oscuro/morado; SOLO KICK en verde */
+.stream-alert-section{
+padding:20px 20px !important;
+background:
+radial-gradient(circle at 15% 0%, rgba(168,85,247,0.12), transparent 34%),
+linear-gradient(180deg,#050505 0%,#08060d 100%) !important;
+}
+
+.stream-alert-card{
+grid-template-columns:minmax(250px, 0.55fr) minmax(300px, 1fr) !important;
+max-width:1050px !important;
+gap:16px !important;
+padding:12px !important;
+border-radius:22px !important;
+background:rgba(10,10,14,0.84) !important;
+border-color:rgba(168,85,247,0.16) !important;
+box-shadow:0 18px 48px rgba(0,0,0,0.42), 0 0 20px rgba(168,85,247,0.08) !important;
+}
+
+.stream-alert-media{
+height:190px !important;
+border-radius:17px !important;
+}
+
+.stream-alert-status{
+background:rgba(168,85,247,0.13) !important;
+border-color:rgba(168,85,247,0.32) !important;
+}
+
+.stream-alert-status::before{
+background:#a855f7 !important;
+box-shadow:0 0 12px rgba(168,85,247,0.85) !important;
+}
+
+.stream-alert-platform{
+color:#22c55e !important;
+font-size:16px !important;
+font-weight:1000 !important;
+text-shadow:0 0 14px rgba(34,197,94,0.38) !important;
+}
+
+.stream-alert-button{
+background:#ffffff !important;
+color:#080808 !important;
+padding:9px 18px !important;
+min-width:72px;
+}
+
+.stream-alert-button:hover{
+background:#d8b4fe !important;
+}
+
+/* Música flotante */
+.music-float-button{
+position:fixed;
+right:16px;
+bottom:16px;
+z-index:1000;
+display:inline-flex;
+align-items:center;
+gap:8px;
+border:1px solid rgba(216,180,254,0.34);
+background:rgba(8,8,12,0.82);
+color:#f5f3ff;
+border-radius:999px;
+padding:10px 13px;
+font-size:13px;
+font-weight:900;
+letter-spacing:0.4px;
+cursor:pointer;
+box-shadow:0 14px 34px rgba(0,0,0,0.46), 0 0 20px rgba(168,85,247,0.16);
+backdrop-filter:blur(10px);
+-webkit-backdrop-filter:blur(10px);
+transition:0.2s ease;
+}
+
+.music-float-button:hover{
+transform:translateY(-2px);
+border-color:rgba(216,180,254,0.60);
+}
+
+.music-float-button.is-playing{
+background:rgba(88,28,135,0.88);
+}
+
+.music-float-player{
+position:fixed;
+width:1px;
+height:1px;
+right:-10px;
+bottom:-10px;
+overflow:hidden;
+opacity:0;
+pointer-events:none;
+}
+
+/* Responsive final */
+@media (max-width:768px){
+
+.hero{
+padding:88px 14px 58px !important;
+gap:18px !important;
+}
+
+.hero-welcome-gif{
+width:min(190px, 56vw);
+}
+
+.hero h1,
+.hero-welcome-title{
+font-size:clamp(2.45rem, 12vw, 4.7rem) !important;
+letter-spacing:1px !important;
+}
+
+.hero-visitor-box{
+max-width:100% !important;
+padding:22px 18px !important;
+}
+
+.hero-profile-mini{
+width:100% !important;
+max-width:360px !important;
+justify-content:flex-start !important;
+}
+
+.location-alert-card{
+grid-template-columns:1fr !important;
+grid-template-areas:
+"media"
+"toggle"
+"content" !important;
+gap:10px !important;
+}
+
+.location-alert-media{
+height:150px !important;
+min-height:150px !important;
+}
+
+.location-alert-media img,
+.location-alert-media video{
+min-height:150px !important;
+}
+
+.location-alert-expanded .location-alert-media{
+height:315px !important;
+min-height:315px !important;
+}
+
+.location-alert-expanded .location-alert-media img,
+.location-alert-expanded .location-alert-media video{
+min-height:315px !important;
+}
+
+.location-alert-content{
+display:block !important;
+}
+
+.location-alert-content h2{
+font-size:1.65rem !important;
+line-height:1.02 !important;
+}
+
+.location-alert-content p{
+font-size:13px !important;
+}
+
+.location-alert-countdown-box{
+margin-top:4px !important;
+}
+
+.featured-event-countdown{
+max-width:none;
+}
+
+.stream-alert-card{
+grid-template-columns:1fr !important;
+}
+
+.stream-alert-media{
+height:185px !important;
+}
+
+.quick-alerts-section{
+padding:14px 14px 4px !important;
+}
+
+.new-episode-section{
+flex-basis:100% !important;
+max-width:none !important;
+}
+
+.new-episode-card{
+grid-template-columns:52px minmax(0,1fr) auto !important;
+min-height:72px !important;
+}
+
+.new-episode-media{
+width:50px !important;
+height:50px !important;
+}
+
+.music-float-button{
+right:12px;
+bottom:12px;
+padding:9px 11px;
+}
+
+.music-float-text{
+display:none;
+}
+
+}
+
+@media (max-width:390px){
+.new-episode-card{
+grid-template-columns:48px minmax(0,1fr) !important;
+}
+.new-episode-button{
+grid-column:2 / 3;
+width:max-content !important;
+margin-top:4px !important;
+}
+}
