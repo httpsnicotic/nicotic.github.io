@@ -150,6 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return Boolean(
             document.getElementById("mainVideo") ||
             document.getElementById("portalVisits") ||
+            document.getElementById("portalVisitsHero") ||
             document.querySelector(".video-highlight-section")
         );
     }
@@ -214,10 +215,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* =========================
        VISITAS AL PORTAL
+       Firebase + respaldo local
     ========================= */
     function countPortalVisit() {
         if (!isPortalPage()) return;
 
+        if (window.nicoticDb) {
+            countFirebasePortalVisit();
+            return;
+        }
+
+        countLocalPortalVisit();
+    }
+
+    function countLocalPortalVisit() {
         const today = new Date().toISOString().slice(0, 10);
 
         if (state.lastPortalVisitDay !== today) {
@@ -229,9 +240,46 @@ document.addEventListener("DOMContentLoaded", () => {
         refreshPortalVisits();
     }
 
+    function countFirebasePortalVisit() {
+        const db = window.nicoticDb;
+        const totalRef = db.ref("stats/portalVisitsTotal");
+        const registeredKey = "nicotic_firebase_visitor_registered_v1";
+
+        totalRef.on("value", snapshot => {
+            const total = Number(snapshot.val() || 0);
+            updatePortalVisitDisplays(total);
+        });
+
+        const alreadyRegistered = localStorage.getItem(registeredKey);
+
+        if (alreadyRegistered) return;
+
+        totalRef.transaction(current => {
+            return Number(current || 0) + 1;
+        }, (error, committed) => {
+            if (!error && committed) {
+                localStorage.setItem(registeredKey, "true");
+            }
+
+            if (error) {
+                console.warn("NICOTIC: no se pudo actualizar contador Firebase.", error);
+                countLocalPortalVisit();
+            }
+        });
+    }
+
     function refreshPortalVisits() {
-        const el = document.getElementById("portalVisits");
-        if (el) el.textContent = formatNumber(state.portalVisits);
+        updatePortalVisitDisplays(state.portalVisits);
+    }
+
+    function updatePortalVisitDisplays(value) {
+        const formatted = formatNumber(value);
+
+        const heroCounter = document.getElementById("portalVisitsHero");
+        const bottomCounter = document.getElementById("portalVisits");
+
+        if (heroCounter) heroCounter.textContent = formatted;
+        if (bottomCounter) bottomCounter.textContent = formatted;
     }
 
     /* =========================
