@@ -26,8 +26,10 @@
 
 <!-- HERO -->
 <div class="hero">
-  <h1>NICOTIC</h1>
-  <p>Bienvenidos al sótano de Nico</p>
+  <div class="hero-welcome-wrap">
+    <img class="hero-welcome-gif" src="giphy.gif" alt="NICOTIC GIF">
+    <h1 class="hero-welcome-title">Bienvenidos al sótano</h1>
+  </div>
 
   <div class="hero-stats-row">
 
@@ -36,10 +38,6 @@
 
       <div class="hero-visitor-number">
         <span class="hero-plus">+</span><span id="portalVisitsHero">0</span>
-      </div>
-
-      <div class="hero-visitor-sub">
-        personas han entrado al portal
       </div>
     </div>
 
@@ -51,7 +49,7 @@
 
       <div class="hero-profile-info">
         <div class="hero-profile-name">
-          NICOTIC <span class="hero-profile-tag">portal</span>
+          NICOTIC <span class="hero-profile-tag">OWNER</span>
         </div>
 
         <div class="hero-profile-mini-stats">
@@ -516,6 +514,14 @@ document.addEventListener('touchstart', function (e) {
   }
 }, { passive: false });
 </script>
+
+
+<!-- MÚSICA FLOTANTE -->
+<button id="musicFloatButton" class="music-float-button" type="button" aria-pressed="false">
+  <span class="music-float-icon">🎵</span>
+  <span class="music-float-text">Música</span>
+</button>
+<div id="musicFloatPlayer" class="music-float-player" aria-hidden="true"></div>
 
 <!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
