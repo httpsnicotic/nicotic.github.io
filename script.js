@@ -1,9 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     /* =========================
-       🔥 PARTICULAS
+       PARTICULAS
     ========================= */
-    if (typeof tsParticles !== "undefined") {
+    const particlesContainer = document.getElementById("tsparticles");
+
+    if (particlesContainer && typeof tsParticles !== "undefined") {
 
         tsParticles.load("tsparticles", {
 
@@ -50,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* =========================
-       🔘 BOTÓN ENTER
+       BOTÓN ENTER
     ========================= */
     const boton = document.getElementById("enterBtn");
 
@@ -61,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* =========================
-       📦 BASE LOCAL
+       BASE LOCAL
     ========================= */
     const STORAGE_KEY = "nicotic_stats_v1";
     const SESSION_VIEWS_KEY = "nicotic_session_views_v1";
@@ -87,10 +89,18 @@ document.addEventListener("DOMContentLoaded", () => {
                     };
                 }
 
+                if (typeof parsed.portalVisits !== "number") {
+                    parsed.portalVisits = 0;
+                }
+
+                if (!parsed.lastPortalVisitDay) {
+                    parsed.lastPortalVisitDay = "";
+                }
+
                 return parsed;
 
             } catch (e) {
-                console.warn("Error leyendo datos locales. Reiniciando.");
+                console.warn("NICOTIC: error leyendo datos locales. Reiniciando.");
             }
         }
 
@@ -136,11 +146,21 @@ document.addEventListener("DOMContentLoaded", () => {
         return Number(num || 0).toLocaleString("es-PE");
     }
 
+    function isPortalPage() {
+        return Boolean(
+            document.getElementById("mainVideo") ||
+            document.getElementById("portalVisits") ||
+            document.querySelector(".video-highlight-section")
+        );
+    }
+
     /* =========================
-       🎬 INICIAR VIDEOS DESDE HTML
+       INICIAR VIDEOS DESDE HTML
     ========================= */
     function initializeVideos() {
         const cards = document.querySelectorAll(".video-card");
+
+        if (!cards.length) return;
 
         let recalculatedViews = 0;
         let recalculatedSkulls = 0;
@@ -176,12 +196,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
         saveState();
         refreshAllUI();
+        setInitialVideoPoster();
+    }
+
+    function setInitialVideoPoster() {
+        const activeCard = document.querySelector(".video-card.active-card");
+        const mainVideo = document.getElementById("mainVideo");
+
+        if (!activeCard || !mainVideo) return;
+
+        const thumb = activeCard.querySelector(".thumb-video");
+
+        if (thumb && thumb.getAttribute("src")) {
+            mainVideo.setAttribute("poster", thumb.getAttribute("src"));
+        }
     }
 
     /* =========================
-       👁️ VISITAS AL PORTAL
+       VISITAS AL PORTAL
     ========================= */
     function countPortalVisit() {
+        if (!isPortalPage()) return;
+
         const today = new Date().toISOString().slice(0, 10);
 
         if (state.lastPortalVisitDay !== today) {
@@ -199,7 +235,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* =========================
-       🎬 SELECCIONAR VIDEO
+       SELECCIONAR VIDEO
     ========================= */
     window.selectVideo = function(card) {
         if (!card) return;
@@ -213,9 +249,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!video || !videoId || !src) return;
 
+        clearTimeout(viewTimer);
+
         video.pause();
         video.src = src;
         video.dataset.currentVideo = videoId;
+
+        const thumb = card.querySelector(".thumb-video");
+
+        if (thumb && thumb.getAttribute("src")) {
+            video.setAttribute("poster", thumb.getAttribute("src"));
+        }
+
         video.load();
 
         const titleEl = document.getElementById("mainTitle");
@@ -236,6 +281,7 @@ document.addEventListener("DOMContentLoaded", () => {
         refreshVideoUI(videoId);
         renderComments(videoId);
         refreshLikedButtons();
+        animateFeaturedVideo();
 
         video.play().catch(() => {});
     };
@@ -244,6 +290,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const main = document.getElementById("mainVideo");
 
         if (!main) return;
+
+        clearTimeout(viewTimer);
 
         main.pause();
         main.src = src;
@@ -265,8 +313,24 @@ document.addEventListener("DOMContentLoaded", () => {
         if (mainViewCount) mainViewCount.textContent = views;
     };
 
+    function animateFeaturedVideo() {
+        const shell = document.querySelector(".featured-video-shell");
+
+        if (!shell) return;
+
+        shell.classList.remove("video-switched");
+
+        requestAnimationFrame(() => {
+            shell.classList.add("video-switched");
+        });
+
+        setTimeout(() => {
+            shell.classList.remove("video-switched");
+        }, 700);
+    }
+
     /* =========================
-       👁️ VISTAS POR VIDEO
+       VISTAS POR VIDEO
     ========================= */
     const mainVideo = document.getElementById("mainVideo");
 
@@ -309,7 +373,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* =========================
-       ☠️ CALAVERAS
+       CALAVERAS
     ========================= */
     function addSkull(videoId) {
         if (!videoId) return;
@@ -328,6 +392,7 @@ document.addEventListener("DOMContentLoaded", () => {
         refreshVideoUI(videoId);
         refreshTotals();
         refreshLikedButtons();
+        pulseButton("mainSkulls");
     }
 
     const mainSkullButton = document.getElementById("mainSkulls");
@@ -347,6 +412,11 @@ document.addEventListener("DOMContentLoaded", () => {
             skullBtn.addEventListener("click", (e) => {
                 e.stopPropagation();
                 addSkull(videoId);
+                skullBtn.classList.add("pulse-click");
+
+                setTimeout(() => {
+                    skullBtn.classList.remove("pulse-click");
+                }, 350);
             });
         }
     });
@@ -375,8 +445,20 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    function pulseButton(id) {
+        const btn = document.getElementById(id);
+
+        if (!btn) return;
+
+        btn.classList.add("pulse-click");
+
+        setTimeout(() => {
+            btn.classList.remove("pulse-click");
+        }, 350);
+    }
+
     /* =========================
-       💬 COMENTARIOS PREMIUM
+       COMENTARIOS PREMIUM
     ========================= */
     const sendCommentBtn = document.getElementById("sendCommentBtn");
 
@@ -427,6 +509,7 @@ document.addEventListener("DOMContentLoaded", () => {
         renderComments(videoId);
         refreshCommentCounts(videoId);
         refreshTotals();
+        pulseButton("sendCommentBtn");
     }
 
     function cleanCommentText(value) {
@@ -455,7 +538,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const comments = state.videos[videoId]?.comments || [];
 
         if (comments.length === 0) {
-            list.innerHTML = `<div class="comment-item empty-comment">Sé el primero en comentar 👀</div>`;
+            list.innerHTML = `<div class="comment-item empty-comment">Sé el primero en comentar</div>`;
             return;
         }
 
@@ -467,7 +550,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             item.innerHTML = `
                 <div class="comment-line">
-                    <span class="comment-alias">
+                    <span class="comment-alias ${alias.badgeClass}">
                         <span class="alias-icon">${alias.icon}</span>
                         <span class="alias-divider">|</span>
                         <span class="alias-name ${alias.className}">${escapeHTML(alias.label)}</span>
@@ -490,7 +573,8 @@ document.addEventListener("DOMContentLoaded", () => {
             return {
                 icon: "🍞",
                 label: "Migajero del Sótano",
-                className: "alias-migajero-text"
+                className: "alias-migajero-text",
+                badgeClass: "alias-migajero-badge"
             };
         }
 
@@ -498,7 +582,8 @@ document.addEventListener("DOMContentLoaded", () => {
             return {
                 icon: "👻",
                 label: "Fantasma del Sótano",
-                className: "alias-fantasma-text"
+                className: "alias-fantasma-text",
+                badgeClass: "alias-fantasma-badge"
             };
         }
 
@@ -506,14 +591,16 @@ document.addEventListener("DOMContentLoaded", () => {
             return {
                 icon: "👁️",
                 label: "Habitante del Sótano",
-                className: "alias-habitante-text"
+                className: "alias-habitante-text",
+                badgeClass: "alias-habitante-badge"
             };
         }
 
         return {
             icon: "👁️",
             label: "Habitante del Sótano",
-            className: "alias-habitante-text"
+            className: "alias-habitante-text",
+            badgeClass: "alias-habitante-badge"
         };
     }
 
@@ -528,9 +615,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const card = document.querySelector(`.video-card[data-video-id="${videoId}"]`);
+
         if (card) {
             const commentPill = [...card.querySelectorAll(".card-pill")]
-                .find(el => el.textContent.includes("💬"));
+                .find(el => el.textContent.includes("comentarios"));
 
             if (commentPill) {
                 commentPill.textContent = `💬 ${count} comentarios`;
@@ -547,7 +635,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .replaceAll("'", "&#039;");
     }
 
-    window.addComment = function(id) {
+    window.addComment = function() {
         sendComment();
     };
 
@@ -556,7 +644,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     /* =========================
-       🔄 ACTUALIZAR UI
+       ACTUALIZAR UI
     ========================= */
     function getCurrentVideoId() {
         const video = document.getElementById("mainVideo");
@@ -611,42 +699,51 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* =========================
-       📱 FULLSCREEN
+       FULLSCREEN
     ========================= */
     const video = document.getElementById("mainVideo");
 
     if (video) {
         video.addEventListener("dblclick", () => {
             if (!document.fullscreenElement) {
-                video.requestFullscreen();
+                video.requestFullscreen().catch(() => {});
             } else {
-                document.exitFullscreen();
+                document.exitFullscreen().catch(() => {});
             }
         });
     }
 
     /* =========================
-       🎬 SCROLL HORIZONTAL
+       SCROLL HORIZONTAL
     ========================= */
     const grid = document.querySelector(".video-grid");
 
     if (grid) {
 
         let isDown = false;
-        let startX;
-        let scrollLeft;
+        let startX = 0;
+        let scrollLeft = 0;
 
         grid.addEventListener("mousedown", (e) => {
             isDown = true;
+            grid.classList.add("dragging");
             startX = e.pageX - grid.offsetLeft;
             scrollLeft = grid.scrollLeft;
         });
 
-        grid.addEventListener("mouseup", () => isDown = false);
-        grid.addEventListener("mouseleave", () => isDown = false);
+        grid.addEventListener("mouseup", () => {
+            isDown = false;
+            grid.classList.remove("dragging");
+        });
+
+        grid.addEventListener("mouseleave", () => {
+            isDown = false;
+            grid.classList.remove("dragging");
+        });
 
         grid.addEventListener("mousemove", (e) => {
             if (!isDown) return;
+
             e.preventDefault();
 
             const x = e.pageX - grid.offsetLeft;
@@ -661,39 +758,81 @@ document.addEventListener("DOMContentLoaded", () => {
         grid.addEventListener("touchstart", (e) => {
             touchStartX = e.touches[0].clientX;
             touchScrollLeft = grid.scrollLeft;
-        });
+        }, { passive: true });
 
         grid.addEventListener("touchmove", (e) => {
             const x = e.touches[0].clientX;
             const walk = (touchStartX - x) * 1.5;
 
             grid.scrollLeft = touchScrollLeft + walk;
+        }, { passive: true });
+    }
+
+    /* =========================
+       EFECTOS VISUALES EXTRA
+    ========================= */
+    function initVisualEffects() {
+        const featuredSection = document.querySelector(".video-highlight-section");
+
+        if (featuredSection) {
+            featuredSection.addEventListener("mousemove", (e) => {
+                const rect = featuredSection.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+                featuredSection.style.setProperty("--mouse-x", `${x}%`);
+                featuredSection.style.setProperty("--mouse-y", `${y}%`);
+            });
+        }
+
+        document.querySelectorAll(".video-card").forEach(card => {
+            card.addEventListener("mouseenter", () => {
+                card.classList.add("card-hovering");
+            });
+
+            card.addEventListener("mouseleave", () => {
+                card.classList.remove("card-hovering");
+            });
         });
     }
 
     /* =========================
-       🎥 PREVIEW MINIATURA
+       BLOQUEO DE ZOOM EN MÓVIL
     ========================= */
-    document.querySelectorAll(".thumb-video").forEach(thumb => {
-
-        if (thumb.tagName !== "VIDEO") return;
-
-        thumb.addEventListener("mouseenter", () => {
-            thumb.currentTime = 0;
-            thumb.play();
-        });
-
-        thumb.addEventListener("mouseleave", () => {
-            thumb.pause();
-            thumb.currentTime = 0;
-        });
-
+    document.addEventListener("gesturestart", function (e) {
+        e.preventDefault();
     });
 
+    document.addEventListener("gesturechange", function (e) {
+        e.preventDefault();
+    });
+
+    document.addEventListener("gestureend", function (e) {
+        e.preventDefault();
+    });
+
+    document.addEventListener("dblclick", function (e) {
+        if (e.target && e.target.tagName === "VIDEO") return;
+        e.preventDefault();
+    }, { passive: false });
+
+    document.addEventListener("touchmove", function (e) {
+        if (e.scale && e.scale !== 1) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+
+    document.addEventListener("touchstart", function (e) {
+        if (e.touches.length > 1) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+
     /* =========================
-       🚀 INICIAR TODO
+       INICIAR TODO
     ========================= */
     initializeVideos();
     countPortalVisit();
+    initVisualEffects();
 
 });
