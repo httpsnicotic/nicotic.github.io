@@ -1634,17 +1634,42 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!results) return;
 
         const clean = normalizeCountryText(query);
-        const matches = nicoticCountries
-            .filter(country => {
-                if (!clean) return ["peru", "mexico", "usa-ny", "espana"].includes(country.key);
-                const haystack = normalizeCountryText([country.name, country.flag, ...(country.aliases || [])].join(" "));
-                return haystack.includes(clean);
-            })
-            .slice(0, 8);
+
+        let matches = [];
+
+        if (!clean) {
+            matches = nicoticCountries.filter(country => ["peru", "mexico", "usa-ny", "espana"].includes(country.key));
+        } else {
+            matches = nicoticCountries
+                .map(country => {
+                    const names = [country.name, ...(country.aliases || [])].map(normalizeCountryText);
+                    const exact = names.some(name => name === clean);
+                    const starts = names.some(name => name.startsWith(clean));
+                    const wordStarts = names.some(name => name.split(/\s+|\/|\(|\)|-/).some(part => part.startsWith(clean)));
+
+                    let score = 0;
+                    if (exact) score = 3;
+                    else if (starts) score = 2;
+                    else if (clean.length >= 2 && wordStarts) score = 1;
+
+                    return { country, score };
+                })
+                .filter(item => item.score > 0)
+                .sort((a, b) => b.score - a.score || a.country.name.localeCompare(b.country.name))
+                .map(item => item.country);
+        }
 
         results.innerHTML = "";
 
-        matches.forEach(country => {
+        if (!matches.length) {
+            const empty = document.createElement("div");
+            empty.className = "schedule-no-results";
+            empty.textContent = "No encontré ese país.";
+            results.appendChild(empty);
+            return;
+        }
+
+        matches.slice(0, 8).forEach(country => {
             const button = document.createElement("button");
             button.type = "button";
             button.className = "schedule-country-option";
@@ -1673,6 +1698,13 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
     }
 
+    function getFlagListLabel(country) {
+        if (country.key === "usa-la") return `${country.flag} Los Ángeles`;
+        if (country.key === "usa-texas") return `${country.flag} Texas`;
+        if (country.key === "usa-ny") return `${country.flag} New York`;
+        return country.flag;
+    }
+
     function renderFlagLists() {
         const latam = document.getElementById("latamFlagList");
         const world = document.getElementById("worldFlagList");
@@ -1680,21 +1712,58 @@ document.addEventListener("DOMContentLoaded", () => {
         if (latam) {
             latam.innerHTML = nicoticCountries
                 .filter(country => country.group === "latam")
-                .map(country => `<span title="${country.name}">${country.flag}</span>`)
+                .map(country => `<span class="flag-list-pill" title="${country.name}">${getFlagListLabel(country)}</span>`)
                 .join("");
         }
 
         if (world) {
             world.innerHTML = nicoticCountries
                 .filter(country => country.group === "world")
-                .map(country => `<span title="${country.name}">${country.flag}</span>`)
+                .map(country => `<span class="flag-list-pill" title="${country.name}">${getFlagListLabel(country)}</span>`)
                 .join("");
+        }
+    }
+
+    const VIEWER_COUNTRY_STATE_KEY = "nicotic_viewer_country_state_v2";
+    const VIEWER_COUNTRY_MAX_CHANGES = 2;
+
+    function loadViewerCountryState() {
+        const oldKey = localStorage.getItem("nicotic_viewer_country_voted_v1");
+
+        const saved = localStorage.getItem(VIEWER_COUNTRY_STATE_KEY);
+
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                return {
+                    selectedKey: parsed.selectedKey || oldKey || "",
+                    changeCount: Number(parsed.changeCount || 0),
+                    locked: parsed.locked === true
+                };
+            } catch (e) {}
+        }
+
+        return {
+            selectedKey: oldKey || "",
+            changeCount: 0,
+            locked: false
+        };
+    }
+
+    function saveViewerCountryState(viewerState) {
+        localStorage.setItem(VIEWER_COUNTRY_STATE_KEY, JSON.stringify(viewerState));
+
+        if (viewerState.selectedKey) {
+            localStorage.setItem("nicotic_viewer_country_voted_v1", viewerState.selectedKey);
+        } else {
+            localStorage.removeItem("nicotic_viewer_country_voted_v1");
         }
     }
 
     function renderViewerFlags() {
         const latam = document.getElementById("latamViewerFlags");
         const world = document.getElementById("worldViewerFlags");
+        const viewerState = loadViewerCountryState();
 
         if (latam) latam.innerHTML = "";
         if (world) world.innerHTML = "";
@@ -1713,8 +1782,12 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
             button.onclick = () => voteViewerCountry(country.key);
 
-            if (localStorage.getItem("nicotic_viewer_country_voted_v1") === country.key) {
+            if (viewerState.selectedKey === country.key) {
                 button.classList.add("voted");
+            }
+
+            if (viewerState.locked && viewerState.selectedKey !== country.key) {
+                button.classList.add("locked");
             }
 
             if (country.group === "latam" && latam) latam.appendChild(button);
@@ -1736,34 +1809,86 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    function voteViewerCountry(countryKey) {
-        const votedKey = localStorage.getItem("nicotic_viewer_country_voted_v1");
-
-        if (votedKey) {
-            document.querySelectorAll(".viewer-flag-button").forEach(button => {
-                button.classList.toggle("voted", button.dataset.countryKey === votedKey);
-            });
-            return;
-        }
-
-        localStorage.setItem("nicotic_viewer_country_voted_v1", countryKey);
-
+    function updateViewerFlagSelection(selectedKey, locked) {
         document.querySelectorAll(".viewer-flag-button").forEach(button => {
-            button.classList.toggle("voted", button.dataset.countryKey === countryKey);
+            const isSelected = button.dataset.countryKey === selectedKey;
+            button.classList.toggle("voted", isSelected);
+            button.classList.toggle("locked", Boolean(locked && !isSelected));
         });
+    }
+
+    function bumpViewerCountry(countryKey, amount) {
+        if (!countryKey) return;
 
         if (!window.nicoticDb) {
             const countEl = document.getElementById(`viewerCount_${countryKey}`);
             if (countEl) {
                 const current = Number(countEl.textContent.replace("+", "")) || 0;
-                countEl.textContent = `+${current + 1}`;
+                countEl.textContent = `+${Math.max(0, current + amount)}`;
             }
             return;
         }
 
         window.nicoticDb.ref(`portal/viewerCountries/${countryKey}`).transaction(current => {
-            return (Number(current) || 0) + 1;
+            return Math.max(0, (Number(current) || 0) + amount);
         });
+    }
+
+    function voteViewerCountry(countryKey) {
+        const viewerState = loadViewerCountryState();
+
+        if (viewerState.locked) {
+            updateViewerFlagSelection(viewerState.selectedKey, true);
+            return;
+        }
+
+        if (!viewerState.selectedKey) {
+            viewerState.selectedKey = countryKey;
+            if (viewerState.changeCount >= VIEWER_COUNTRY_MAX_CHANGES) {
+                viewerState.locked = true;
+            }
+            saveViewerCountryState(viewerState);
+            updateViewerFlagSelection(viewerState.selectedKey, viewerState.locked);
+            bumpViewerCountry(countryKey, 1);
+            return;
+        }
+
+        if (viewerState.selectedKey === countryKey) {
+            if (viewerState.changeCount + 1 >= VIEWER_COUNTRY_MAX_CHANGES) {
+                viewerState.locked = true;
+                saveViewerCountryState(viewerState);
+                updateViewerFlagSelection(viewerState.selectedKey, true);
+                return;
+            }
+
+            bumpViewerCountry(countryKey, -1);
+            viewerState.selectedKey = "";
+            viewerState.changeCount += 1;
+            saveViewerCountryState(viewerState);
+            updateViewerFlagSelection("", false);
+            return;
+        }
+
+        if (viewerState.changeCount >= VIEWER_COUNTRY_MAX_CHANGES) {
+            viewerState.locked = true;
+            saveViewerCountryState(viewerState);
+            updateViewerFlagSelection(viewerState.selectedKey, true);
+            return;
+        }
+
+        const oldKey = viewerState.selectedKey;
+        bumpViewerCountry(oldKey, -1);
+        bumpViewerCountry(countryKey, 1);
+
+        viewerState.selectedKey = countryKey;
+        viewerState.changeCount += 1;
+
+        if (viewerState.changeCount >= VIEWER_COUNTRY_MAX_CHANGES) {
+            viewerState.locked = true;
+        }
+
+        saveViewerCountryState(viewerState);
+        updateViewerFlagSelection(viewerState.selectedKey, viewerState.locked);
     }
 
 
