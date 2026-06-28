@@ -34,6 +34,7 @@
     <button class="side-menu-link" type="button" data-target="socialSection" data-social-open="true">Social</button>
     <button class="side-menu-link" type="button" data-target="videoSection">Video destacado</button>
     <button class="side-menu-link" type="button" data-target="videoGridAnchor">Videos</button>
+    <button class="side-menu-link" type="button" data-target="Historial de Videos en DriveSection">Episodios anteriores</button>
     <button class="side-menu-link" type="button" data-target="scheduleSection">Zonas horarias de stream</button>
     <button class="side-menu-link" type="button" data-target="totalsSection">Totales</button>
   </div>
@@ -523,9 +524,11 @@
 
   </div>
 
-  <button class="history-btn" onclick="location.href='historico.html'">
-    📁 Histórico / Episodios anteriores
+  <div id="Historial de Videos en DriveSection" class="Historial de Videos en Drive-anchor-section">
+<button class="history-btn" onclick="location.href='Historial de Videos en Drive.html'">
+    📁 Historial de Videos en Drive / Episodios anteriores
   </button>
+</div>
 </div>
 
 </div>
@@ -695,7 +698,7 @@ window.nicoticDb = firebase.database();
 
 
 <!-- FLECHA ARRIBA -->
-<button id="scrollTopButton" class="scroll-top-button" type="button" aria-label="Subir al inicio">🡹</button>
+<button id="scrollTopButton" class="scroll-top-button" type="button" aria-label="Subir al inicio">🔄</button>
 
 
 <!-- CTA EVENTO COMENZADO -->
