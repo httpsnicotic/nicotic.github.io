@@ -7240,3 +7240,203 @@ body{touch-action:auto !important;overscroll-behavior-y:auto !important;overflow
 .historico-anchor-section .history-btn{font-size:14px !important;font-weight:900 !important;letter-spacing:.4px !important;}
 .side-menu-close,.social-drawer-close,.info-drawer-close{width:48px !important;height:48px !important;min-width:48px !important;min-height:48px !important;padding:0 !important;border-radius:50% !important;display:flex !important;align-items:center !important;justify-content:center !important;aspect-ratio:1/1 !important;line-height:1 !important;font-size:25px !important;font-weight:900 !important;text-transform:none !important;letter-spacing:0 !important;background:rgba(255,255,255,.08) !important;border:1px solid rgba(255,255,255,.14) !important;color:white !important;}
 @media (max-width:768px){.featured-event-section{padding:28px 0 22px !important;}.featured-event-heading{width:91vw !important;margin-bottom:15px !important;}.featured-event-heading h2{font-size:clamp(2.35rem,11vw,4.4rem) !important;margin-top:16px !important;}.scroll-top-button{width:56px !important;height:56px !important;min-width:56px !important;min-height:56px !important;left:18px !important;bottom:34px !important;}.scroll-top-button::after{font-size:26px !important;}.side-menu-close,.social-drawer-close,.info-drawer-close{width:46px !important;height:46px !important;min-width:46px !important;min-height:46px !important;}}
+
+
+
+/* =========================================================
+   V20 - HISTORIAL FIX + SCROLL VIDEOS + ESTILO ROJO
+========================================================= */
+
+/* FIX historial */
+.historico-anchor-section{
+width:min(1050px,94vw) !important;
+margin:30px auto 70px !important;
+display:flex !important;
+align-items:center !important;
+justify-content:center !important;
+position:relative !important;
+z-index:5 !important;
+}
+
+.historico-anchor-section .history-btn{
+width:100% !important;
+max-width:760px !important;
+padding:20px 24px !important;
+border-radius:999px !important;
+background:rgba(20,20,22,.90) !important;
+border:1px solid rgba(255,255,255,.12) !important;
+color:white !important;
+font-size:clamp(1rem,4vw,1.55rem) !important;
+font-weight:900 !important;
+line-height:1.22 !important;
+box-shadow:
+0 22px 60px rgba(0,0,0,.48),
+0 0 28px rgba(168,85,247,.12) !important;
+}
+
+/* Scroll horizontal más fluido */
+.video-grid{
+overflow-x:auto !important;
+overflow-y:hidden !important;
+scroll-behavior:auto !important;
+-webkit-overflow-scrolling:touch !important;
+overscroll-behavior-x:contain !important;
+touch-action:pan-x pan-y !important;
+scroll-snap-type:none !important;
+cursor:grab !important;
+will-change:scroll-position !important;
+}
+
+.video-grid.dragging{
+cursor:grabbing !important;
+scroll-behavior:auto !important;
+}
+
+.video-card{
+-webkit-tap-highlight-color:transparent !important;
+user-select:none !important;
+touch-action:pan-y !important;
+}
+
+.thumb-video{
+pointer-events:none !important;
+user-select:none !important;
+-webkit-user-drag:none !important;
+}
+
+/* Estilo rojo tipo Comunicado Importante para video principal */
+.video-highlight-section{
+background:
+radial-gradient(circle at 50% 8%, rgba(239,68,68,.10), transparent 34%),
+radial-gradient(circle at 50% 55%, rgba(168,85,247,.10), transparent 44%),
+linear-gradient(180deg,#020202 0%,#070306 45%,#010101 100%) !important;
+}
+
+.featured-video-shell{
+border:1px solid rgba(248,113,113,.22) !important;
+background:rgba(8,8,12,.44) !important;
+box-shadow:
+0 28px 90px rgba(0,0,0,.84),
+0 0 38px rgba(239,68,68,.14),
+0 0 58px rgba(168,85,247,.08) !important;
+}
+
+.featured-video{
+border:1px solid rgba(248,113,113,.20) !important;
+box-shadow:
+0 24px 70px rgba(0,0,0,.78),
+0 0 34px rgba(239,68,68,.12) !important;
+}
+
+.main-video-info{
+border:1px solid rgba(248,113,113,.22) !important;
+background:
+linear-gradient(180deg, rgba(20,9,12,.78), rgba(8,8,12,.78)) !important;
+box-shadow:
+0 22px 70px rgba(0,0,0,.52),
+0 0 28px rgba(239,68,68,.12) !important;
+}
+
+/* Carrete de videos con marco rojo */
+.video-grid{
+border:1px solid rgba(248,113,113,.14) !important;
+border-radius:28px !important;
+background:rgba(10,8,10,.36) !important;
+box-shadow:
+inset 0 0 0 1px rgba(255,255,255,.03),
+0 0 28px rgba(239,68,68,.08) !important;
+}
+
+.video-card{
+background:
+linear-gradient(180deg, rgba(16,12,14,.92), rgba(8,8,12,.92)) !important;
+border:1px solid rgba(248,113,113,.18) !important;
+box-shadow:
+0 18px 46px rgba(0,0,0,.46),
+0 0 22px rgba(239,68,68,.08) !important;
+}
+
+.video-card.active-card{
+border-color:rgba(248,113,113,.50) !important;
+box-shadow:
+0 20px 58px rgba(0,0,0,.52),
+0 0 30px rgba(239,68,68,.22),
+0 0 36px rgba(168,85,247,.12) !important;
+}
+
+/* Contador de visitas del sótano con el mismo ambiente rojo */
+.hero-visitor-box,
+.visitor-counter,
+.big-counter{
+border:1px solid rgba(248,113,113,.24) !important;
+background:
+linear-gradient(180deg, rgba(20,9,12,.74), rgba(8,8,12,.76)) !important;
+box-shadow:
+0 24px 70px rgba(0,0,0,.55),
+0 0 32px rgba(239,68,68,.13),
+0 0 46px rgba(168,85,247,.08) !important;
+}
+
+/* Partículas encima de la imagen del comunicado */
+.featured-event-media{
+position:relative !important;
+overflow:hidden !important;
+isolation:isolate !important;
+}
+
+.featured-event-media img,
+.featured-event-media video{
+position:relative !important;
+z-index:1 !important;
+}
+
+.featured-media-particles{
+position:absolute !important;
+inset:0 !important;
+z-index:99 !important;
+pointer-events:none !important;
+overflow:hidden !important;
+}
+
+.featured-media-particles span{
+position:absolute !important;
+left:calc((var(--i) * 15%) % 96%) !important;
+top:calc((var(--i) * 21%) % 92%) !important;
+width:6px !important;
+height:6px !important;
+border-radius:50% !important;
+background:#ef4444 !important;
+box-shadow:
+0 0 12px rgba(239,68,68,.95),
+0 0 26px rgba(239,68,68,.42) !important;
+opacity:.92 !important;
+animation:nicoticEyeParticleFrontV20 4.6s linear infinite !important;
+animation-delay:calc(var(--i) * -0.30s) !important;
+}
+
+@keyframes nicoticEyeParticleFrontV20{
+0%{ transform:translate3d(0,24px,0) scale(.65); opacity:.16; }
+35%{ opacity:.96; }
+100%{ transform:translate3d(22px,-90px,0) scale(1.18); opacity:0; }
+}
+
+/* Celular */
+@media (max-width:768px){
+  .historico-anchor-section{
+    margin:24px auto 54px !important;
+  }
+
+  .historico-anchor-section .history-btn{
+    padding:18px 18px !important;
+  }
+
+  .video-grid{
+    border-radius:22px !important;
+    padding:10px 12px !important;
+  }
+
+  .featured-video-shell,
+  .main-video-info{
+    border-radius:22px !important;
+  }
+}
