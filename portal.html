@@ -155,10 +155,7 @@
         <div id="newEpisodeMedia" class="new-episode-media" aria-hidden="true"></div>
 
         <div class="new-episode-content">
-          <div class="new-episode-kicker">NEW EPISODIO</div>
-
           <h2 id="newEpisodeTitle">NEW EPISODIO</h2>
-
           <p id="newEpisodeDescription">Disponible</p>
         </div>
 
@@ -458,11 +455,74 @@
   </div>
 </div>
 
+
 <!-- HORARIOS -->
-<div class="section">
-  <h2>🌎 Horarios</h2>
-  <p class="time">7:30 PM Perú</p>
-</div>
+<section id="scheduleSection" class="section schedule-section">
+  <div class="schedule-header">
+    <div>
+      <h2>👁️✨ Horarios de stream</h2>
+      <p class="schedule-subtitle">Busca tu país y mira la hora exacta del sótano.</p>
+    </div>
+
+    <div class="schedule-mode-toggle" aria-label="Cambiar tipo de stream">
+      <button id="scheduleModePc" class="schedule-mode-button active" type="button" data-mode="pc">PC</button>
+      <button id="scheduleModePhone" class="schedule-mode-button" type="button" data-mode="phone">Phone</button>
+    </div>
+  </div>
+
+  <div class="schedule-current-card">
+    <div>
+      <span class="schedule-label">Días de stream en:</span>
+      <strong id="scheduleModeTitle">PC</strong>
+    </div>
+    <p id="scheduleDaysText">Lunes - Miércoles - Viernes</p>
+    <div id="schedulePeruTime" class="schedule-peru-time">7:30 PM Hora Perú 🇵🇪</div>
+  </div>
+
+  <div class="schedule-search-grid">
+    <div class="schedule-search-card">
+      <label for="countryScheduleSearch">Buscar país</label>
+      <input id="countryScheduleSearch" class="schedule-search-input" type="search" placeholder="Ej: Perú, México, España..." autocomplete="off">
+      <div id="countryScheduleResults" class="schedule-results"></div>
+
+      <div id="selectedCountryTime" class="selected-country-time">
+        Selecciona un país para ver su horario.
+      </div>
+    </div>
+
+    <div class="flag-list-card">
+      <button id="flagListToggle" class="flag-list-toggle" type="button" aria-expanded="false">
+        Lista de banderas <span>⌄</span>
+      </button>
+      <div id="flagListPanel" class="flag-list-panel">
+        <div class="flag-list-group">
+          <strong>PAÍSES DE LATAM</strong>
+          <div id="latamFlagList" class="flag-list-row"></div>
+        </div>
+        <div class="flag-list-group">
+          <strong>PAÍSES FUERA DE LATAM</strong>
+          <div id="worldFlagList" class="flag-list-row"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="viewer-country-section">
+    <h3>¿De dónde nos ves?</h3>
+    <p>Marca tu bandera una sola vez y suma al contador del sótano.</p>
+
+    <div class="viewer-country-group">
+      <h4>PAÍSES DE LATAM</h4>
+      <div id="latamViewerFlags" class="viewer-flag-grid"></div>
+    </div>
+
+    <div class="viewer-country-group">
+      <h4>PAÍSES FUERA DE LATAM</h4>
+      <div id="worldViewerFlags" class="viewer-flag-grid"></div>
+    </div>
+  </div>
+</section>
+
 
 <!-- COMUNIDAD -->
 <div class="section">
