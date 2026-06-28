@@ -17,6 +17,12 @@
     <div class="menu-icon">☰</div>
     <div class="logo">NICO<span>TIC</span></div>
   </div>
+
+  <div class="top-right">
+    <button id="infoTopButton" class="info-top-button" type="button" aria-label="Abrir información">
+      Info
+    </button>
+  </div>
 </div>
 
 <!-- MENÚ DESPLEGABLE -->
@@ -32,6 +38,42 @@
     <button class="side-menu-link" type="button" data-target="totalsSection">Totales</button>
   </div>
 </nav>
+
+
+<!-- PANEL INFO NICOTIC -->
+<section id="infoDrawer" class="info-drawer" aria-hidden="true">
+  <div class="info-drawer-backdrop" data-close-info="true"></div>
+
+  <div class="info-drawer-panel">
+    <button id="infoDrawerClose" class="info-drawer-close" type="button" aria-label="Cerrar información">×</button>
+
+    <div class="info-card">
+      <img class="info-main-img" src="redes/ojo2info.jpg" alt="NICOTIC Info">
+
+      <div class="info-kicker">LA COMUNIDAD DEL SÓTANO</div>
+      <h2>Bienvenido al mundo NICOTIC</h2>
+
+      <p>
+        Soy Nico, creador de esta página. Este portal nació para tener un lugar propio donde pueda subir videos,
+        avisos y momentos del sótano sin depender tanto de las restricciones de TikTok o YouTube.
+      </p>
+
+      <p>
+        Aquí vas a encontrar contenido, comunicados, directos, novedades y todo lo importante de la comunidad.
+        La idea principal es que NICOTIC llegue a más personas, a más países y que la comunidad del sótano siga creciendo.
+      </p>
+
+      <div class="info-goal-box">
+        <strong>Objetivo principal</strong>
+        <span>Ser conocido, mover contenido sin miedo y hacer que el sótano se vea en distintas partes del mundo.</span>
+      </div>
+
+      <p class="info-thanks">
+        Gracias por estar aquí. Si estás leyendo esto, ya eres parte del sótano.
+      </p>
+    </div>
+  </div>
+</section>
 
 <!-- HERO -->
 <div class="hero">
@@ -84,6 +126,8 @@
 
 <!-- EVENTO GRANDE / VIAJE / MISIÓN ESPECIAL -->
 <section id="featuredEventSection" class="featured-event-section nicotic-alert-hidden">
+  <div class="featured-event-particles" aria-hidden="true"></div>
+  <div class="featured-event-zone-label">COMUNICADO IMPORTANTE</div>
   <div class="featured-event-card">
 
     <div id="featuredEventMedia" class="featured-event-media" aria-hidden="true"></div>
@@ -645,6 +689,17 @@ window.nicoticDb = firebase.database();
 </script>
 
 <script src="script.js"></script>
+
+
+<!-- FLECHA ARRIBA -->
+<button id="scrollTopButton" class="scroll-top-button" type="button" aria-label="Subir al inicio">↑</button>
+
+
+<!-- CTA EVENTO COMENZADO -->
+<button id="featuredEventCta" class="featured-event-cta nicotic-alert-hidden" type="button">
+  <span>🚨 LA MISIÓN COMENZÓ</span>
+  <strong>Presiona para ver el comunicado importante</strong>
+</button>
 
 </body>
 </html>
