@@ -331,6 +331,13 @@ document.addEventListener("DOMContentLoaded", () => {
         refreshLikedButtons();
         animateFeaturedVideo();
 
+        const videoSection = document.getElementById("videoSection");
+        if (videoSection) {
+            setTimeout(() => {
+                videoSection.scrollIntoView({ behavior: "smooth", block: "start" });
+            }, 80);
+        }
+
         video.play().catch(() => {});
     };
 
@@ -809,58 +816,54 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* =========================
-       SCROLL HORIZONTAL
+       SCROLL HORIZONTAL SUAVE
     ========================= */
     const grid = document.querySelector(".video-grid");
 
     if (grid) {
+        window.nicoticVideoGridDidDrag = false;
 
-        let isDown = false;
+        let pointerDown = false;
         let startX = 0;
         let scrollLeft = 0;
+        let moved = false;
 
-        grid.addEventListener("mousedown", (e) => {
-            isDown = true;
-            grid.classList.add("dragging");
-            startX = e.pageX - grid.offsetLeft;
+        grid.addEventListener("pointerdown", (e) => {
+            pointerDown = true;
+            moved = false;
+            startX = e.clientX;
             scrollLeft = grid.scrollLeft;
-        });
-
-        grid.addEventListener("mouseup", () => {
-            isDown = false;
-            grid.classList.remove("dragging");
-        });
-
-        grid.addEventListener("mouseleave", () => {
-            isDown = false;
-            grid.classList.remove("dragging");
-        });
-
-        grid.addEventListener("mousemove", (e) => {
-            if (!isDown) return;
-
-            e.preventDefault();
-
-            const x = e.pageX - grid.offsetLeft;
-            const walk = (x - startX) * 2;
-
-            grid.scrollLeft = scrollLeft - walk;
-        });
-
-        let touchStartX = 0;
-        let touchScrollLeft = 0;
-
-        grid.addEventListener("touchstart", (e) => {
-            touchStartX = e.touches[0].clientX;
-            touchScrollLeft = grid.scrollLeft;
+            grid.classList.add("dragging");
         }, { passive: true });
 
-        grid.addEventListener("touchmove", (e) => {
-            const x = e.touches[0].clientX;
-            const walk = (touchStartX - x) * 1.5;
+        grid.addEventListener("pointermove", (e) => {
+            if (!pointerDown) return;
 
-            grid.scrollLeft = touchScrollLeft + walk;
+            const dx = e.clientX - startX;
+
+            if (Math.abs(dx) > 8) {
+                moved = true;
+                window.nicoticVideoGridDidDrag = true;
+                grid.scrollLeft = scrollLeft - dx;
+            }
         }, { passive: true });
+
+        function finishGridDrag() {
+            if (!pointerDown) return;
+
+            pointerDown = false;
+            grid.classList.remove("dragging");
+
+            if (moved) {
+                setTimeout(() => {
+                    window.nicoticVideoGridDidDrag = false;
+                }, 160);
+            }
+        }
+
+        grid.addEventListener("pointerup", finishGridDrag, { passive: true });
+        grid.addEventListener("pointercancel", finishGridDrag, { passive: true });
+        grid.addEventListener("pointerleave", finishGridDrag, { passive: true });
     }
 
     /* =========================
@@ -1348,10 +1351,12 @@ document.addEventListener("DOMContentLoaded", () => {
             started.textContent = data.startedText || "LA MISIÓN COMENZÓ";
             started.classList.remove("nicotic-alert-hidden");
             section.classList.add("featured-event-ended");
+            showFeaturedEventCta(data);
             return;
         }
 
         section.classList.remove("featured-event-ended");
+        hideFeaturedEventCta();
         countdown.classList.remove("nicotic-alert-hidden");
         started.classList.add("nicotic-alert-hidden");
 
@@ -1367,6 +1372,23 @@ document.addEventListener("DOMContentLoaded", () => {
         if (secondsEl) secondsEl.textContent = padTime(seconds);
     }
 
+
+    function showFeaturedEventCta(data) {
+        const cta = document.getElementById("featuredEventCta");
+        if (!cta) return;
+
+        cta.classList.remove("nicotic-alert-hidden");
+        cta.onclick = () => {
+            const section = document.getElementById("featuredEventSection");
+            if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
+        };
+    }
+
+    function hideFeaturedEventCta() {
+        const cta = document.getElementById("featuredEventCta");
+        if (cta) cta.classList.add("nicotic-alert-hidden");
+    }
+
     function hideFeaturedEvent() {
         const section = document.getElementById("featuredEventSection");
 
@@ -1376,6 +1398,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         clearInterval(featuredEventTimer);
+        hideFeaturedEventCta();
     }
 
 
@@ -1829,7 +1852,7 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
                 const parsed = JSON.parse(saved);
                 return {
-                    selectedKey: parsed.selectedKey || oldKey || "",
+                    selectedKey: getLocalCountryKey(parsed.selectedKey || oldKey || ""),
                     changeCount: Number(parsed.changeCount || 0),
                     locked: parsed.locked === true
                 };
@@ -1837,7 +1860,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         return {
-            selectedKey: oldKey || "",
+            selectedKey: getLocalCountryKey(oldKey || ""),
             changeCount: 0,
             locked: false
         };
@@ -1888,17 +1911,65 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+
+    function getFirebaseCountryKey(countryKey) {
+        const map = {
+            "elsalvador": "el_salvador",
+            "costarica": "costa_rica",
+            "puertorico": "puerto_rico",
+            "usa-la": "usa_la",
+            "usa-texas": "usa_tx",
+            "usa-ny": "usa_ny",
+            "reino-unido": "uk"
+        };
+
+        return map[countryKey] || countryKey;
+    }
+
+    function getLocalCountryKey(firebaseKey) {
+        const map = {
+            "el_salvador": "elsalvador",
+            "costa_rica": "costarica",
+            "puerto_rico": "puertorico",
+            "usa_la": "usa-la",
+            "usa_tx": "usa-texas",
+            "usa_ny": "usa-ny",
+            "uk": "reino-unido"
+        };
+
+        return map[firebaseKey] || firebaseKey;
+    }
+
     function listenViewerCountryVotes() {
-        if (!window.nicoticDb) return;
+        const viewerState = loadViewerCountryState();
+
+        if (!window.nicoticDb) {
+            if (viewerState.selectedKey) {
+                const countEl = document.getElementById(`viewerCount_${viewerState.selectedKey}`);
+                if (countEl && countEl.textContent === "+0") countEl.textContent = "+1";
+            }
+            updateViewerFlagSelection(viewerState.selectedKey, viewerState.locked);
+            return;
+        }
 
         window.nicoticDb.ref("portal/viewerCountries").on("value", snapshot => {
             const values = snapshot.val() || {};
+            const selectedKey = loadViewerCountryState().selectedKey;
 
             nicoticCountries.forEach(country => {
                 const countEl = document.getElementById(`viewerCount_${country.key}`);
-                const count = Number(values[country.key] || 0);
+                const firebaseKey = getFirebaseCountryKey(country.key);
+                let count = Number(values[firebaseKey] || 0);
+
+                if (selectedKey === country.key && count <= 0) {
+                    count = 1;
+                }
+
                 if (countEl) countEl.textContent = `+${count}`;
             });
+
+            const freshState = loadViewerCountryState();
+            updateViewerFlagSelection(freshState.selectedKey, freshState.locked);
         });
     }
 
@@ -1922,7 +1993,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        window.nicoticDb.ref(`portal/viewerCountries/${countryKey}`).transaction(current => {
+        window.nicoticDb.ref(`portal/viewerCountries/${getFirebaseCountryKey(countryKey)}`).transaction(current => {
             return Math.max(0, (Number(current) || 0) + amount);
         });
     }
@@ -2019,11 +2090,13 @@ document.addEventListener("DOMContentLoaded", () => {
         function openSocial() {
             drawer.classList.add("open");
             drawer.setAttribute("aria-hidden", "false");
+            document.body.classList.add("drawer-open");
         }
 
         function closeSocial() {
             drawer.classList.remove("open");
             drawer.setAttribute("aria-hidden", "true");
+            document.body.classList.remove("drawer-open");
         }
 
         if (openBtn) openBtn.onclick = openSocial;
@@ -2036,6 +2109,72 @@ document.addEventListener("DOMContentLoaded", () => {
         window.openNicoticSocial = openSocial;
     }
 
+
+
+    /* =========================
+       INFO DRAWER
+    ========================= */
+    function initInfoDrawer() {
+        const openBtn = document.getElementById("infoTopButton");
+        const drawer = document.getElementById("infoDrawer");
+        const closeBtn = document.getElementById("infoDrawerClose");
+
+        if (!drawer) return;
+
+        function openInfo() {
+            drawer.classList.add("open");
+            drawer.setAttribute("aria-hidden", "false");
+            document.body.classList.add("drawer-open");
+        }
+
+        function closeInfo() {
+            drawer.classList.remove("open");
+            drawer.setAttribute("aria-hidden", "true");
+            document.body.classList.remove("drawer-open");
+        }
+
+        if (openBtn) openBtn.onclick = openInfo;
+        if (closeBtn) closeBtn.onclick = closeInfo;
+
+        drawer.querySelectorAll("[data-close-info]").forEach(el => {
+            el.addEventListener("click", closeInfo);
+        });
+
+        window.openNicoticInfo = openInfo;
+    }
+
+    /* =========================
+       FLECHA ARRIBA
+    ========================= */
+    function initScrollTopButton() {
+        const btn = document.getElementById("scrollTopButton");
+        if (!btn) return;
+
+        const update = () => {
+            btn.classList.toggle("show", window.scrollY > 520);
+        };
+
+        btn.onclick = () => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        };
+
+        window.addEventListener("scroll", update, { passive: true });
+        update();
+    }
+
+    /* =========================
+       PARTÍCULAS DEL COMUNICADO
+    ========================= */
+    function initFeaturedEventParticles() {
+        const box = document.querySelector(".featured-event-particles");
+        if (!box || box.children.length) return;
+
+        for (let i = 0; i < 14; i++) {
+            const dot = document.createElement("span");
+            dot.style.setProperty("--i", String(i));
+            box.appendChild(dot);
+        }
+    }
 
     /* =========================
        MENÚ SUPERIOR DESPLEGABLE
@@ -2091,6 +2230,9 @@ document.addEventListener("DOMContentLoaded", () => {
        INICIAR TODO
     ========================= */
     initSideMenu();
+    initInfoDrawer();
+    initScrollTopButton();
+    initFeaturedEventParticles();
     initSocialDrawer();
     initCommentsToggle();
     initializeVideos();
