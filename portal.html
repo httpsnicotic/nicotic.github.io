@@ -17,12 +17,22 @@
     <div class="menu-icon">☰</div>
     <div class="logo">NICO<span>TIC</span></div>
   </div>
-
-  <div class="top-right">
-    <div class="search-icon">🔍</div>
-    <div class="user-icon">👤</div>
-  </div>
 </div>
+
+
+<!-- MENÚ DESPLEGABLE -->
+<nav id="sideMenu" class="side-menu" aria-hidden="true">
+  <div class="side-menu-panel">
+    <button id="sideMenuClose" class="side-menu-close" type="button" aria-label="Cerrar menú">×</button>
+    <div class="side-menu-title">NICOTIC</div>
+
+    <button class="side-menu-link" type="button" data-target="socialSection">Social</button>
+    <button class="side-menu-link" type="button" data-target="videoSection">Video destacado</button>
+    <button class="side-menu-link" type="button" data-target="videoGridAnchor">Videos</button>
+    <button class="side-menu-link" type="button" data-target="scheduleSection">Zonas horarias de stream</button>
+    <button class="side-menu-link" type="button" data-target="totalsSection">Totales</button>
+  </div>
+</nav>
 
 <!-- HERO -->
 <div class="hero">
@@ -193,26 +203,71 @@
   </div>
 </section>
 
-<!-- NOTICIAS -->
-<div class="section">
-  <h2>📢 Noticias</h2>
 
-  <div class="news-card">
-    <p>📌 Bienvenido al portal NICOTIC</p>
-  </div>
+<!-- SOCIAL -->
+<section id="socialSection" class="section social-section">
+  <div class="social-card">
+    <div class="social-header">
+      <span class="social-kicker">Redes oficiales</span>
+      <h2>SOCIAL</h2>
+      <p>Presiona para ir y unirte a las redes sociales del sótano.</p>
+    </div>
 
-  <div class="news-card">
-    <p>🔥 Próximo evento pronto</p>
+    <div class="social-grid">
+      <a class="social-item" href="https://kick.com/niicotic" target="_blank" rel="noopener">
+        <div class="social-avatar-wrap">
+          <img src="redes/kick.jpg" alt="Kick">
+          <span class="social-check">✓</span>
+        </div>
+        <strong>KICK</strong>
+        <span class="social-go">Ir</span>
+      </a>
+
+      <a class="social-item" href="#" target="_blank" rel="noopener">
+        <div class="social-avatar-wrap">
+          <img src="redes/ig.jpg" alt="Instagram">
+          <span class="social-check">✓</span>
+        </div>
+        <strong>INSTAGRAM</strong>
+        <span class="social-go">Ir</span>
+      </a>
+
+      <a class="social-item" href="#" target="_blank" rel="noopener">
+        <div class="social-avatar-wrap">
+          <img src="redes/discord.jpg" alt="Discord">
+          <span class="social-check">✓</span>
+        </div>
+        <strong>DISCORD</strong>
+        <span class="social-go">Ir</span>
+      </a>
+
+      <a class="social-item" href="#" target="_blank" rel="noopener">
+        <div class="social-avatar-wrap">
+          <img src="redes/wsp.jpg" alt="WhatsApp">
+          <span class="social-check">✓</span>
+        </div>
+        <strong>WHATSAPP</strong>
+        <span class="social-go">Ir</span>
+      </a>
+
+      <a class="social-item" href="#" target="_blank" rel="noopener">
+        <div class="social-avatar-wrap">
+          <img src="redes/tiktok.jpg" alt="TikTok">
+          <span class="social-check">✓</span>
+        </div>
+        <strong>TIKTOK</strong>
+        <span class="social-go">Ir</span>
+      </a>
+    </div>
   </div>
-</div>
+</section>
+
 
 <!-- VIDEOS -->
 <div id="videoSection" class="section video-highlight-section">
 
   <div class="featured-section-header">
-    <div class="featured-kicker">NICOTIC</div>
-
-    <h2 class="featured-title">Video destacado</h2>
+<h2 class="featured-title">VIDEO DESTACADO</h2>
 
     <div class="featured-divider" aria-hidden="true">
       <span></span>
@@ -282,6 +337,7 @@
     </div>
   </div>
 
+  <div id="videoGridAnchor"></div>
   <div class="video-grid">
 
     <!-- VIDEO 1 -->
@@ -431,28 +487,6 @@
   </button>
 </div>
 
-<!-- TOTALES -->
-<div class="section totals-section">
-  <h2>👁️ Totales</h2>
-
-  <div class="big-counter">
-    <div id="totalVideoViews" class="big-number">0</div>
-    <p>vistas acumuladas en los videos del sótano</p>
-  </div>
-
-  <div class="totals-grid">
-    <div class="total-card">
-      <span>☠️</span>
-      <strong id="totalSkulls">0</strong>
-      <p>calaveras acumuladas</p>
-    </div>
-
-    <div class="total-card">
-      <span>💬</span>
-      <strong id="totalComments">0</strong>
-      <p>comentarios acumulados</p>
-    </div>
-  </div>
 </div>
 
 
@@ -524,23 +558,38 @@
 </section>
 
 
-<!-- COMUNIDAD -->
-<div class="section">
-  <h2>👥 Comunidad</h2>
-  <p>Seguidores y usuarios próximamente</p>
-</div>
 
-<!-- COMANDOS -->
-<div class="section">
-  <h2>⌨️ Comandos</h2>
-  <p>ayuda / social / stream / noticias</p>
-</div>
+<!-- TOTALES -->
+<section id="totalsSection" class="section totals-section totals-final-section">
+  <div class="totals-final-card">
+    <div class="totals-final-header">
+      <span>COMUNICADO IMPORTANTE</span>
+      <h2>TOTALES DEL SÓTANO</h2>
+      <p>Resumen general de la actividad dentro del portal.</p>
+    </div>
 
-<!-- EVENTOS -->
-<div class="section">
-  <h2>⏳ Eventos</h2>
-  <p>Cuenta regresiva aquí</p>
-</div>
+    <div class="totals-final-grid">
+      <div class="total-card total-card-red">
+        <span>👁️</span>
+        <strong id="totalVideoViews">0</strong>
+        <p>vistas acumuladas</p>
+      </div>
+
+      <div class="total-card total-card-red">
+        <span>☠️</span>
+        <strong id="totalSkulls">0</strong>
+        <p>calaveras acumuladas</p>
+      </div>
+
+      <div class="total-card total-card-red">
+        <span>💬</span>
+        <strong id="totalComments">0</strong>
+        <p>comentarios acumulados</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 
 <script>
 /* BLOQUEO DE ZOOM EN MÓVIL */
