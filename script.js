@@ -943,6 +943,8 @@ document.addEventListener("DOMContentLoaded", () => {
         dateTime: "2026-07-10T17:00:00-05:00",
         imageUrl: "ojo.jpg",
         videoUrl: "",
+        buttonText: "",
+        buttonUrl: "",
         expireAfterHours: 6,
         startedText: "Ya comenzó"
     };
@@ -973,13 +975,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 renderNoticesCarousel(data);
             }, error => {
                 console.warn("NICOTIC: no se pudo leer avisosNovedades.", error);
-                hideNoticesCarousel();
+                renderNoticesCarousel({
+                    mostrarTodos: true,
+                    items: [fallbackNotice]
+                });
             });
 
             return;
         }
 
-        hideNoticesCarousel();
+        renderNoticesCarousel({
+            mostrarTodos: true,
+            items: [fallbackNotice]
+        });
     }
 
     function renderNoticesCarousel(data) {
@@ -1110,6 +1118,13 @@ document.addEventListener("DOMContentLoaded", () => {
         if (section) section.classList.add("nicotic-alert-hidden");
     }
 
+
+
+    function renderAlertMedia(media, data) {
+        // Alias para Avisos / Novedades.
+        // Evita que el carrusel se rompa si el bloque llama renderAlertMedia().
+        renderGeneralAlertMedia(media, data);
+    }
 
     /* =========================
        EVENTO GRANDE / VIAJE / MISIÓN ESPECIAL
