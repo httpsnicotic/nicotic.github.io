@@ -948,6 +948,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     function initLocationAlert() {
+        // Compatibilidad interna: ahora el portal usa SOLO Avisos / Novedades.
         initNoticesCarousel();
     }
 
@@ -961,32 +962,24 @@ document.addEventListener("DOMContentLoaded", () => {
             window.nicoticDb.ref("portal/avisosNovedades").on("value", snapshot => {
                 const data = snapshot.val();
 
-                if (!data || data.active !== true) {
-                    // respaldo compatible con el aviso antiguo
-                    window.nicoticDb.ref("portal/alerts/locationAlert").once("value").then(oldSnap => {
-                        const oldData = oldSnap.val();
-                        if (oldData && oldData.active === true) {
-                            renderNoticesCarousel({
-                                active: true,
-                                notices: [oldData]
-                            });
-                        } else {
-                            hideNoticesCarousel();
-                        }
-                    });
+                // Sistema nuevo:
+                // portal/avisosNovedades/mostrarTodos = true/false
+                // portal/avisosNovedades/items = 4 avisos
+                if (!data || data.mostrarTodos !== true) {
+                    hideNoticesCarousel();
                     return;
                 }
 
                 renderNoticesCarousel(data);
             }, error => {
                 console.warn("NICOTIC: no se pudo leer avisosNovedades.", error);
-                renderNoticesCarousel({ active: true, notices: [fallbackNotice] });
+                hideNoticesCarousel();
             });
 
             return;
         }
 
-        renderNoticesCarousel({ active: true, notices: [fallbackNotice] });
+        hideNoticesCarousel();
     }
 
     function renderNoticesCarousel(data) {
@@ -997,13 +990,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         clearNoticesTimers();
 
-        const notices = Array.isArray(data.notices)
-            ? data.notices
-            : Object.values(data.notices || {});
+        const rawItems = Array.isArray(data.items)
+            ? data.items
+            : Object.values(data.items || {});
 
-        const activeNotices = notices.filter(item => item && item.active === true);
+        const activeNotices = rawItems.filter(item => item && item.active === true);
 
-        if (!activeNotices.length) {
+        if (data.mostrarTodos !== true || !activeNotices.length) {
             hideNoticesCarousel();
             return;
         }
@@ -2025,7 +2018,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initSocialDrawer();
     initCommentsToggle();
     initializeVideos();
-    initLocationAlert();
+    initNoticesCarousel();
     initFeaturedEvent();
     initNewEpisodeAlert();
     initStreamAlert();
