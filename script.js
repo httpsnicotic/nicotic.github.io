@@ -1029,6 +1029,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* =========================
        BLOQUEO DE ZOOM EN MÓVIL
+       V18: ya no bloquea el scroll vertical sobre imágenes.
     ========================= */
     document.addEventListener("gesturestart", function (e) {
         e.preventDefault();
@@ -1047,14 +1048,8 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
     }, { passive: false });
 
-    document.addEventListener("touchmove", function (e) {
-        if (e.scale && e.scale !== 1) {
-            e.preventDefault();
-        }
-    }, { passive: false });
-
     document.addEventListener("touchstart", function (e) {
-        if (e.touches.length > 1) {
+        if (e.touches && e.touches.length > 1) {
             e.preventDefault();
         }
     }, { passive: false });
@@ -1091,6 +1086,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function ensureNoticesDOM() {
+        if (!isPortalPage()) return { section: null, track: null };
+
         let section = document.getElementById("noticesSection");
         let track = document.getElementById("noticesTrack");
 
@@ -1123,6 +1120,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function initNoticesCarousel() {
+        if (!isPortalPage()) return;
+
         const dom = ensureNoticesDOM();
         if (!dom.section || !dom.track) return;
 
@@ -2362,21 +2361,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* =========================
        INICIAR TODO
+       IMPORTANTE:
+       index.html también carga script.js solo para partículas y ENTER.
+       Todo lo del portal debe correr únicamente en portal.html.
     ========================= */
-    initSideMenu();
-    initInfoDrawer();
-    initScrollTopButton();
-    initFeaturedEventParticles();
-    initSocialDrawer();
-    initCommentsToggle();
-    initializeVideos();
-    initNoticesCarousel();
-    initFeaturedEvent();
-    initNewEpisodeAlert();
-    initStreamAlert();
-    initFloatingMusic();
-    initScheduleTools();
-    countPortalVisit();
-    initVisualEffects();
+    if (isPortalPage()) {
+        initSideMenu();
+        initInfoDrawer();
+        initScrollTopButton();
+        initFeaturedEventParticles();
+        initSocialDrawer();
+        initCommentsToggle();
+        initializeVideos();
+        initNoticesCarousel();
+        initFeaturedEvent();
+        initNewEpisodeAlert();
+        initStreamAlert();
+        initFloatingMusic();
+        initScheduleTools();
+        countPortalVisit();
+        initVisualEffects();
+    }
 
 });
