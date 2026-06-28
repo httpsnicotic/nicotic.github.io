@@ -3691,3 +3691,557 @@ grid-row:1 / span 2 !important;
 }
 
 }
+
+
+/* =========================================================
+   V10 - Ajustes episodio, aviso, horarios y banderas
+========================================================= */
+
+/* Episodio nuevo compacto */
+.quick-alerts-section{
+padding:18px 20px !important;
+}
+
+.quick-alerts-row{
+max-width:1050px;
+margin:0 auto;
+}
+
+.new-episode-section{
+width:100% !important;
+padding:0 !important;
+background:transparent !important;
+border:0 !important;
+}
+
+.new-episode-card{
+width:100% !important;
+max-width:100% !important;
+margin:0 auto !important;
+display:grid !important;
+grid-template-columns:82px minmax(0,1fr) auto !important;
+gap:14px !important;
+align-items:center !important;
+padding:14px 16px !important;
+min-height:96px !important;
+border-radius:24px !important;
+background:
+radial-gradient(circle at 0% 50%, rgba(239,68,68,0.20), transparent 34%),
+linear-gradient(90deg, rgba(127,29,29,0.38), rgba(12,10,18,0.88) 48%, rgba(10,10,14,0.92)) !important;
+border:1px solid rgba(248,113,113,0.32) !important;
+box-shadow:0 18px 42px rgba(0,0,0,0.42), 0 0 26px rgba(239,68,68,0.08) !important;
+}
+
+.new-episode-media{
+width:72px !important;
+height:72px !important;
+min-width:72px !important;
+border-radius:18px !important;
+border:1px solid rgba(248,113,113,0.36) !important;
+box-shadow:0 0 18px rgba(239,68,68,0.14) !important;
+}
+
+.new-episode-kicker{
+display:none !important;
+}
+
+.new-episode-content{
+gap:1px !important;
+min-width:0 !important;
+}
+
+.new-episode-content h2{
+font-size:clamp(1.45rem, 5vw, 2.05rem) !important;
+line-height:0.95 !important;
+margin:0 !important;
+color:#ff4242 !important;
+letter-spacing:1px !important;
+text-shadow:0 0 14px rgba(239,68,68,0.20) !important;
+white-space:normal !important;
+}
+
+.new-episode-content p{
+font-size:1.15rem !important;
+line-height:1.05 !important;
+font-weight:1000 !important;
+color:#ffffff !important;
+margin:0 !important;
+}
+
+.new-episode-button{
+justify-self:end !important;
+display:inline-flex !important;
+align-items:center !important;
+justify-content:center !important;
+min-width:132px !important;
+height:52px !important;
+padding:0 18px !important;
+border-radius:999px !important;
+background:#ef4444 !important;
+color:#ffffff !important;
+font-size:1.02rem !important;
+font-weight:1000 !important;
+box-shadow:0 12px 28px rgba(239,68,68,0.24) !important;
+}
+
+/* Aviso del sótano: cerrado muestra media foto, abierto muestra todo */
+.location-alert-card{
+align-items:start !important;
+}
+
+.location-alert-media{
+height:180px !important;
+min-height:180px !important;
+max-height:180px !important;
+}
+
+.location-alert-media img,
+.location-alert-media video{
+height:100% !important;
+min-height:0 !important;
+object-fit:cover !important;
+object-position:center center !important;
+}
+
+.location-alert-expanded .location-alert-card{
+display:block !important;
+}
+
+.location-alert-expanded .location-alert-media{
+width:100% !important;
+height:auto !important;
+min-height:0 !important;
+max-height:none !important;
+margin-bottom:12px !important;
+}
+
+.location-alert-expanded .location-alert-media img{
+width:100% !important;
+height:auto !important;
+min-height:0 !important;
+object-fit:contain !important;
+object-position:center center !important;
+display:block !important;
+}
+
+.location-alert-expanded .location-alert-media video{
+width:100% !important;
+height:auto !important;
+min-height:0 !important;
+object-fit:contain !important;
+display:block !important;
+}
+
+.location-alert-expanded .location-alert-toggle{
+margin:0 0 18px 0 !important;
+}
+
+.location-alert-expanded .location-alert-content{
+max-width:100% !important;
+}
+
+/* Horarios interactivos */
+.schedule-section{
+position:relative;
+z-index:3;
+overflow:hidden;
+background:
+radial-gradient(circle at 20% 0%, rgba(168,85,247,0.13), transparent 34%),
+linear-gradient(180deg, rgba(8,8,12,0.94), rgba(5,5,7,0.98));
+border-top:1px solid rgba(255,255,255,0.08);
+border-bottom:1px solid rgba(255,255,255,0.08);
+}
+
+.schedule-header{
+display:flex;
+align-items:flex-start;
+justify-content:space-between;
+gap:16px;
+max-width:1050px;
+margin:0 auto 18px;
+text-align:left;
+}
+
+.schedule-section h2{
+margin:0;
+font-size:clamp(1.7rem, 5vw, 2.6rem);
+}
+
+.schedule-subtitle{
+margin:8px 0 0;
+color:#bdbdbd;
+}
+
+.schedule-mode-toggle{
+display:flex;
+gap:8px;
+background:rgba(255,255,255,0.06);
+border:1px solid rgba(255,255,255,0.10);
+border-radius:999px;
+padding:5px;
+flex-shrink:0;
+}
+
+.schedule-mode-button{
+border:0;
+border-radius:999px;
+padding:10px 16px;
+background:transparent;
+color:#d8d8d8;
+font-weight:1000;
+letter-spacing:1px;
+cursor:pointer;
+}
+
+.schedule-mode-button.active{
+background:#a855f7;
+color:white;
+box-shadow:0 0 18px rgba(168,85,247,0.28);
+}
+
+.schedule-current-card,
+.schedule-search-card,
+.flag-list-card,
+.viewer-country-section{
+max-width:1050px;
+margin:0 auto 18px;
+background:rgba(15,15,20,0.76);
+border:1px solid rgba(255,255,255,0.08);
+border-radius:24px;
+padding:18px;
+box-shadow:0 20px 50px rgba(0,0,0,0.36);
+}
+
+.schedule-current-card{
+display:grid;
+grid-template-columns:1fr auto;
+gap:10px 18px;
+align-items:center;
+}
+
+.schedule-label{
+display:block;
+font-size:12px;
+letter-spacing:2px;
+text-transform:uppercase;
+color:#c4b5fd;
+font-weight:900;
+margin-bottom:5px;
+}
+
+#scheduleModeTitle{
+font-size:1.8rem;
+letter-spacing:2px;
+}
+
+#scheduleDaysText{
+margin:0;
+font-size:1.15rem;
+font-weight:900;
+color:white;
+text-align:right;
+}
+
+.schedule-peru-time{
+grid-column:1 / -1;
+display:inline-flex;
+justify-content:center;
+border:1px solid rgba(168,85,247,0.26);
+background:rgba(0,0,0,0.28);
+border-radius:16px;
+padding:12px 14px;
+font-weight:1000;
+color:#f5f3ff;
+}
+
+.schedule-search-grid{
+max-width:1050px;
+margin:0 auto;
+display:grid;
+grid-template-columns:minmax(0,1fr) minmax(260px,0.65fr);
+gap:18px;
+}
+
+.schedule-search-card,
+.flag-list-card{
+margin:0 0 18px;
+max-width:none;
+}
+
+.schedule-search-card label{
+display:block;
+font-size:12px;
+letter-spacing:2px;
+text-transform:uppercase;
+font-weight:1000;
+color:#c4b5fd;
+margin-bottom:9px;
+}
+
+.schedule-search-input{
+width:100%;
+border:1px solid rgba(255,255,255,0.12);
+background:rgba(0,0,0,0.34);
+color:white;
+border-radius:16px;
+padding:13px 14px;
+font-size:16px;
+outline:none;
+}
+
+.schedule-search-input:focus{
+border-color:rgba(168,85,247,0.62);
+box-shadow:0 0 0 4px rgba(168,85,247,0.12);
+}
+
+.schedule-results{
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+margin-top:12px;
+}
+
+.schedule-country-option{
+border:1px solid rgba(255,255,255,0.11);
+background:rgba(255,255,255,0.06);
+color:white;
+border-radius:999px;
+padding:8px 10px;
+font-weight:900;
+cursor:pointer;
+}
+
+.schedule-country-option:hover{
+background:rgba(168,85,247,0.22);
+border-color:rgba(168,85,247,0.44);
+}
+
+.selected-country-time{
+margin-top:14px;
+border-radius:18px;
+padding:15px;
+background:linear-gradient(135deg, rgba(168,85,247,0.16), rgba(0,0,0,0.24));
+border:1px solid rgba(168,85,247,0.20);
+font-size:1.05rem;
+font-weight:900;
+line-height:1.35;
+}
+
+.selected-country-time strong{
+display:block;
+font-size:1.5rem;
+margin-bottom:4px;
+}
+
+.flag-list-toggle{
+width:100%;
+display:flex;
+align-items:center;
+justify-content:space-between;
+border:1px solid rgba(255,255,255,0.10);
+background:rgba(255,255,255,0.06);
+color:white;
+border-radius:18px;
+padding:13px 14px;
+font-weight:1000;
+letter-spacing:1px;
+cursor:pointer;
+}
+
+.flag-list-panel{
+display:none;
+padding-top:14px;
+}
+
+.flag-list-card.open .flag-list-panel{
+display:block;
+}
+
+.flag-list-group{
+margin-top:12px;
+text-align:left;
+}
+
+.flag-list-group strong,
+.viewer-country-group h4{
+display:block;
+font-size:12px;
+letter-spacing:2px;
+text-transform:uppercase;
+color:#c4b5fd;
+margin-bottom:10px;
+}
+
+.flag-list-row{
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+font-size:1.55rem;
+line-height:1;
+}
+
+.viewer-country-section h3{
+font-size:clamp(1.6rem, 5vw, 2.4rem);
+margin:0 0 6px;
+}
+
+.viewer-country-section > p{
+margin:0 0 18px;
+color:#bdbdbd;
+}
+
+.viewer-country-group{
+text-align:left;
+margin-top:18px;
+}
+
+.viewer-flag-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit, minmax(116px, 1fr));
+gap:10px;
+}
+
+.viewer-flag-button{
+border:1px solid rgba(255,255,255,0.10);
+background:rgba(255,255,255,0.055);
+color:white;
+border-radius:16px;
+padding:11px 10px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:8px;
+font-weight:1000;
+cursor:pointer;
+transition:0.18s ease;
+}
+
+.viewer-flag-button:hover{
+transform:translateY(-2px);
+border-color:rgba(168,85,247,0.48);
+background:rgba(168,85,247,0.14);
+}
+
+.viewer-flag-button.voted{
+border-color:rgba(34,197,94,0.42);
+background:rgba(34,197,94,0.12);
+}
+
+.viewer-flag-name{
+display:flex;
+align-items:center;
+gap:7px;
+min-width:0;
+}
+
+.viewer-flag-country{
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+font-size:0.82rem;
+}
+
+.viewer-flag-count{
+color:#d8b4fe;
+}
+
+.music-float-button.is-playing{
+background:rgba(0,0,0,0.92) !important;
+}
+
+@media (max-width:768px){
+
+.quick-alerts-section{
+padding:14px 28px !important;
+}
+
+.new-episode-card{
+grid-template-columns:74px minmax(0,1fr) !important;
+grid-template-areas:
+"media text"
+"media button" !important;
+gap:8px 12px !important;
+padding:12px !important;
+min-height:0 !important;
+border-radius:22px !important;
+}
+
+.new-episode-media{
+grid-area:media;
+width:66px !important;
+height:66px !important;
+min-width:66px !important;
+border-radius:16px !important;
+}
+
+.new-episode-content{
+grid-area:text;
+}
+
+.new-episode-button{
+grid-area:button;
+justify-self:start !important;
+height:42px !important;
+min-width:128px !important;
+padding:0 16px !important;
+font-size:0.95rem !important;
+}
+
+.new-episode-content h2{
+font-size:1.45rem !important;
+}
+
+.new-episode-content p{
+font-size:1.05rem !important;
+}
+
+.location-alert-media{
+height:165px !important;
+min-height:165px !important;
+max-height:165px !important;
+}
+
+.location-alert-expanded .location-alert-media{
+height:auto !important;
+min-height:0 !important;
+max-height:none !important;
+}
+
+.schedule-section{
+padding-left:18px !important;
+padding-right:18px !important;
+}
+
+.schedule-header,
+.schedule-current-card{
+display:block;
+}
+
+.schedule-mode-toggle{
+margin-top:14px;
+width:100%;
+}
+
+.schedule-mode-button{
+flex:1;
+}
+
+#scheduleDaysText{
+text-align:left;
+margin:12px 0;
+}
+
+.schedule-search-grid{
+grid-template-columns:1fr;
+gap:0;
+}
+
+.viewer-flag-grid{
+grid-template-columns:repeat(2, minmax(0,1fr));
+}
+
+.viewer-flag-country{
+font-size:0.75rem;
+}
+
+}
