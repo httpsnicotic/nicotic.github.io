@@ -1518,6 +1518,255 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
+
+
+    /* =========================
+       HORARIOS + BANDERAS
+    ========================= */
+    const nicoticCountries = [
+        { key:"mexico", flag:"🇲🇽", name:"México (CDMX)", group:"latam", pc:"6:30 PM", phone:"10:00 PM", aliases:["mexico","méxico","cdmx"] },
+        { key:"guatemala", flag:"🇬🇹", name:"Guatemala", group:"latam", pc:"6:30 PM", phone:"10:00 PM", aliases:["guatemala"] },
+        { key:"elsalvador", flag:"🇸🇻", name:"El Salvador", group:"latam", pc:"6:30 PM", phone:"10:00 PM", aliases:["el salvador","salvador"] },
+        { key:"nicaragua", flag:"🇳🇮", name:"Nicaragua", group:"latam", pc:"6:30 PM", phone:"10:00 PM", aliases:["nicaragua"] },
+        { key:"costarica", flag:"🇨🇷", name:"Costa Rica", group:"latam", pc:"6:30 PM", phone:"10:00 PM", aliases:["costa rica"] },
+        { key:"honduras", flag:"🇭🇳", name:"Honduras", group:"latam", pc:"6:30 PM", phone:"10:00 PM", aliases:["honduras"] },
+        { key:"peru", flag:"🇵🇪", name:"Perú", group:"latam", pc:"7:30 PM", phone:"11:00 PM", aliases:["peru","perú"] },
+        { key:"colombia", flag:"🇨🇴", name:"Colombia", group:"latam", pc:"7:30 PM", phone:"11:00 PM", aliases:["colombia"] },
+        { key:"ecuador", flag:"🇪🇨", name:"Ecuador", group:"latam", pc:"7:30 PM", phone:"11:00 PM", aliases:["ecuador"] },
+        { key:"panama", flag:"🇵🇦", name:"Panamá", group:"latam", pc:"7:30 PM", phone:"11:00 PM", aliases:["panama","panamá"] },
+        { key:"cuba", flag:"🇨🇺", name:"Cuba", group:"latam", pc:"7:30 PM", phone:"12:00 AM (Medianoche)", aliases:["cuba"] },
+        { key:"venezuela", flag:"🇻🇪", name:"Venezuela", group:"latam", pc:"8:30 PM", phone:"12:00 AM (Medianoche)", aliases:["venezuela"] },
+        { key:"bolivia", flag:"🇧🇴", name:"Bolivia", group:"latam", pc:"8:30 PM", phone:"12:00 AM (Medianoche)", aliases:["bolivia"] },
+        { key:"paraguay", flag:"🇵🇾", name:"Paraguay", group:"latam", pc:"8:30 PM", phone:"12:00 AM (Medianoche)", aliases:["paraguay"] },
+        { key:"puertorico", flag:"🇵🇷", name:"Puerto Rico", group:"latam", pc:"8:30 PM", phone:"12:00 AM (Medianoche)", aliases:["puerto rico"] },
+        { key:"dominicana", flag:"🇩🇴", name:"Rep. Dominicana", group:"latam", pc:"8:30 PM", phone:"12:00 AM (Medianoche)", aliases:["rep dominicana","republica dominicana","república dominicana","dominicana"] },
+        { key:"argentina", flag:"🇦🇷", name:"Argentina", group:"latam", pc:"9:30 PM", phone:"1:00 AM (Madrugada)", aliases:["argentina"] },
+        { key:"chile", flag:"🇨🇱", name:"Chile", group:"latam", pc:"9:30 PM", phone:"12:00 AM (Medianoche)", aliases:["chile"] },
+        { key:"uruguay", flag:"🇺🇾", name:"Uruguay", group:"latam", pc:"9:30 PM", phone:"1:00 AM (Madrugada)", aliases:["uruguay"] },
+        { key:"brasil", flag:"🇧🇷", name:"Brasil (São Paulo)", group:"latam", pc:"9:30 PM", phone:"1:00 AM (Madrugada)", aliases:["brasil","brazil","sao paulo","são paulo"] },
+        { key:"usa-la", flag:"🇺🇸", name:"Los Ángeles / California", group:"world", pc:"5:30 PM", phone:"8:00 PM", aliases:["los angeles","ángeles","california","usa la"] },
+        { key:"usa-texas", flag:"🇺🇸", name:"Texas", group:"world", pc:"6:30 PM", phone:"10:00 PM", aliases:["texas","usa texas"] },
+        { key:"usa-ny", flag:"🇺🇸", name:"Nueva York", group:"world", pc:"7:30 PM", phone:"11:00 PM", aliases:["nueva york","new york","ny"] },
+        { key:"canada", flag:"🇨🇦", name:"Canadá (Toronto)", group:"world", pc:"7:30 PM", phone:"11:00 PM", aliases:["canada","canadá","toronto"] },
+        { key:"reino-unido", flag:"🇬🇧", name:"Reino Unido (Londres)", group:"world", pc:"1:30 AM (Día siguiente)", phone:"5:00 AM (Madrugada)", aliases:["reino unido","londres","uk","inglaterra"] },
+        { key:"espana", flag:"🇪🇸", name:"España (Madrid)", group:"world", pc:"2:30 AM (Día siguiente)", phone:"6:00 AM (Mañana)", aliases:["espana","españa","madrid"] },
+        { key:"francia", flag:"🇫🇷", name:"Francia", group:"world", pc:"2:30 AM (Día siguiente)", phone:"6:00 AM (Mañana)", aliases:["francia","france"] },
+        { key:"italia", flag:"🇮🇹", name:"Italia", group:"world", pc:"2:30 AM (Día siguiente)", phone:"6:00 AM (Mañana)", aliases:["italia","italy"] },
+        { key:"alemania", flag:"🇩🇪", name:"Alemania", group:"world", pc:"2:30 AM (Día siguiente)", phone:"6:00 AM (Mañana)", aliases:["alemania","germany","deutschland"] }
+    ];
+
+    let currentScheduleMode = "pc";
+    let selectedScheduleCountry = null;
+
+    function normalizeCountryText(value) {
+        return String(value || "")
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .trim();
+    }
+
+    function initScheduleTools() {
+        const section = document.getElementById("scheduleSection");
+        if (!section) return;
+
+        renderScheduleMode();
+        renderFlagLists();
+        renderViewerFlags();
+        bindScheduleEvents();
+        listenViewerCountryVotes();
+    }
+
+    function bindScheduleEvents() {
+        const pcButton = document.getElementById("scheduleModePc");
+        const phoneButton = document.getElementById("scheduleModePhone");
+        const search = document.getElementById("countryScheduleSearch");
+        const flagToggle = document.getElementById("flagListToggle");
+        const flagCard = flagToggle ? flagToggle.closest(".flag-list-card") : null;
+
+        [pcButton, phoneButton].forEach(button => {
+            if (!button) return;
+            button.onclick = () => {
+                currentScheduleMode = button.dataset.mode || "pc";
+                renderScheduleMode();
+                renderCountrySearchResults(search ? search.value : "");
+                if (selectedScheduleCountry) showCountryTime(selectedScheduleCountry);
+            };
+        });
+
+        if (search) {
+            search.addEventListener("input", () => renderCountrySearchResults(search.value));
+            search.addEventListener("focus", () => renderCountrySearchResults(search.value));
+        }
+
+        if (flagToggle && flagCard) {
+            flagToggle.onclick = () => {
+                const open = flagCard.classList.toggle("open");
+                flagToggle.setAttribute("aria-expanded", open ? "true" : "false");
+                flagToggle.innerHTML = open ? 'Lista de banderas <span>⌃</span>' : 'Lista de banderas <span>⌄</span>';
+            };
+        }
+    }
+
+    function renderScheduleMode() {
+        const pcButton = document.getElementById("scheduleModePc");
+        const phoneButton = document.getElementById("scheduleModePhone");
+        const title = document.getElementById("scheduleModeTitle");
+        const days = document.getElementById("scheduleDaysText");
+        const peruTime = document.getElementById("schedulePeruTime");
+
+        if (pcButton) pcButton.classList.toggle("active", currentScheduleMode === "pc");
+        if (phoneButton) phoneButton.classList.toggle("active", currentScheduleMode === "phone");
+
+        if (currentScheduleMode === "pc") {
+            if (title) title.textContent = "PC";
+            if (days) days.textContent = "Lunes - Miércoles - Viernes";
+            if (peruTime) peruTime.textContent = "7:30 PM Hora Perú 🇵🇪";
+        } else {
+            if (title) title.textContent = "Phone";
+            if (days) days.textContent = "Sábado - Martes - Jueves";
+            if (peruTime) peruTime.textContent = "11:00 PM Hora Perú 🇵🇪";
+        }
+    }
+
+    function renderCountrySearchResults(query) {
+        const results = document.getElementById("countryScheduleResults");
+        if (!results) return;
+
+        const clean = normalizeCountryText(query);
+        const matches = nicoticCountries
+            .filter(country => {
+                if (!clean) return ["peru", "mexico", "usa-ny", "espana"].includes(country.key);
+                const haystack = normalizeCountryText([country.name, country.flag, ...(country.aliases || [])].join(" "));
+                return haystack.includes(clean);
+            })
+            .slice(0, 8);
+
+        results.innerHTML = "";
+
+        matches.forEach(country => {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "schedule-country-option";
+            button.textContent = `${country.flag} ${country.name}`;
+            button.onclick = () => {
+                selectedScheduleCountry = country;
+                showCountryTime(country);
+            };
+            results.appendChild(button);
+        });
+    }
+
+    function showCountryTime(country) {
+        const output = document.getElementById("selectedCountryTime");
+        const search = document.getElementById("countryScheduleSearch");
+        if (!output || !country) return;
+
+        const time = currentScheduleMode === "pc" ? country.pc : country.phone;
+        const modeText = currentScheduleMode === "pc" ? "Stream en PC" : "Stream en Phone";
+
+        if (search) search.value = country.name;
+
+        output.innerHTML = `
+            <strong>${country.flag} ${country.name}</strong>
+            ${modeText}: <span>${time}</span>
+        `;
+    }
+
+    function renderFlagLists() {
+        const latam = document.getElementById("latamFlagList");
+        const world = document.getElementById("worldFlagList");
+
+        if (latam) {
+            latam.innerHTML = nicoticCountries
+                .filter(country => country.group === "latam")
+                .map(country => `<span title="${country.name}">${country.flag}</span>`)
+                .join("");
+        }
+
+        if (world) {
+            world.innerHTML = nicoticCountries
+                .filter(country => country.group === "world")
+                .map(country => `<span title="${country.name}">${country.flag}</span>`)
+                .join("");
+        }
+    }
+
+    function renderViewerFlags() {
+        const latam = document.getElementById("latamViewerFlags");
+        const world = document.getElementById("worldViewerFlags");
+
+        if (latam) latam.innerHTML = "";
+        if (world) world.innerHTML = "";
+
+        nicoticCountries.forEach(country => {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "viewer-flag-button";
+            button.dataset.countryKey = country.key;
+            button.innerHTML = `
+                <span class="viewer-flag-name">
+                    <span>${country.flag}</span>
+                    <span class="viewer-flag-country">${country.name}</span>
+                </span>
+                <span class="viewer-flag-count" id="viewerCount_${country.key}">+0</span>
+            `;
+            button.onclick = () => voteViewerCountry(country.key);
+
+            if (localStorage.getItem("nicotic_viewer_country_voted_v1") === country.key) {
+                button.classList.add("voted");
+            }
+
+            if (country.group === "latam" && latam) latam.appendChild(button);
+            if (country.group === "world" && world) world.appendChild(button);
+        });
+    }
+
+    function listenViewerCountryVotes() {
+        if (!window.nicoticDb) return;
+
+        window.nicoticDb.ref("portal/viewerCountries").on("value", snapshot => {
+            const values = snapshot.val() || {};
+
+            nicoticCountries.forEach(country => {
+                const countEl = document.getElementById(`viewerCount_${country.key}`);
+                const count = Number(values[country.key] || 0);
+                if (countEl) countEl.textContent = `+${count}`;
+            });
+        });
+    }
+
+    function voteViewerCountry(countryKey) {
+        const votedKey = localStorage.getItem("nicotic_viewer_country_voted_v1");
+
+        if (votedKey) {
+            document.querySelectorAll(".viewer-flag-button").forEach(button => {
+                button.classList.toggle("voted", button.dataset.countryKey === votedKey);
+            });
+            return;
+        }
+
+        localStorage.setItem("nicotic_viewer_country_voted_v1", countryKey);
+
+        document.querySelectorAll(".viewer-flag-button").forEach(button => {
+            button.classList.toggle("voted", button.dataset.countryKey === countryKey);
+        });
+
+        if (!window.nicoticDb) {
+            const countEl = document.getElementById(`viewerCount_${countryKey}`);
+            if (countEl) {
+                const current = Number(countEl.textContent.replace("+", "")) || 0;
+                countEl.textContent = `+${current + 1}`;
+            }
+            return;
+        }
+
+        window.nicoticDb.ref(`portal/viewerCountries/${countryKey}`).transaction(current => {
+            return (Number(current) || 0) + 1;
+        });
+    }
+
+
     /* =========================
        INICIAR TODO
     ========================= */
@@ -1527,6 +1776,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initNewEpisodeAlert();
     initStreamAlert();
     initFloatingMusic();
+    initScheduleTools();
     countPortalVisit();
     initVisualEffects();
 
