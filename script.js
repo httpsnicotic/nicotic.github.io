@@ -199,6 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
         refreshAllUI();
         setInitialVideoPoster();
         listenFirebaseVideoStats();
+        initSmoothHorizontalCarousels();
     }
 
 
@@ -954,97 +955,173 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* =========================
-       SCROLL HORIZONTAL SUAVE - V20
-       En celular usa scroll nativo.
-       En PC permite arrastrar con mouse.
+       SCROLL HORIZONTAL REAL - V21
+       Funciona al deslizar sobre imágenes/miniaturas.
     ========================= */
-    const grid = document.querySelector(".video-grid");
+    function initSmoothHorizontalCarousels() {
+        const setups = [
+            { selector: ".video-grid", flag: "nicoticVideoGridDidDrag" },
+            { selector: ".notices-track", flag: "nicoticNoticesDidDrag" }
+        ];
 
-    if (grid) {
-        window.nicoticVideoGridDidDrag = false;
+        setups.forEach(setup => {
+            const track = document.querySelector(setup.selector);
+            if (!track || track.dataset.nicoticSmoothScrollReady === "true") return;
 
-        let isMouseDragging = false;
-        let startX = 0;
-        let startScrollLeft = 0;
-        let moved = false;
+            track.dataset.nicoticSmoothScrollReady = "true";
+            window[setup.flag] = false;
 
-        grid.addEventListener("pointerdown", (e) => {
-            if (e.pointerType === "touch") return;
+            let startX = 0;
+            let startY = 0;
+            let startScrollLeft = 0;
+            let touching = false;
+            let moved = false;
+            let raf = null;
+            let targetScrollLeft = 0;
 
-            isMouseDragging = true;
-            moved = false;
-            startX = e.clientX;
-            startScrollLeft = grid.scrollLeft;
-            grid.classList.add("dragging");
-
-            try {
-                grid.setPointerCapture(e.pointerId);
-            } catch (err) {}
-        }, { passive: true });
-
-        grid.addEventListener("pointermove", (e) => {
-            if (!isMouseDragging) return;
-
-            const dx = e.clientX - startX;
-
-            if (Math.abs(dx) > 5) {
-                moved = true;
-                window.nicoticVideoGridDidDrag = true;
-                grid.scrollLeft = startScrollLeft - dx;
-                e.preventDefault();
+            function prepareChildren() {
+                track.querySelectorAll("img, video").forEach(el => {
+                    el.draggable = false;
+                    el.setAttribute("draggable", "false");
+                });
             }
-        }, { passive: false });
 
-        function finishMouseDrag(e) {
-            if (!isMouseDragging) return;
+            prepareChildren();
 
-            isMouseDragging = false;
-            grid.classList.remove("dragging");
+            const observer = new MutationObserver(prepareChildren);
+            observer.observe(track, { childList: true, subtree: true });
 
-            try {
-                grid.releasePointerCapture(e.pointerId);
-            } catch (err) {}
-
-            if (moved) {
-                setTimeout(() => {
-                    window.nicoticVideoGridDidDrag = false;
-                }, 140);
+            function applyScroll() {
+                track.scrollLeft = targetScrollLeft;
+                raf = null;
             }
-        }
 
-        grid.addEventListener("pointerup", finishMouseDrag, { passive: true });
-        grid.addEventListener("pointercancel", finishMouseDrag, { passive: true });
-        grid.addEventListener("pointerleave", finishMouseDrag, { passive: true });
+            track.addEventListener("touchstart", (e) => {
+                if (!e.touches || !e.touches[0]) return;
 
-        let touchStartX = 0;
-        let touchStartY = 0;
+                touching = true;
+                moved = false;
+                window[setup.flag] = false;
 
-        grid.addEventListener("touchstart", (e) => {
-            window.nicoticVideoGridDidDrag = false;
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                startScrollLeft = track.scrollLeft;
+                targetScrollLeft = startScrollLeft;
+            }, { passive: true, capture: true });
 
-            if (!e.touches || !e.touches[0]) return;
+            track.addEventListener("touchmove", (e) => {
+                if (!touching || !e.touches || !e.touches[0]) return;
 
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
-        }, { passive: true });
+                const dx = e.touches[0].clientX - startX;
+                const dy = e.touches[0].clientY - startY;
 
-        grid.addEventListener("touchmove", (e) => {
-            if (!e.touches || !e.touches[0]) return;
+                const absX = Math.abs(dx);
+                const absY = Math.abs(dy);
 
-            const dx = Math.abs(e.touches[0].clientX - touchStartX);
-            const dy = Math.abs(e.touches[0].clientY - touchStartY);
+                if (absX > 7 && absX > absY * 1.05) {
+                    moved = true;
+                    window[setup.flag] = true;
 
-            if (dx > 12 && dx > dy) {
-                window.nicoticVideoGridDidDrag = true;
+                    targetScrollLeft = startScrollLeft - dx;
+
+                    if (!raf) {
+                        raf = requestAnimationFrame(applyScroll);
+                    }
+
+                    e.preventDefault();
+                }
+            }, { passive: false, capture: true });
+
+            function finishTouch() {
+                touching = false;
+
+                if (raf) {
+                    cancelAnimationFrame(raf);
+                    raf = null;
+                }
+
+                if (moved) {
+                    setTimeout(() => {
+                        window[setup.flag] = false;
+                    }, 180);
+                }
             }
-        }, { passive: true });
 
-        grid.addEventListener("touchend", () => {
-            setTimeout(() => {
-                window.nicoticVideoGridDidDrag = false;
-            }, 160);
-        }, { passive: true });
+            track.addEventListener("touchend", finishTouch, { passive: true, capture: true });
+            track.addEventListener("touchcancel", finishTouch, { passive: true, capture: true });
+
+            track.addEventListener("click", (e) => {
+                if (moved || window[setup.flag]) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    if (typeof e.stopImmediatePropagation === "function") {
+                        e.stopImmediatePropagation();
+                    }
+
+                    setTimeout(() => {
+                        moved = false;
+                        window[setup.flag] = false;
+                    }, 120);
+                }
+            }, true);
+
+            let mouseDown = false;
+            let mouseStartX = 0;
+            let mouseStartScrollLeft = 0;
+            let mouseMoved = false;
+
+            track.addEventListener("pointerdown", (e) => {
+                if (e.pointerType === "touch") return;
+
+                mouseDown = true;
+                mouseMoved = false;
+                mouseStartX = e.clientX;
+                mouseStartScrollLeft = track.scrollLeft;
+                track.classList.add("dragging");
+
+                try {
+                    track.setPointerCapture(e.pointerId);
+                } catch (err) {}
+            }, { passive: true });
+
+            track.addEventListener("pointermove", (e) => {
+                if (!mouseDown || e.pointerType === "touch") return;
+
+                const dx = e.clientX - mouseStartX;
+
+                if (Math.abs(dx) > 5) {
+                    mouseMoved = true;
+                    window[setup.flag] = true;
+                    track.scrollLeft = mouseStartScrollLeft - dx;
+                    e.preventDefault();
+                }
+            }, { passive: false });
+
+            function finishMouse(e) {
+                if (!mouseDown) return;
+
+                mouseDown = false;
+                track.classList.remove("dragging");
+
+                try {
+                    track.releasePointerCapture(e.pointerId);
+                } catch (err) {}
+
+                if (mouseMoved) {
+                    setTimeout(() => {
+                        window[setup.flag] = false;
+                    }, 160);
+                }
+            }
+
+            track.addEventListener("pointerup", finishMouse, { passive: true });
+            track.addEventListener("pointercancel", finishMouse, { passive: true });
+            track.addEventListener("pointerleave", finishMouse, { passive: true });
+        });
     }
+
+    initSmoothHorizontalCarousels();
 
     /* =========================
        EFECTOS VISUALES EXTRA
@@ -1286,6 +1363,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         section.classList.remove("nicotic-alert-hidden");
         section.style.display = "";
+        initSmoothHorizontalCarousels();
     }
 
     function renderAlertMedia(media, data) {
