@@ -4280,3 +4280,431 @@ cursor:not-allowed;
 opacity:1;
 cursor:default;
 }
+
+/* =========================
+   NICOTIC V12 - LIMPIEZA Y ORDEN FINAL
+========================= */
+
+body{
+background:
+linear-gradient(180deg, rgba(0,0,0,0.86), rgba(0,0,0,0.94)),
+url("redes/fondo2.jpeg") center top / cover fixed no-repeat !important;
+}
+
+.topbar{
+justify-content:flex-start !important;
+gap:0 !important;
+}
+
+.top-left{
+width:100%;
+justify-content:flex-start;
+}
+
+.top-right,
+.search-icon,
+.user-icon{
+display:none !important;
+}
+
+.menu-icon{
+font-size:30px;
+padding:8px 10px;
+border-radius:12px;
+}
+
+.menu-icon:active{
+transform:scale(0.96);
+}
+
+/* MENÚ DESPLEGABLE */
+.side-menu{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.58);
+z-index:1200;
+opacity:0;
+pointer-events:none;
+transition:0.22s ease;
+}
+
+.side-menu.open{
+opacity:1;
+pointer-events:auto;
+}
+
+.side-menu-panel{
+width:min(310px, 82vw);
+height:100%;
+background:linear-gradient(180deg,rgba(9,9,12,0.98),rgba(3,3,5,0.98));
+border-right:1px solid rgba(168,85,247,0.20);
+box-shadow:30px 0 80px rgba(0,0,0,0.72);
+padding:24px 18px;
+transform:translateX(-100%);
+transition:0.24s ease;
+}
+
+.side-menu.open .side-menu-panel{
+transform:translateX(0);
+}
+
+.side-menu-close{
+width:42px;
+height:42px;
+border:none;
+border-radius:50%;
+background:rgba(255,255,255,0.08);
+color:white;
+font-size:30px;
+line-height:1;
+cursor:pointer;
+}
+
+.side-menu-title{
+margin:22px 0 18px;
+font-size:25px;
+font-weight:900;
+letter-spacing:4px;
+color:white;
+text-shadow:0 0 16px rgba(168,85,247,0.5);
+}
+
+.side-menu-link{
+width:100%;
+display:flex;
+align-items:center;
+justify-content:space-between;
+margin:9px 0;
+padding:14px 15px;
+border-radius:16px;
+border:1px solid rgba(255,255,255,0.08);
+background:rgba(255,255,255,0.04);
+color:white;
+font-size:15px;
+font-weight:900;
+text-align:left;
+cursor:pointer;
+}
+
+.side-menu-link::after{
+content:"›";
+font-size:22px;
+color:#c084fc;
+}
+
+.side-menu-link:hover{
+background:rgba(168,85,247,0.13);
+border-color:rgba(168,85,247,0.35);
+}
+
+/* AVISO DEL SÓTANO: CERRADO SOLO MEDIA VISTA DEL IRIS */
+.location-alert-card{
+overflow:hidden;
+}
+
+.location-alert-media{
+height:165px !important;
+aspect-ratio:auto !important;
+border-radius:22px !important;
+overflow:hidden !important;
+background:#050505 !important;
+}
+
+.location-alert-media img,
+.location-alert-media video{
+width:100% !important;
+height:100% !important;
+object-fit:cover !important;
+object-position:center 52% !important;
+display:block !important;
+}
+
+.location-alert-expanded .location-alert-media{
+height:auto !important;
+max-height:none !important;
+aspect-ratio:auto !important;
+}
+
+.location-alert-expanded .location-alert-media img,
+.location-alert-expanded .location-alert-media video{
+height:auto !important;
+max-height:none !important;
+object-fit:contain !important;
+object-position:center center !important;
+background:#050505;
+}
+
+/* SOCIAL ANTES DE VIDEO DESTACADO */
+.social-section{
+min-height:auto !important;
+padding:70px 20px 55px !important;
+background:
+radial-gradient(circle at 50% 10%, rgba(168,85,247,0.16), transparent 34%),
+rgba(0,0,0,0.55) !important;
+}
+
+.social-card{
+width:min(1050px, 94vw);
+background:rgba(8,8,12,0.78);
+border:1px solid rgba(168,85,247,0.18);
+border-radius:30px;
+padding:24px;
+box-shadow:0 25px 75px rgba(0,0,0,0.58);
+}
+
+.social-header{
+text-align:left;
+margin-bottom:18px;
+}
+
+.social-kicker{
+display:inline-flex;
+color:#c084fc;
+font-size:12px;
+font-weight:900;
+letter-spacing:3px;
+text-transform:uppercase;
+margin-bottom:8px;
+}
+
+.social-header h2{
+font-size:clamp(2.4rem, 7vw, 5rem) !important;
+line-height:0.95;
+margin:0 0 8px !important;
+letter-spacing:1px;
+color:#fff !important;
+}
+
+.social-header p{
+margin:0;
+color:#cfcfcf;
+font-size:16px;
+line-height:1.45;
+}
+
+.social-grid{
+display:grid;
+grid-template-columns:repeat(5, minmax(130px,1fr));
+gap:13px;
+margin-top:20px;
+}
+
+.social-item{
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+gap:9px;
+min-height:170px;
+border-radius:24px;
+background:rgba(255,255,255,0.045);
+border:1px solid rgba(255,255,255,0.08);
+text-decoration:none;
+color:white;
+transition:0.2s ease;
+}
+
+.social-item:hover{
+transform:translateY(-3px);
+border-color:rgba(168,85,247,0.38);
+background:rgba(168,85,247,0.10);
+}
+
+.social-avatar-wrap{
+position:relative;
+width:78px;
+height:78px;
+}
+
+.social-avatar-wrap img{
+width:78px;
+height:78px;
+border-radius:50%;
+object-fit:cover;
+display:block;
+border:2px solid rgba(255,255,255,0.20);
+box-shadow:0 0 24px rgba(168,85,247,0.23);
+}
+
+.social-check{
+position:absolute;
+right:-3px;
+bottom:2px;
+width:24px;
+height:24px;
+border-radius:50%;
+background:#1d9bf0;
+color:#fff;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:900;
+font-size:14px;
+border:2px solid #050505;
+box-shadow:0 0 13px rgba(29,155,240,0.70);
+}
+
+.social-item strong{
+font-size:13px;
+letter-spacing:1.8px;
+}
+
+.social-go{
+background:#ffffff;
+color:#050505;
+font-weight:900;
+border-radius:999px;
+padding:8px 18px;
+font-size:13px;
+}
+
+/* VIDEO DESTACADO MÁS LIMPIO */
+.featured-kicker{
+display:none !important;
+}
+
+.featured-title{
+color:#fff !important;
+background:none !important;
+-webkit-text-fill-color:#fff !important;
+text-transform:uppercase !important;
+letter-spacing:0 !important;
+text-shadow:0 0 24px rgba(168,85,247,0.28) !important;
+}
+
+.featured-video-shell,
+.main-video-info,
+.comments-box,
+.video-card,
+.location-alert-card,
+.stream-alert-card{
+border-color:rgba(255,255,255,0.07) !important;
+box-shadow:0 18px 55px rgba(0,0,0,0.54) !important;
+}
+
+/* TOTALES AL FINAL EN ROJO */
+.totals-final-section{
+min-height:auto !important;
+padding:75px 20px 80px !important;
+background:
+radial-gradient(circle at 50% 0%, rgba(239,68,68,0.20), transparent 36%),
+linear-gradient(180deg, rgba(18,4,4,0.84), rgba(0,0,0,0.92)) !important;
+}
+
+.totals-final-card{
+width:min(1050px,94vw);
+border-radius:30px;
+padding:26px;
+border:1px solid rgba(239,68,68,0.25);
+background:rgba(12,5,5,0.82);
+box-shadow:0 25px 75px rgba(0,0,0,0.6);
+}
+
+.totals-final-header{
+text-align:left;
+margin-bottom:20px;
+}
+
+.totals-final-header span{
+display:inline-flex;
+color:#fca5a5;
+font-size:12px;
+font-weight:900;
+letter-spacing:3px;
+text-transform:uppercase;
+margin-bottom:10px;
+}
+
+.totals-final-header h2{
+margin:0 0 8px !important;
+font-size:clamp(2.1rem,6vw,4.5rem) !important;
+color:#fff !important;
+}
+
+.totals-final-header p{
+color:#d0d0d0;
+margin:0;
+}
+
+.totals-final-grid{
+display:grid;
+grid-template-columns:repeat(3, 1fr);
+gap:14px;
+}
+
+.total-card-red{
+width:auto !important;
+min-width:0 !important;
+background:rgba(239,68,68,0.08) !important;
+border:1px solid rgba(239,68,68,0.24) !important;
+border-radius:22px !important;
+}
+
+.total-card-red strong{
+color:white;
+text-shadow:0 0 18px rgba(239,68,68,0.35);
+}
+
+/* BOTÓN MÚSICA: QUE NO TAPE TANTO */
+.music-float-button{
+right:18px !important;
+bottom:24px !important;
+width:64px !important;
+height:64px !important;
+}
+
+/* RESPONSIVE */
+@media (max-width:768px){
+  .location-alert-media{
+    height:150px !important;
+  }
+
+  .location-alert-expanded .location-alert-media{
+    height:auto !important;
+  }
+
+  .social-section{
+    padding:45px 16px 42px !important;
+  }
+
+  .social-card{
+    padding:18px;
+    border-radius:24px;
+  }
+
+  .social-grid{
+    grid-template-columns:1fr;
+    gap:10px;
+  }
+
+  .social-item{
+    min-height:94px;
+    flex-direction:row;
+    justify-content:space-between;
+    padding:12px 14px;
+  }
+
+  .social-avatar-wrap,
+  .social-avatar-wrap img{
+    width:56px;
+    height:56px;
+  }
+
+  .social-item strong{
+    flex:1;
+    text-align:left;
+    margin-left:10px;
+  }
+
+  .totals-final-grid{
+    grid-template-columns:1fr;
+  }
+
+  .topbar{
+    justify-content:flex-start !important;
+  }
+
+  .logo{
+    margin-left:4px;
+  }
+}
