@@ -543,9 +543,13 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!text) return;
 
         const comment = {
+            id: "c_" + Date.now() + "_" + Math.random().toString(16).slice(2),
             name: name,
             text: text.slice(0, 180),
-            date: formatCommentDate()
+            date: formatCommentDate(),
+            likes: 0,
+            likedByMe: false,
+            ownerReplies: []
         };
 
         state.videos[videoId].comments.push(comment);
@@ -591,13 +595,18 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         comments.slice().reverse().forEach(comment => {
+            if (!comment.id) comment.id = "c_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+            if (typeof comment.likes !== "number") comment.likes = 0;
+            if (!Array.isArray(comment.ownerReplies)) comment.ownerReplies = [];
+
             const item = document.createElement("div");
             item.className = "comment-item";
 
             const alias = getAliasData(comment.name);
+            const isOwner = String(comment.name || "").toLowerCase().includes("owner") || String(comment.name || "").toLowerCase().includes("nicotic");
 
             item.innerHTML = `
-                <div class="comment-line">
+                <div class="comment-line ${isOwner ? "owner-comment" : ""}">
                     <span class="comment-alias ${alias.badgeClass}">
                         <span class="alias-icon">${alias.icon}</span>
                         <span class="alias-divider">|</span>
@@ -607,11 +616,42 @@ document.addEventListener("DOMContentLoaded", () => {
                     <span class="comment-text">${escapeHTML(comment.text)}</span>
                 </div>
 
-                <span class="comment-date">${escapeHTML(comment.date || "")}</span>
+                <div class="comment-actions-row">
+                    <button class="comment-like-btn ${comment.likedByMe ? "liked" : ""}" type="button" data-comment-id="${escapeHTML(comment.id)}">
+                        ♡ <span>${formatNumber(comment.likes || 0)}</span>
+                    </button>
+                    <span class="comment-date">${escapeHTML(comment.date || "")}</span>
+                </div>
+
+                ${comment.ownerReplies.map(reply => `
+                    <div class="owner-reply">
+                        <strong>NICOTIC OWNER ✓</strong>
+                        <span>${escapeHTML(reply.text || "")}</span>
+                    </div>
+                `).join("")}
             `;
+
+            const likeBtn = item.querySelector(".comment-like-btn");
+            if (likeBtn) {
+                likeBtn.onclick = () => toggleCommentLike(videoId, comment.id);
+            }
 
             list.appendChild(item);
         });
+
+        saveState();
+    }
+
+    function toggleCommentLike(videoId, commentId) {
+        const comments = state.videos[videoId]?.comments || [];
+        const comment = comments.find(item => item.id === commentId);
+        if (!comment) return;
+
+        comment.likedByMe = !comment.likedByMe;
+        comment.likes = Math.max(0, Number(comment.likes || 0) + (comment.likedByMe ? 1 : -1));
+
+        saveState();
+        renderComments(videoId);
     }
 
     function getAliasData(name) {
@@ -885,212 +925,196 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+    
     /* =========================
-       AVISO RÁPIDO: HOY ESTARÉ EN...
-       Firebase: portal/alerts/locationAlert
+       AVISOS / NOVEDADES
+       Firebase: portal/avisosNovedades
     ========================= */
-    let locationAlertTimer = null;
+    let noticesTimers = [];
 
-    const locationAlertDemo = {
-        active: false,
+    const fallbackNotice = {
+        id: "aviso_1",
+        active: true,
+        type: "normal",
+        kicker: "Avisos / Novedades",
         title: "Hoy estaré en Trujillo",
         place: "Centro de Trujillo",
         description: "Estaré grabando algo especial para el sótano.",
         dateTime: "2026-07-10T17:00:00-05:00",
         imageUrl: "ojo.jpg",
         videoUrl: "",
-        buttonText: "Más info",
-        buttonUrl: "",
-        expireAfterHours: 6
+        expireAfterHours: 6,
+        startedText: "Ya comenzó"
     };
 
     function initLocationAlert() {
-        const section = document.getElementById("locationAlertSection");
+        initNoticesCarousel();
+    }
 
+    function initNoticesCarousel() {
+        const section = document.getElementById("noticesSection");
         if (!section) return;
 
-        hideLocationAlert();
+        hideNoticesCarousel();
 
         if (window.nicoticDb) {
-            window.nicoticDb.ref("portal/alerts/locationAlert").on("value", snapshot => {
+            window.nicoticDb.ref("portal/avisosNovedades").on("value", snapshot => {
                 const data = snapshot.val();
 
                 if (!data || data.active !== true) {
-                    hideLocationAlert();
+                    // respaldo compatible con el aviso antiguo
+                    window.nicoticDb.ref("portal/alerts/locationAlert").once("value").then(oldSnap => {
+                        const oldData = oldSnap.val();
+                        if (oldData && oldData.active === true) {
+                            renderNoticesCarousel({
+                                active: true,
+                                notices: [oldData]
+                            });
+                        } else {
+                            hideNoticesCarousel();
+                        }
+                    });
                     return;
                 }
 
-                renderLocationAlert(data);
+                renderNoticesCarousel(data);
             }, error => {
-                console.warn("NICOTIC: no se pudo leer locationAlert.", error);
-                renderLocationAlert(locationAlertDemo);
+                console.warn("NICOTIC: no se pudo leer avisosNovedades.", error);
+                renderNoticesCarousel({ active: true, notices: [fallbackNotice] });
             });
 
             return;
         }
 
-        renderLocationAlert(locationAlertDemo);
+        renderNoticesCarousel({ active: true, notices: [fallbackNotice] });
     }
 
-    function renderLocationAlert(data) {
-        const section = document.getElementById("locationAlertSection");
-        const title = document.getElementById("locationAlertTitle");
-        const place = document.getElementById("locationAlertPlace");
-        const description = document.getElementById("locationAlertDescription");
-        const media = document.getElementById("locationAlertMedia");
-        const button = document.getElementById("locationAlertButton");
-        const toggle = document.getElementById("locationAlertToggle");
+    function renderNoticesCarousel(data) {
+        const section = document.getElementById("noticesSection");
+        const track = document.getElementById("noticesTrack");
 
-        if (!section) return;
+        if (!section || !track) return;
 
-        if (!data || data.active !== true) {
-            hideLocationAlert();
+        clearNoticesTimers();
+
+        const notices = Array.isArray(data.notices)
+            ? data.notices
+            : Object.values(data.notices || {});
+
+        const activeNotices = notices.filter(item => item && item.active === true);
+
+        if (!activeNotices.length) {
+            hideNoticesCarousel();
             return;
         }
 
-        if (title) title.textContent = data.title || "Hoy estaré en...";
-        if (place) place.textContent = data.place || "Lugar por confirmar";
-        if (description) description.textContent = data.description || "Pronto habrá un aviso especial.";
+        track.innerHTML = "";
 
-        renderLocationAlertMedia(media, data);
-        setupLocationAlertToggle(section, toggle);
-        renderLocationAlertButton(button, data);
+        activeNotices.slice(0, 4).forEach((notice, index) => {
+            const card = document.createElement("article");
+            card.className = `notice-card ${notice.type === "important" ? "notice-important" : ""}`;
+            card.dataset.noticeIndex = String(index);
+
+            const media = document.createElement("div");
+            media.className = "notice-media";
+            renderAlertMedia(media, notice);
+
+            const toggle = document.createElement("button");
+            toggle.className = "notice-toggle";
+            toggle.type = "button";
+            toggle.innerHTML = 'Ver foto completa <span>⌄</span>';
+
+            toggle.onclick = () => {
+                const expanded = card.classList.toggle("expanded");
+                toggle.innerHTML = expanded ? 'Ocultar foto <span>⌃</span>' : 'Ver foto completa <span>⌄</span>';
+            };
+
+            const content = document.createElement("div");
+            content.className = "notice-content";
+
+            const countdownId = `noticeCountdown_${index}`;
+
+            content.innerHTML = `
+                <div class="notice-kicker">${escapeHTML(notice.kicker || "Avisos / Novedades")}</div>
+                <h3>${escapeHTML(notice.title || "Aviso del sótano")}</h3>
+                ${notice.place ? `<div class="notice-place">${escapeHTML(notice.place)}</div>` : ""}
+                <p>${escapeHTML(notice.description || "")}</p>
+                ${notice.dateTime ? `
+                    <div class="notice-countdown">
+                        <span>Faltan</span>
+                        <strong id="${countdownId}">--d --h --m</strong>
+                    </div>
+                ` : ""}
+            `;
+
+            card.appendChild(media);
+            card.appendChild(toggle);
+            card.appendChild(content);
+            track.appendChild(card);
+
+            if (notice.dateTime) {
+                startNoticeCountdown(notice, countdownId, card);
+            }
+        });
 
         section.classList.remove("nicotic-alert-hidden");
-        startLocationAlertCountdown(data);
     }
 
+    function startNoticeCountdown(notice, countdownId, card) {
+        const countdown = document.getElementById(countdownId);
+        if (!countdown) return;
 
-    function setupLocationAlertToggle(section, toggle) {
-        if (!section || !toggle) return;
+        const targetDate = new Date(notice.dateTime);
+        const expireAfterHours = Number(notice.expireAfterHours || 0);
 
-        section.classList.remove("location-alert-expanded");
-        toggle.setAttribute("aria-expanded", "false");
-        toggle.innerHTML = 'Ver foto completa <span>⌄</span>';
+        function update() {
+            const now = new Date();
+            const diff = targetDate.getTime() - now.getTime();
 
-        toggle.onclick = () => {
-            const expanded = section.classList.toggle("location-alert-expanded");
-            toggle.setAttribute("aria-expanded", expanded ? "true" : "false");
-            toggle.innerHTML = expanded ? 'Ocultar foto <span>⌃</span>' : 'Ver foto completa <span>⌄</span>';
-        };
-    }
-
-    function renderLocationAlertMedia(media, data) {
-        if (!media) return;
-
-        const imageUrl = String(data.imageUrl || "").trim();
-        const videoUrl = String(data.videoUrl || "").trim();
-
-        media.innerHTML = "";
-
-        if (videoUrl) {
-            const video = document.createElement("video");
-            video.src = videoUrl;
-            video.autoplay = true;
-            video.muted = true;
-            video.loop = true;
-            video.playsInline = true;
-            video.preload = "metadata";
-            media.appendChild(video);
-            return;
-        }
-
-        if (imageUrl) {
-            const img = document.createElement("img");
-            img.src = imageUrl;
-            img.alt = data.title || "Aviso NICOTIC";
-            img.loading = "lazy";
-            media.appendChild(img);
-        }
-    }
-
-    function renderLocationAlertButton(button, data) {
-        if (!button) return;
-
-        const buttonText = String(data.buttonText || "").trim();
-        const buttonUrl = String(data.buttonUrl || "").trim();
-
-        if (!buttonText || !buttonUrl) {
-            button.classList.add("nicotic-alert-hidden");
-            button.removeAttribute("href");
-            return;
-        }
-
-        button.textContent = buttonText;
-        button.href = buttonUrl;
-        button.classList.remove("nicotic-alert-hidden");
-    }
-
-    function startLocationAlertCountdown(data) {
-        clearInterval(locationAlertTimer);
-
-        updateLocationAlertCountdown(data);
-
-        locationAlertTimer = setInterval(() => {
-            updateLocationAlertCountdown(data);
-        }, 1000);
-    }
-
-    function updateLocationAlertCountdown(data) {
-        const section = document.getElementById("locationAlertSection");
-        const countdown = document.getElementById("locationAlertCountdown");
-
-        if (!section || !countdown) return;
-
-        const target = new Date(data.dateTime || "").getTime();
-
-        if (!target || Number.isNaN(target)) {
-            countdown.textContent = "Fecha por confirmar";
-            section.classList.remove("location-alert-ended");
-            return;
-        }
-
-        const now = Date.now();
-        const diff = target - now;
-        const expireAfterHours = Number(data.expireAfterHours || 6);
-        const hideAfterMs = expireAfterHours * 60 * 60 * 1000;
-
-        if (diff <= 0) {
-            const passed = Math.abs(diff);
-
-            if (passed >= hideAfterMs) {
-                hideLocationAlert();
+            if (Number.isNaN(targetDate.getTime())) {
+                countdown.textContent = "--d --h --m";
                 return;
             }
 
-            countdown.textContent = data.startedText || "Ya comenzó";
-            section.classList.add("location-alert-ended");
-            return;
+            if (diff <= 0) {
+                countdown.textContent = notice.startedText || "Ya comenzó";
+
+                if (expireAfterHours > 0) {
+                    const expireAt = targetDate.getTime() + expireAfterHours * 60 * 60 * 1000;
+                    if (now.getTime() > expireAt && card) {
+                        card.remove();
+                        const track = document.getElementById("noticesTrack");
+                        if (track && !track.children.length) hideNoticesCarousel();
+                    }
+                }
+
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((diff / (1000 * 60)) % 60);
+
+            countdown.textContent = `${days}d ${hours}h ${minutes}m`;
         }
 
-        section.classList.remove("location-alert-ended");
-
-        const totalSeconds = Math.floor(diff / 1000);
-        const days = Math.floor(totalSeconds / 86400);
-        const hours = Math.floor((totalSeconds % 86400) / 3600);
-        const minutes = Math.floor((totalSeconds % 3600) / 60);
-        const seconds = totalSeconds % 60;
-
-        if (days > 0) {
-            countdown.textContent = `${days}d ${padTime(hours)}h ${padTime(minutes)}m`;
-        } else {
-            countdown.textContent = `${padTime(hours)}h ${padTime(minutes)}m ${padTime(seconds)}s`;
-        }
+        update();
+        noticesTimers.push(setInterval(update, 60000));
     }
 
-    function hideLocationAlert() {
-        const section = document.getElementById("locationAlertSection");
-
-        if (section) {
-            section.classList.add("nicotic-alert-hidden");
-            section.classList.remove("location-alert-ended");
-        }
-
-        clearInterval(locationAlertTimer);
+    function clearNoticesTimers() {
+        noticesTimers.forEach(timer => clearInterval(timer));
+        noticesTimers = [];
     }
 
-    function padTime(value) {
-        return String(value).padStart(2, "0");
+    function hideNoticesCarousel() {
+        clearNoticesTimers();
+
+        const section = document.getElementById("noticesSection");
+        const track = document.getElementById("noticesTrack");
+
+        if (track) track.innerHTML = "";
+        if (section) section.classList.add("nicotic-alert-hidden");
     }
 
 
@@ -1894,6 +1918,56 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+    
+    /* =========================
+       DESPLEGAR COMENTARIOS
+    ========================= */
+    function initCommentsToggle() {
+        const toggle = document.getElementById("toggleCommentsBox");
+        const box = document.querySelector(".comments-box");
+
+        if (!toggle || !box) return;
+
+        box.classList.add("comments-collapsed");
+        toggle.textContent = "Desplegar comentarios";
+
+        toggle.onclick = () => {
+            const isClosed = box.classList.toggle("comments-collapsed");
+            toggle.textContent = isClosed ? "Desplegar comentarios" : "Ocultar comentarios";
+        };
+    }
+
+    /* =========================
+       PANEL FLOTANTE DE REDES
+    ========================= */
+    function initSocialDrawer() {
+        const openBtn = document.getElementById("socialFloatButton");
+        const drawer = document.getElementById("socialSection");
+        const closeBtn = document.getElementById("socialDrawerClose");
+
+        if (!drawer) return;
+
+        function openSocial() {
+            drawer.classList.add("open");
+            drawer.setAttribute("aria-hidden", "false");
+        }
+
+        function closeSocial() {
+            drawer.classList.remove("open");
+            drawer.setAttribute("aria-hidden", "true");
+        }
+
+        if (openBtn) openBtn.onclick = openSocial;
+        if (closeBtn) closeBtn.onclick = closeSocial;
+
+        drawer.querySelectorAll("[data-close-social]").forEach(el => {
+            el.addEventListener("click", closeSocial);
+        });
+
+        window.openNicoticSocial = openSocial;
+    }
+
+
     /* =========================
        MENÚ SUPERIOR DESPLEGABLE
     ========================= */
@@ -1924,6 +1998,13 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll(".side-menu-link").forEach(button => {
             button.addEventListener("click", () => {
                 const targetId = button.dataset.target;
+
+                if (button.dataset.socialOpen === "true" && typeof window.openNicoticSocial === "function") {
+                    closeMenu();
+                    setTimeout(() => window.openNicoticSocial(), 120);
+                    return;
+                }
+
                 const target = document.getElementById(targetId);
 
                 if (target) {
@@ -1941,6 +2022,8 @@ document.addEventListener("DOMContentLoaded", () => {
        INICIAR TODO
     ========================= */
     initSideMenu();
+    initSocialDrawer();
+    initCommentsToggle();
     initializeVideos();
     initLocationAlert();
     initFeaturedEvent();
