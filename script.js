@@ -2282,6 +2282,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function initScrollTopButton() {
         const btn = document.getElementById("scrollTopButton");
         if (!btn) return;
+        btn.textContent = "🠉";
 
         const update = () => {
             btn.classList.toggle("show", window.scrollY > 520);
