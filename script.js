@@ -977,7 +977,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (Math.abs(dx) > 8) {
                 moved = true;
                 window.nicoticVideoGridDidDrag = true;
-                grid.scrollLeft = scrollLeft - dx;
+                grid.scrollLeft = scrollLeft - (dx * 2.4);
             }
         }, { passive: true });
 
@@ -1032,25 +1032,25 @@ document.addEventListener("DOMContentLoaded", () => {
        V18: ya no bloquea el scroll vertical sobre imágenes.
     ========================= */
     document.addEventListener("gesturestart", function (e) {
-        e.preventDefault();
+        /* preventDefault removed for smooth mobile scroll */
     });
 
     document.addEventListener("gesturechange", function (e) {
-        e.preventDefault();
+        /* preventDefault removed for smooth mobile scroll */
     });
 
     document.addEventListener("gestureend", function (e) {
-        e.preventDefault();
+        /* preventDefault removed for smooth mobile scroll */
     });
 
     document.addEventListener("dblclick", function (e) {
         if (e.target && e.target.tagName === "VIDEO") return;
-        e.preventDefault();
+        /* preventDefault removed for smooth mobile scroll */
     }, { passive: false });
 
     document.addEventListener("touchstart", function (e) {
         if (e.touches && e.touches.length > 1) {
-            e.preventDefault();
+            /* preventDefault removed for smooth mobile scroll */
         }
     }, { passive: false });
     /* =========================
@@ -1341,7 +1341,6 @@ document.addEventListener("DOMContentLoaded", () => {
         startedText: "LA MISIÓN COMENZÓ"
     };
 
-
     function ensureFeaturedMediaParticles() {
         const media = document.getElementById("featuredEventMedia");
         if (!media) return;
@@ -1353,7 +1352,7 @@ document.addEventListener("DOMContentLoaded", () => {
         layer.className = "featured-media-particles";
         layer.setAttribute("aria-hidden", "true");
 
-        for (let i = 0; i < 14; i++) {
+        for (let i = 0; i < 16; i++) {
             const dot = document.createElement("span");
             dot.style.setProperty("--i", String(i));
             layer.appendChild(dot);
@@ -1361,6 +1360,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         media.appendChild(layer);
     }
+
+
 
     function initFeaturedEvent() {
         const section = document.getElementById("featuredEventSection");
@@ -2303,7 +2304,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function initScrollTopButton() {
         const btn = document.getElementById("scrollTopButton");
         if (!btn) return;
-        btn.textContent = "🡹";
+        btn.textContent = "🔄";
 
         const update = () => {
             btn.classList.toggle("show", window.scrollY > 520);
@@ -2392,6 +2393,7 @@ document.addEventListener("DOMContentLoaded", () => {
         initInfoDrawer();
         initScrollTopButton();
         initFeaturedEventParticles();
+    setTimeout(ensureFeaturedMediaParticles, 700);
         initSocialDrawer();
         initCommentsToggle();
         initializeVideos();
