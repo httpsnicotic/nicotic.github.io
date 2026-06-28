@@ -4245,3 +4245,38 @@ font-size:0.75rem;
 }
 
 }
+
+/* AJUSTE V11: lista de banderas y voto corregible */
+.flag-list-pill{
+display:inline-flex;
+align-items:center;
+gap:5px;
+min-height:30px;
+padding:5px 8px;
+border-radius:999px;
+background:rgba(255,255,255,0.055);
+border:1px solid rgba(255,255,255,0.08);
+font-size:0.95rem;
+font-weight:900;
+white-space:nowrap;
+}
+
+.schedule-no-results{
+width:100%;
+padding:10px 12px;
+border-radius:14px;
+background:rgba(255,255,255,0.055);
+border:1px solid rgba(255,255,255,0.08);
+color:#cfcfcf;
+font-weight:900;
+}
+
+.viewer-flag-button.locked{
+opacity:0.52;
+cursor:not-allowed;
+}
+
+.viewer-flag-button.voted.locked{
+opacity:1;
+cursor:default;
+}
