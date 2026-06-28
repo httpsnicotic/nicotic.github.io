@@ -384,6 +384,11 @@ document.addEventListener("DOMContentLoaded", () => {
        SELECCIONAR VIDEO
     ========================= */
     window.selectVideo = function(card) {
+        if (window.nicoticVideoGridDidDrag) {
+            window.nicoticVideoGridDidDrag = false;
+            return;
+        }
+
         if (!card) return;
 
         const videoId = card.dataset.videoId;
@@ -949,54 +954,96 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* =========================
-       SCROLL HORIZONTAL SUAVE
+       SCROLL HORIZONTAL SUAVE - V20
+       En celular usa scroll nativo.
+       En PC permite arrastrar con mouse.
     ========================= */
     const grid = document.querySelector(".video-grid");
 
     if (grid) {
         window.nicoticVideoGridDidDrag = false;
 
-        let pointerDown = false;
+        let isMouseDragging = false;
         let startX = 0;
-        let scrollLeft = 0;
+        let startScrollLeft = 0;
         let moved = false;
 
         grid.addEventListener("pointerdown", (e) => {
-            pointerDown = true;
+            if (e.pointerType === "touch") return;
+
+            isMouseDragging = true;
             moved = false;
             startX = e.clientX;
-            scrollLeft = grid.scrollLeft;
+            startScrollLeft = grid.scrollLeft;
             grid.classList.add("dragging");
+
+            try {
+                grid.setPointerCapture(e.pointerId);
+            } catch (err) {}
         }, { passive: true });
 
         grid.addEventListener("pointermove", (e) => {
-            if (!pointerDown) return;
+            if (!isMouseDragging) return;
 
             const dx = e.clientX - startX;
 
-            if (Math.abs(dx) > 8) {
+            if (Math.abs(dx) > 5) {
                 moved = true;
                 window.nicoticVideoGridDidDrag = true;
-                grid.scrollLeft = scrollLeft - (dx * 2.4);
+                grid.scrollLeft = startScrollLeft - dx;
+                e.preventDefault();
             }
-        }, { passive: true });
+        }, { passive: false });
 
-        function finishGridDrag() {
-            if (!pointerDown) return;
+        function finishMouseDrag(e) {
+            if (!isMouseDragging) return;
 
-            pointerDown = false;
+            isMouseDragging = false;
             grid.classList.remove("dragging");
+
+            try {
+                grid.releasePointerCapture(e.pointerId);
+            } catch (err) {}
 
             if (moved) {
                 setTimeout(() => {
                     window.nicoticVideoGridDidDrag = false;
-                }, 160);
+                }, 140);
             }
         }
 
-        grid.addEventListener("pointerup", finishGridDrag, { passive: true });
-        grid.addEventListener("pointercancel", finishGridDrag, { passive: true });
-        grid.addEventListener("pointerleave", finishGridDrag, { passive: true });
+        grid.addEventListener("pointerup", finishMouseDrag, { passive: true });
+        grid.addEventListener("pointercancel", finishMouseDrag, { passive: true });
+        grid.addEventListener("pointerleave", finishMouseDrag, { passive: true });
+
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        grid.addEventListener("touchstart", (e) => {
+            window.nicoticVideoGridDidDrag = false;
+
+            if (!e.touches || !e.touches[0]) return;
+
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+
+        grid.addEventListener("touchmove", (e) => {
+            if (!e.touches || !e.touches[0]) return;
+
+            const dx = Math.abs(e.touches[0].clientX - touchStartX);
+            const dy = Math.abs(e.touches[0].clientY - touchStartY);
+
+            if (dx > 12 && dx > dy) {
+                window.nicoticVideoGridDidDrag = true;
+            }
+        }, { passive: true });
+
+        grid.addEventListener("touchend", () => {
+            setTimeout(() => {
+                window.nicoticVideoGridDidDrag = false;
+            }, 160);
+        }, { passive: true });
     }
 
     /* =========================
@@ -1352,7 +1399,7 @@ document.addEventListener("DOMContentLoaded", () => {
         layer.className = "featured-media-particles";
         layer.setAttribute("aria-hidden", "true");
 
-        for (let i = 0; i < 16; i++) {
+        for (let i = 0; i < 18; i++) {
             const dot = document.createElement("span");
             dot.style.setProperty("--i", String(i));
             layer.appendChild(dot);
@@ -1360,6 +1407,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         media.appendChild(layer);
     }
+
+
 
 
 
@@ -1434,6 +1483,7 @@ document.addEventListener("DOMContentLoaded", () => {
             video.playsInline = true;
             video.preload = "metadata";
             media.appendChild(video);
+            ensureFeaturedMediaParticles();
             return;
         }
 
@@ -1443,6 +1493,7 @@ document.addEventListener("DOMContentLoaded", () => {
             img.alt = data.title || "Evento NICOTIC";
             img.loading = "lazy";
             media.appendChild(img);
+            ensureFeaturedMediaParticles();
         }
     }
 
