@@ -922,13 +922,14 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
         }
     }, { passive: false });
-
-
-
-    
     /* =========================
-       AVISOS / NOVEDADES
+       AVISOS / NOVEDADES - V14.3 ROBUSTO
        Firebase: portal/avisosNovedades
+       Reglas:
+       - mostrarTodos prende/apaga todo.
+       - active prende/apaga cada aviso.
+       - true puede venir como boolean true o texto "true".
+       - Si la fecha ya pasó, NO elimina el aviso si active sigue true.
     ========================= */
     let noticesTimers = [];
 
@@ -936,27 +937,58 @@ document.addEventListener("DOMContentLoaded", () => {
         id: "aviso_1",
         active: true,
         type: "normal",
-        kicker: "Avisos / Novedades",
-        title: "Hoy estaré en Trujillo",
-        place: "Centro de Trujillo",
-        description: "Estaré grabando algo especial para el sótano.",
-        dateTime: "2026-07-10T17:00:00-05:00",
+        kicker: "Aviso",
+        title: "Avisos / Novedades",
+        place: "Sótano NICOTIC",
+        description: "Carrete de avisos conectado correctamente.",
+        dateTime: "",
         imageUrl: "ojo.jpg",
         videoUrl: "",
         buttonText: "",
         buttonUrl: "",
-        expireAfterHours: 6,
-        startedText: "Ya comenzó"
+        expireAfterHours: 0,
+        startedText: "Activo"
     };
 
+    function nicoticBool(value) {
+        return value === true || value === "true" || value === 1 || value === "1";
+    }
+
+    function ensureNoticesDOM() {
+        let section = document.getElementById("noticesSection");
+        let track = document.getElementById("noticesTrack");
+
+        if (section && track) return { section, track };
+
+        section = document.createElement("section");
+        section.id = "noticesSection";
+        section.className = "notices-section nicotic-alert-hidden";
+        section.innerHTML = `
+            <div class="notices-header">
+                <span>📍 AVISOS / NOVEDADES</span>
+                <h2>Lo último del sótano</h2>
+            </div>
+            <div id="noticesTrack" class="notices-track" aria-label="Carrusel de avisos"></div>
+        `;
+
+        const hero = document.querySelector(".hero");
+        if (hero && hero.parentNode) {
+            hero.insertAdjacentElement("afterend", section);
+        } else {
+            document.body.insertBefore(section, document.body.firstChild);
+        }
+
+        track = document.getElementById("noticesTrack");
+        return { section, track };
+    }
+
     function initLocationAlert() {
-        // Compatibilidad interna: ahora el portal usa SOLO Avisos / Novedades.
         initNoticesCarousel();
     }
 
     function initNoticesCarousel() {
-        const section = document.getElementById("noticesSection");
-        if (!section) return;
+        const dom = ensureNoticesDOM();
+        if (!dom.section || !dom.track) return;
 
         hideNoticesCarousel();
 
@@ -964,17 +996,16 @@ document.addEventListener("DOMContentLoaded", () => {
             window.nicoticDb.ref("portal/avisosNovedades").on("value", snapshot => {
                 const data = snapshot.val();
 
-                // Sistema nuevo:
-                // portal/avisosNovedades/mostrarTodos = true/false
-                // portal/avisosNovedades/items = 4 avisos
-                if (!data || data.mostrarTodos !== true) {
+                console.log("NICOTIC avisosNovedades:", data);
+
+                if (!data || !nicoticBool(data.mostrarTodos)) {
                     hideNoticesCarousel();
                     return;
                 }
 
                 renderNoticesCarousel(data);
             }, error => {
-                console.warn("NICOTIC: no se pudo leer avisosNovedades.", error);
+                console.warn("NICOTIC: no se pudo leer portal/avisosNovedades.", error);
                 renderNoticesCarousel({
                     mostrarTodos: true,
                     items: [fallbackNotice]
@@ -991,20 +1022,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function renderNoticesCarousel(data) {
-        const section = document.getElementById("noticesSection");
-        const track = document.getElementById("noticesTrack");
+        const dom = ensureNoticesDOM();
+        const section = dom.section;
+        const track = dom.track;
 
         if (!section || !track) return;
 
         clearNoticesTimers();
 
-        const rawItems = Array.isArray(data.items)
-            ? data.items
-            : Object.values(data.items || {});
+        const sourceItems = data.items || data.notices || {};
+        const rawItems = Array.isArray(sourceItems)
+            ? sourceItems
+            : Object.values(sourceItems);
 
-        const activeNotices = rawItems.filter(item => item && item.active === true);
+        const activeNotices = rawItems.filter(item => item && nicoticBool(item.active));
 
-        if (data.mostrarTodos !== true || !activeNotices.length) {
+        console.log("NICOTIC avisos activos:", activeNotices.length);
+
+        if (!nicoticBool(data.mostrarTodos) || !activeNotices.length) {
             hideNoticesCarousel();
             return;
         }
@@ -1014,7 +1049,7 @@ document.addEventListener("DOMContentLoaded", () => {
         activeNotices.slice(0, 4).forEach((notice, index) => {
             const card = document.createElement("article");
             card.className = `notice-card ${notice.type === "important" ? "notice-important" : ""}`;
-            card.dataset.noticeIndex = String(index);
+            card.dataset.noticeId = notice.id || String(index);
 
             const media = document.createElement("div");
             media.className = "notice-media";
@@ -1023,17 +1058,25 @@ document.addEventListener("DOMContentLoaded", () => {
             const toggle = document.createElement("button");
             toggle.className = "notice-toggle";
             toggle.type = "button";
+            toggle.setAttribute("aria-expanded", "false");
             toggle.innerHTML = 'Ver foto completa <span>⌄</span>';
 
             toggle.onclick = () => {
                 const expanded = card.classList.toggle("expanded");
+                toggle.setAttribute("aria-expanded", expanded ? "true" : "false");
                 toggle.innerHTML = expanded ? 'Ocultar foto <span>⌃</span>' : 'Ver foto completa <span>⌄</span>';
             };
 
             const content = document.createElement("div");
             content.className = "notice-content";
 
-            const countdownId = `noticeCountdown_${index}`;
+            const countdownId = `noticeCountdown_${notice.id || index}`;
+
+            const buttonText = String(notice.buttonText || "").trim();
+            const buttonUrl = String(notice.buttonUrl || "").trim();
+            const buttonHTML = buttonText && buttonUrl
+                ? `<a class="notice-button" href="${escapeHTML(buttonUrl)}" target="_blank" rel="noopener">${escapeHTML(buttonText)}</a>`
+                : "";
 
             content.innerHTML = `
                 <div class="notice-kicker">${escapeHTML(notice.kicker || "Avisos / Novedades")}</div>
@@ -1046,6 +1089,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <strong id="${countdownId}">--d --h --m</strong>
                     </div>
                 ` : ""}
+                ${buttonHTML}
             `;
 
             card.appendChild(media);
@@ -1054,41 +1098,63 @@ document.addEventListener("DOMContentLoaded", () => {
             track.appendChild(card);
 
             if (notice.dateTime) {
-                startNoticeCountdown(notice, countdownId, card);
+                startNoticeCountdown(notice, countdownId);
             }
         });
 
         section.classList.remove("nicotic-alert-hidden");
+        section.style.display = "";
     }
 
-    function startNoticeCountdown(notice, countdownId, card) {
+    function renderAlertMedia(media, data) {
+        if (!media) return;
+
+        const imageUrl = String(data.imageUrl || "").trim();
+        const videoUrl = String(data.videoUrl || "").trim();
+
+        media.innerHTML = "";
+
+        if (videoUrl) {
+            const video = document.createElement("video");
+            video.src = videoUrl;
+            video.autoplay = true;
+            video.loop = true;
+            video.muted = true;
+            video.playsInline = true;
+            video.preload = "metadata";
+            media.appendChild(video);
+            return;
+        }
+
+        if (imageUrl) {
+            const img = document.createElement("img");
+            img.src = imageUrl;
+            img.alt = data.title || "Aviso NICOTIC";
+            img.loading = "lazy";
+            media.appendChild(img);
+            return;
+        }
+
+        media.innerHTML = `<div class="notice-empty-media">📍</div>`;
+    }
+
+    function startNoticeCountdown(notice, countdownId) {
         const countdown = document.getElementById(countdownId);
         if (!countdown) return;
 
-        const targetDate = new Date(notice.dateTime);
-        const expireAfterHours = Number(notice.expireAfterHours || 0);
+        const targetDate = new Date(notice.dateTime || "");
 
         function update() {
             const now = new Date();
             const diff = targetDate.getTime() - now.getTime();
 
             if (Number.isNaN(targetDate.getTime())) {
-                countdown.textContent = "--d --h --m";
+                countdown.textContent = "Fecha por confirmar";
                 return;
             }
 
             if (diff <= 0) {
                 countdown.textContent = notice.startedText || "Ya comenzó";
-
-                if (expireAfterHours > 0) {
-                    const expireAt = targetDate.getTime() + expireAfterHours * 60 * 60 * 1000;
-                    if (now.getTime() > expireAt && card) {
-                        card.remove();
-                        const track = document.getElementById("noticesTrack");
-                        if (track && !track.children.length) hideNoticesCarousel();
-                    }
-                }
-
                 return;
             }
 
@@ -1096,7 +1162,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
             const minutes = Math.floor((diff / (1000 * 60)) % 60);
 
-            countdown.textContent = `${days}d ${hours}h ${minutes}m`;
+            countdown.textContent = days > 0
+                ? `${days}d ${hours}h ${minutes}m`
+                : `${hours}h ${minutes}m`;
         }
 
         update();
@@ -1118,13 +1186,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (section) section.classList.add("nicotic-alert-hidden");
     }
 
-
-
-    function renderAlertMedia(media, data) {
-        // Alias para Avisos / Novedades.
-        // Evita que el carrusel se rompa si el bloque llama renderAlertMedia().
-        renderGeneralAlertMedia(media, data);
-    }
 
     /* =========================
        EVENTO GRANDE / VIAJE / MISIÓN ESPECIAL
