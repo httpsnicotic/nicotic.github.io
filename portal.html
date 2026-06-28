@@ -26,7 +26,7 @@
     <button id="sideMenuClose" class="side-menu-close" type="button" aria-label="Cerrar menú">×</button>
     <div class="side-menu-title">NICOTIC</div>
 
-    <button class="side-menu-link" type="button" data-target="socialSection">Social</button>
+    <button class="side-menu-link" type="button" data-target="socialSection" data-social-open="true">Social</button>
     <button class="side-menu-link" type="button" data-target="videoSection">Video destacado</button>
     <button class="side-menu-link" type="button" data-target="videoGridAnchor">Videos</button>
     <button class="side-menu-link" type="button" data-target="scheduleSection">Zonas horarias de stream</button>
@@ -72,38 +72,16 @@
   </div>
 </div>
 
-<!-- AVISO RÁPIDO: HOY ESTARÉ EN... -->
-<section id="locationAlertSection" class="location-alert-section nicotic-alert-hidden">
-  <div class="location-alert-card">
 
-    <div id="locationAlertMedia" class="location-alert-media" aria-hidden="true"></div>
-
-    <button id="locationAlertToggle" class="location-alert-toggle" type="button" aria-expanded="false">
-      Ver foto completa <span>⌄</span>
-    </button>
-
-    <div class="location-alert-content">
-      <div class="location-alert-kicker">Aviso del sótano</div>
-
-      <h2 id="locationAlertTitle">Hoy estaré en...</h2>
-
-      <div id="locationAlertPlace" class="location-alert-place">Lugar por confirmar</div>
-
-      <p id="locationAlertDescription">Pronto habrá un aviso especial.</p>
-
-      <div class="location-alert-countdown-box">
-        <span class="location-alert-countdown-label">Faltan</span>
-        <strong id="locationAlertCountdown">--d --h --m --s</strong>
-      </div>
-
-      <a id="locationAlertButton" class="location-alert-button" href="#" target="_blank" rel="noopener">
-        Más info
-      </a>
-    </div>
-
+<!-- AVISOS / NOVEDADES -->
+<section id="noticesSection" class="notices-section nicotic-alert-hidden">
+  <div class="notices-header">
+    <span>📍 AVISOS / NOVEDADES</span>
+    <h2>Lo último del sótano</h2>
   </div>
-</section>
 
+  <div id="noticesTrack" class="notices-track" aria-label="Carrusel de avisos"></div>
+</section>
 
 <!-- EVENTO GRANDE / VIAJE / MISIÓN ESPECIAL -->
 <section id="featuredEventSection" class="featured-event-section nicotic-alert-hidden">
@@ -204,60 +182,71 @@
 </section>
 
 
-<!-- SOCIAL -->
-<section id="socialSection" class="section social-section">
-  <div class="social-card">
-    <div class="social-header">
-      <span class="social-kicker">Redes oficiales</span>
-      <h2>SOCIAL</h2>
-      <p>Presiona para ir y unirte a las redes sociales del sótano.</p>
-    </div>
 
-    <div class="social-grid">
-      <a class="social-item" href="https://kick.com/niicotic" target="_blank" rel="noopener">
-        <div class="social-avatar-wrap">
-          <img src="redes/kick.jpg" alt="Kick">
-          <span class="social-check">✓</span>
-        </div>
-        <strong>KICK</strong>
-        <span class="social-go">Ir</span>
-      </a>
+<!-- BOTÓN / PANEL DE REDES -->
+<button id="socialFloatButton" class="social-float-button" type="button" aria-label="Abrir redes">
+  Redes
+</button>
 
-      <a class="social-item" href="#" target="_blank" rel="noopener">
-        <div class="social-avatar-wrap">
-          <img src="redes/ig.jpg" alt="Instagram">
-          <span class="social-check">✓</span>
-        </div>
-        <strong>INSTAGRAM</strong>
-        <span class="social-go">Ir</span>
-      </a>
+<section id="socialSection" class="social-drawer" aria-hidden="true">
+  <div class="social-drawer-backdrop" data-close-social="true"></div>
 
-      <a class="social-item" href="#" target="_blank" rel="noopener">
-        <div class="social-avatar-wrap">
-          <img src="redes/discord.jpg" alt="Discord">
-          <span class="social-check">✓</span>
-        </div>
-        <strong>DISCORD</strong>
-        <span class="social-go">Ir</span>
-      </a>
+  <div class="social-drawer-panel">
+    <button id="socialDrawerClose" class="social-drawer-close" type="button" aria-label="Cerrar redes">×</button>
 
-      <a class="social-item" href="#" target="_blank" rel="noopener">
-        <div class="social-avatar-wrap">
-          <img src="redes/wsp.jpg" alt="WhatsApp">
-          <span class="social-check">✓</span>
-        </div>
-        <strong>WHATSAPP</strong>
-        <span class="social-go">Ir</span>
-      </a>
+    <div class="social-card">
+      <div class="social-header">
+        <span class="social-kicker">Redes oficiales</span>
+        <h2>SOCIAL</h2>
+        <p>Presiona para ir y unirte a las redes sociales del sótano.</p>
+      </div>
 
-      <a class="social-item" href="#" target="_blank" rel="noopener">
-        <div class="social-avatar-wrap">
-          <img src="redes/tiktok.jpg" alt="TikTok">
-          <span class="social-check">✓</span>
-        </div>
-        <strong>TIKTOK</strong>
-        <span class="social-go">Ir</span>
-      </a>
+      <div class="social-grid">
+        <a class="social-item" href="https://kick.com/niicotic" target="_blank" rel="noopener">
+          <div class="social-avatar-wrap">
+            <img src="redes/kick.jpg" alt="Kick">
+            <span class="social-check">✓</span>
+          </div>
+          <strong>KICK</strong>
+          <span class="social-go">Ir</span>
+        </a>
+
+        <a class="social-item" href="#" target="_blank" rel="noopener">
+          <div class="social-avatar-wrap">
+            <img src="redes/ig.jpg" alt="Instagram">
+            <span class="social-check">✓</span>
+          </div>
+          <strong>INSTAGRAM</strong>
+          <span class="social-go">Ir</span>
+        </a>
+
+        <a class="social-item" href="#" target="_blank" rel="noopener">
+          <div class="social-avatar-wrap">
+            <img src="redes/discord.jpg" alt="Discord">
+            <span class="social-check">✓</span>
+          </div>
+          <strong>DISCORD</strong>
+          <span class="social-go">Ir</span>
+        </a>
+
+        <a class="social-item" href="#" target="_blank" rel="noopener">
+          <div class="social-avatar-wrap">
+            <img src="redes/wsp.jpg" alt="WhatsApp">
+            <span class="social-check">✓</span>
+          </div>
+          <strong>WHATSAPP</strong>
+          <span class="social-go">Ir</span>
+        </a>
+
+        <a class="social-item" href="#" target="_blank" rel="noopener">
+          <div class="social-avatar-wrap">
+            <img src="redes/tiktok.jpg" alt="TikTok">
+            <span class="social-check">✓</span>
+          </div>
+          <strong>TIKTOK</strong>
+          <span class="social-go">Ir</span>
+        </a>
+      </div>
     </div>
   </div>
 </section>
@@ -296,7 +285,7 @@
   <div class="main-video-info">
 
     <div class="main-title-row">
-      <img src="ojo.jpg" alt="NICOTIC" class="playing-avatar">
+      <span class="playing-avatar-wrap"><img src="ojo.jpg" alt="NICOTIC" class="playing-avatar"><span class="video-verified-check">✓</span></span>
 
       <div>
         <div id="mainTitle" class="main-video-title">Episodio 1</div>
@@ -319,7 +308,8 @@
     </div>
 
     <!-- COMENTARIOS ANÓNIMOS -->
-    <div class="comments-box">
+    <button id="toggleCommentsBox" class="comments-toggle-btn" type="button">Desplegar comentarios</button>
+    <div class="comments-box comments-collapsed">
       <h3>💬 Comentarios</h3>
 
       <div class="comment-form">
@@ -354,6 +344,7 @@
 
       <div class="card-title">Episodio 1</div>
       <div class="card-meta">Episodio 01 · reciente</div>
+      <div class="video-card-owner"><span class="video-card-eye-wrap"><img src="ojo.jpg" alt="NICOTIC"><span>✓</span></span><b>NICOTIC</b></div>
 
       <div class="card-actions">
         <button class="card-pill skull-card-btn" type="button" onclick="event.stopPropagation();">
@@ -382,6 +373,7 @@
 
       <div class="card-title">Episodio 2</div>
       <div class="card-meta">Episodio 02 · reciente</div>
+      <div class="video-card-owner"><span class="video-card-eye-wrap"><img src="ojo.jpg" alt="NICOTIC"><span>✓</span></span><b>NICOTIC</b></div>
 
       <div class="card-actions">
         <button class="card-pill skull-card-btn" type="button" onclick="event.stopPropagation();">
@@ -410,6 +402,7 @@
 
       <div class="card-title">Episodio 3</div>
       <div class="card-meta">Episodio 03 · reciente</div>
+      <div class="video-card-owner"><span class="video-card-eye-wrap"><img src="ojo.jpg" alt="NICOTIC"><span>✓</span></span><b>NICOTIC</b></div>
 
       <div class="card-actions">
         <button class="card-pill skull-card-btn" type="button" onclick="event.stopPropagation();">
@@ -438,6 +431,7 @@
 
       <div class="card-title">Episodio 4</div>
       <div class="card-meta">Episodio 04 · reciente</div>
+      <div class="video-card-owner"><span class="video-card-eye-wrap"><img src="ojo.jpg" alt="NICOTIC"><span>✓</span></span><b>NICOTIC</b></div>
 
       <div class="card-actions">
         <button class="card-pill skull-card-btn" type="button" onclick="event.stopPropagation();">
@@ -466,6 +460,7 @@
 
       <div class="card-title">Episodio 5</div>
       <div class="card-meta">Episodio 05 · reciente</div>
+      <div class="video-card-owner"><span class="video-card-eye-wrap"><img src="ojo.jpg" alt="NICOTIC"><span>✓</span></span><b>NICOTIC</b></div>
 
       <div class="card-actions">
         <button class="card-pill skull-card-btn" type="button" onclick="event.stopPropagation();">
