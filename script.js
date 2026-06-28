@@ -198,7 +198,105 @@ document.addEventListener("DOMContentLoaded", () => {
         saveState();
         refreshAllUI();
         setInitialVideoPoster();
+        listenFirebaseVideoStats();
     }
+
+
+    /* =========================
+       FIREBASE VIDEOS: vistas, calaveras y comentarios
+    ========================= */
+    function getVideoRef(videoId) {
+        if (!window.nicoticDb || !videoId) return null;
+        return window.nicoticDb.ref(`portal/videos/${videoId}`);
+    }
+
+    function getVideoBaseData(videoId) {
+        const card = document.querySelector(`.video-card[data-video-id="${videoId}"]`);
+        return {
+            views: Number(card?.dataset.views || 0),
+            skulls: Number(card?.dataset.skulls || 0),
+            comments: []
+        };
+    }
+
+    function normalizeFirebaseComments(raw) {
+        if (!raw) return [];
+        if (Array.isArray(raw)) return raw.filter(Boolean).map(normalizeCommentObject);
+
+        return Object.keys(raw)
+            .map(key => normalizeCommentObject({ id: key, ...raw[key] }))
+            .sort((a, b) => Number(a.createdAt || 0) - Number(b.createdAt || 0));
+    }
+
+    function normalizeCommentObject(comment) {
+        return {
+            id: comment.id || ("c_" + Date.now() + "_" + Math.random().toString(16).slice(2)),
+            name: comment.name || "👁️ | Habitante del Sótano",
+            text: comment.text || "",
+            date: comment.date || "",
+            createdAt: Number(comment.createdAt || 0),
+            likes: Number(comment.likes || 0),
+            likedByMe: false,
+            ownerReplies: Array.isArray(comment.ownerReplies) ? comment.ownerReplies : []
+        };
+    }
+
+    function recalculateTotalsFromState() {
+        let views = 0;
+        let skulls = 0;
+        let comments = 0;
+
+        Object.keys(state.videos || {}).forEach(videoId => {
+            views += Number(state.videos[videoId].views || 0);
+            skulls += Number(state.videos[videoId].skulls || 0);
+            comments += (state.videos[videoId].comments || []).length;
+        });
+
+        state.totals.videoViews = views;
+        state.totals.skulls = skulls;
+        state.totals.comments = comments;
+    }
+
+    function hasFirebaseVideos() {
+        return Boolean(window.nicoticDb && isPortalPage());
+    }
+
+    function listenFirebaseVideoStats() {
+        if (!window.nicoticDb) return;
+
+        document.querySelectorAll(".video-card").forEach(card => {
+            const videoId = card.dataset.videoId;
+            if (!videoId) return;
+
+            const ref = getVideoRef(videoId);
+            const base = getVideoBaseData(videoId);
+
+            ref.transaction(current => current || base);
+
+            ref.on("value", snapshot => {
+                const data = snapshot.val();
+                if (!data) return;
+
+                if (!state.videos[videoId]) state.videos[videoId] = base;
+
+                state.videos[videoId].views = Number(data.views || 0);
+                state.videos[videoId].skulls = Number(data.skulls || 0);
+                state.videos[videoId].comments = normalizeFirebaseComments(data.comments);
+
+                recalculateTotalsFromState();
+
+                refreshVideoUI(videoId);
+                refreshCommentCounts(videoId);
+
+                if (getCurrentVideoId() === videoId) renderComments(videoId);
+
+                refreshTotals();
+                refreshLikedButtons();
+                saveState();
+            });
+        });
+    }
+
 
     function setInitialVideoPoster() {
         const activeCard = document.querySelector(".video-card.active-card");
@@ -419,6 +517,11 @@ document.addEventListener("DOMContentLoaded", () => {
     function addView(videoId) {
         if (!state.videos[videoId]) return;
 
+        if (hasFirebaseVideos()) {
+            getVideoRef(videoId).child("views").transaction(current => Number(current || 0) + 1);
+            return;
+        }
+
         state.videos[videoId].views++;
         state.totals.videoViews++;
 
@@ -439,9 +542,18 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        state.likedSkulls[videoId] = true;
+        saveState();
+
+        if (hasFirebaseVideos()) {
+            getVideoRef(videoId).child("skulls").transaction(current => Number(current || 0) + 1);
+            refreshLikedButtons();
+            pulseButton("mainSkulls");
+            return;
+        }
+
         state.videos[videoId].skulls++;
         state.totals.skulls++;
-        state.likedSkulls[videoId] = true;
 
         saveState();
         refreshVideoUI(videoId);
@@ -554,15 +666,25 @@ document.addEventListener("DOMContentLoaded", () => {
             name: name,
             text: text.slice(0, 180),
             date: formatCommentDate(),
+            createdAt: Date.now(),
             likes: 0,
             likedByMe: false,
             ownerReplies: []
         };
 
+        if (textInput) textInput.value = "";
+
+        if (hasFirebaseVideos()) {
+            const ref = getVideoRef(videoId).child("comments").push();
+            comment.id = ref.key;
+            comment.createdAt = firebase.database.ServerValue.TIMESTAMP;
+            ref.set(comment);
+            pulseButton("sendCommentBtn");
+            return;
+        }
+
         state.videos[videoId].comments.push(comment);
         state.totals.comments++;
-
-        if (textInput) textInput.value = "";
 
         saveState();
         renderComments(videoId);
@@ -604,6 +726,7 @@ document.addEventListener("DOMContentLoaded", () => {
         comments.slice().reverse().forEach(comment => {
             if (!comment.id) comment.id = "c_" + Date.now() + "_" + Math.random().toString(16).slice(2);
             if (typeof comment.likes !== "number") comment.likes = 0;
+            comment.likedByMe = Boolean(localStorage.getItem(`comment_like_${videoId}_${comment.id}`));
             if (!Array.isArray(comment.ownerReplies)) comment.ownerReplies = [];
 
             const item = document.createElement("div");
@@ -654,8 +777,18 @@ document.addEventListener("DOMContentLoaded", () => {
         const comment = comments.find(item => item.id === commentId);
         if (!comment) return;
 
-        comment.likedByMe = !comment.likedByMe;
-        comment.likes = Math.max(0, Number(comment.likes || 0) + (comment.likedByMe ? 1 : -1));
+        const likeKey = `comment_like_${videoId}_${commentId}`;
+        if (localStorage.getItem(likeKey)) return;
+
+        localStorage.setItem(likeKey, "true");
+
+        if (hasFirebaseVideos()) {
+            getVideoRef(videoId).child(`comments/${commentId}/likes`).transaction(current => Number(current || 0) + 1);
+            return;
+        }
+
+        comment.likedByMe = true;
+        comment.likes = Math.max(0, Number(comment.likes || 0) + 1);
 
         saveState();
         renderComments(videoId);
@@ -1199,7 +1332,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const featuredEventDemo = {
         active: false,
         title: "Viaje a Japón",
-        subtitle: "Misión especial",
+        subtitle: "Comunicado importante",
         description: "Se viene contenido fuera del sótano. Esto será parte de una etapa especial de NICOTIC.",
         dateTime: "2026-12-20T08:00:00-05:00",
         imageUrl: "ojo.jpg",
