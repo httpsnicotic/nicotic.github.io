@@ -1892,9 +1892,55 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
+
+
+    /* =========================
+       MENÚ SUPERIOR DESPLEGABLE
+    ========================= */
+    function initSideMenu() {
+        const menuButton = document.querySelector(".menu-icon");
+        const menu = document.getElementById("sideMenu");
+        const closeButton = document.getElementById("sideMenuClose");
+
+        if (!menuButton || !menu) return;
+
+        function openMenu() {
+            menu.classList.add("open");
+            menu.setAttribute("aria-hidden", "false");
+        }
+
+        function closeMenu() {
+            menu.classList.remove("open");
+            menu.setAttribute("aria-hidden", "true");
+        }
+
+        menuButton.addEventListener("click", openMenu);
+        if (closeButton) closeButton.addEventListener("click", closeMenu);
+
+        menu.addEventListener("click", (event) => {
+            if (event.target === menu) closeMenu();
+        });
+
+        document.querySelectorAll(".side-menu-link").forEach(button => {
+            button.addEventListener("click", () => {
+                const targetId = button.dataset.target;
+                const target = document.getElementById(targetId);
+
+                if (target) {
+                    closeMenu();
+                    setTimeout(() => {
+                        target.scrollIntoView({ behavior: "smooth", block: "start" });
+                    }, 120);
+                }
+            });
+        });
+    }
+
+
     /* =========================
        INICIAR TODO
     ========================= */
+    initSideMenu();
     initializeVideos();
     initLocationAlert();
     initFeaturedEvent();
