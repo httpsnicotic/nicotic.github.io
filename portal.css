@@ -7440,3 +7440,221 @@ animation-delay:calc(var(--i) * -0.30s) !important;
     border-radius:22px !important;
   }
 }
+
+
+/* =========================================================
+   V21 - SCROLL TÁCTIL REAL + ESPACIOS + ROJO VISITANTES
+========================================================= */
+
+/* Permitir gestos táctiles reales dentro de carretes */
+html,
+body{
+touch-action:auto !important;
+overscroll-behavior-y:auto !important;
+overflow-x:hidden !important;
+}
+
+.video-grid,
+.notices-track{
+overflow-x:auto !important;
+overflow-y:hidden !important;
+-webkit-overflow-scrolling:touch !important;
+scroll-behavior:auto !important;
+touch-action:auto !important;
+overscroll-behavior-x:contain !important;
+scroll-snap-type:none !important;
+}
+
+.video-grid *,
+.notices-track *{
+touch-action:auto !important;
+}
+
+.video-card,
+.notice-card{
+touch-action:auto !important;
+-webkit-tap-highlight-color:transparent !important;
+user-select:none !important;
+-webkit-user-select:none !important;
+}
+
+.thumb-video,
+.notice-media,
+.notice-media img,
+.notice-media video,
+.video-card img,
+.video-card video{
+touch-action:auto !important;
+-webkit-user-drag:none !important;
+user-select:none !important;
+-webkit-user-select:none !important;
+}
+
+.thumb-video,
+.notice-media img,
+.notice-media video{
+pointer-events:auto !important;
+}
+
+/* El video principal mantiene sus controles */
+#mainVideo,
+.featured-video video{
+pointer-events:auto !important;
+touch-action:auto !important;
+}
+
+/* Feedback al arrastrar */
+.video-grid.dragging,
+.notices-track.dragging{
+cursor:grabbing !important;
+scroll-behavior:auto !important;
+}
+
+.video-grid,
+.notices-track{
+cursor:grab !important;
+}
+
+/* Acortar espacios grandes entre secciones */
+.hero{
+height:auto !important;
+min-height:88vh !important;
+padding:82px 18px 42px !important;
+}
+
+.section{
+min-height:auto !important;
+padding-top:54px !important;
+padding-bottom:42px !important;
+}
+
+.notices-section,
+.featured-event-section,
+.quick-alerts-section,
+.stream-alert-section,
+.video-highlight-section,
+.schedule-section,
+.totals-section,
+.visitors-section,
+.viewer-country-section,
+.historico-anchor-section{
+min-height:auto !important;
+padding-top:34px !important;
+padding-bottom:34px !important;
+}
+
+.featured-section-header,
+.notices-header,
+.featured-event-heading,
+.schedule-header,
+.viewer-country-header{
+margin-bottom:18px !important;
+}
+
+.featured-divider{
+margin-top:18px !important;
+}
+
+.video-grid{
+margin-top:16px !important;
+}
+
+.main-video-info{
+margin-top:14px !important;
+}
+
+.comments-box{
+margin-top:14px !important;
+}
+
+.quick-alerts-section{
+padding-top:18px !important;
+padding-bottom:22px !important;
+}
+
+.stream-alert-section{
+padding-top:24px !important;
+}
+
+.totals-grid{
+margin-top:18px !important;
+}
+
+/* Más rojo dentro del contador de visitantes del sótano */
+.hero-visitor-box,
+.visitor-counter,
+.big-counter{
+background:
+radial-gradient(circle at 50% 0%, rgba(239,68,68,.30), transparent 44%),
+linear-gradient(180deg, rgba(42,10,14,.88), rgba(11,7,10,.88)) !important;
+border:1px solid rgba(248,113,113,.38) !important;
+box-shadow:
+0 24px 80px rgba(0,0,0,.58),
+inset 0 0 34px rgba(239,68,68,.10),
+0 0 34px rgba(239,68,68,.20),
+0 0 44px rgba(168,85,247,.10) !important;
+}
+
+.hero-visitor-label{
+color:#fecaca !important;
+}
+
+.hero-plus,
+#portalVisitsHero,
+.visitor-number,
+.big-number{
+text-shadow:
+0 0 18px rgba(239,68,68,.42),
+0 0 34px rgba(168,85,247,.24) !important;
+}
+
+.hero-plus{
+color:#fecaca !important;
+}
+
+/* Más compacto en celular */
+@media (max-width:768px){
+  .hero{
+    min-height:84vh !important;
+    padding:72px 14px 30px !important;
+  }
+
+  .section{
+    padding-top:42px !important;
+    padding-bottom:34px !important;
+  }
+
+  .notices-section,
+  .featured-event-section,
+  .quick-alerts-section,
+  .stream-alert-section,
+  .video-highlight-section,
+  .schedule-section,
+  .totals-section,
+  .visitors-section,
+  .viewer-country-section,
+  .historico-anchor-section{
+    padding-top:28px !important;
+    padding-bottom:28px !important;
+  }
+
+  .featured-section-header,
+  .notices-header,
+  .featured-event-heading,
+  .schedule-header,
+  .viewer-country-header{
+    margin-bottom:14px !important;
+  }
+
+  .video-grid,
+  .notices-track{
+    padding-left:14px !important;
+    padding-right:14px !important;
+  }
+
+  .hero-visitor-box{
+    background:
+    radial-gradient(circle at 50% 0%, rgba(239,68,68,.34), transparent 48%),
+    linear-gradient(180deg, rgba(42,10,14,.92), rgba(9,7,10,.92)) !important;
+  }
+}
