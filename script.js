@@ -1341,6 +1341,27 @@ document.addEventListener("DOMContentLoaded", () => {
         startedText: "LA MISIÓN COMENZÓ"
     };
 
+
+    function ensureFeaturedMediaParticles() {
+        const media = document.getElementById("featuredEventMedia");
+        if (!media) return;
+
+        const old = media.querySelector(".featured-media-particles");
+        if (old) old.remove();
+
+        const layer = document.createElement("div");
+        layer.className = "featured-media-particles";
+        layer.setAttribute("aria-hidden", "true");
+
+        for (let i = 0; i < 14; i++) {
+            const dot = document.createElement("span");
+            dot.style.setProperty("--i", String(i));
+            layer.appendChild(dot);
+        }
+
+        media.appendChild(layer);
+    }
+
     function initFeaturedEvent() {
         const section = document.getElementById("featuredEventSection");
 
@@ -1577,6 +1598,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (description) description.textContent = data.description || "Disponible";
 
         renderGeneralAlertMedia(media, data);
+        if (media && media.id === 'featuredEventMedia') ensureFeaturedMediaParticles();
 
         const goToEpisode = () => {
             const videoSection = document.getElementById("videoSection") || document.querySelector(".video-highlight-section");
@@ -2281,7 +2303,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function initScrollTopButton() {
         const btn = document.getElementById("scrollTopButton");
         if (!btn) return;
-        btn.textContent = "🠉";
+        btn.textContent = "🡹";
 
         const update = () => {
             btn.classList.toggle("show", window.scrollY > 520);
